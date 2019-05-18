@@ -79,7 +79,8 @@ HEADERS += \
     Core/TriangulatedMeshes3.h \
     Cyclic/CyclicCurves3.h \
     Core/LinearCombination3.h \
-    Core/TensorProductSurfaces3.h
+    Core/TensorProductSurfaces3.h \
+    Core/ShaderPrograms.h
 
 SOURCES += \
     GUI/GLWidget.cpp \
@@ -96,5 +97,6 @@ SOURCES += \
     Core/TriangulatedMeshes3.cpp \
     Cyclic/CyclicCurves3.cpp \
     Core/LinearCombination3.cpp \
-    Core/TensorProductSurfaces3.cpp
+    Core/TensorProductSurfaces3.cpp \
+    Core/ShaderPrograms.cpp
 
