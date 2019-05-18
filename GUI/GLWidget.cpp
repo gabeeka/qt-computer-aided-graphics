@@ -109,11 +109,9 @@ namespace cagd
 
             // create and store your geometry in display lists or vertex buffer objects
             // ...
-            initOffModel("Models/mouse.off");
+            initOffModel();
             initParametricCurves(5);
             initParametricSurfaces(5);
-
-
 
 
 
@@ -150,9 +148,17 @@ namespace cagd
 
             // render your geometry (this is oldest OpenGL rendering technique, later we will use some advanced methods)
 
-            // renderOffModel();
-            // renderParametricCurve(4);
-            renderParametricSurface(4);
+            switch (_render_function) {
+                case 0:
+                    renderParametricCurve();
+                break;
+                case 1:
+                    renderOffModel();
+                break;
+                case 2:
+                    renderParametricSurface();
+                break;
+            }
 
         // pops the current matrix stack, replacing the current matrix with the one below it on the stack,
         // i.e., the original model view matrix is restored
@@ -262,36 +268,51 @@ namespace cagd
         _image_of_pc_vec[4] = _pc_vec[4]->GenerateImage(div_point_count,usage_flag);
     }
 
-    void GLWidget::renderParametricCurve(GLuint curve_index)
+    void GLWidget::renderParametricCurve()
     {
         glPointSize(5.0);
         glColor3f(1.0, 0.0, 0.0);
-        _image_of_pc_vec[curve_index]->RenderDerivatives(0, GL_LINE_STRIP);
+        _image_of_pc_vec[_render_index]->RenderDerivatives(0, GL_LINE_STRIP);
 
         glPointSize(5.0);
 
         glColor3f(0.0, 0.5, 0.0);
-        _image_of_pc_vec[curve_index]->RenderDerivatives(1, GL_LINES);
-        _image_of_pc_vec[curve_index]->RenderDerivatives(1, GL_POINTS);
+        _image_of_pc_vec[_render_index]->RenderDerivatives(1, GL_LINES);
+        _image_of_pc_vec[_render_index]->RenderDerivatives(1, GL_POINTS);
 
         glColor3f(0.1, 0.5, 0.9);
-        _image_of_pc_vec[curve_index]->RenderDerivatives(2, GL_LINES);
-        _image_of_pc_vec[curve_index]->RenderDerivatives(2, GL_POINTS);
+        _image_of_pc_vec[_render_index]->RenderDerivatives(2, GL_LINES);
+        _image_of_pc_vec[_render_index]->RenderDerivatives(2, GL_POINTS);
 
         glPointSize(1.0);
     }
 
     // OFF models
-    void GLWidget::initOffModel(const char* file_name)
+    void GLWidget::initOffModel()
     {
-        if (_mouse.LoadFromOFF(file_name, true))
+        _off_models.resize(3);
+        if (_off_models[0].LoadFromOFF("Models/elephant.off", true))
         {
-            if (_mouse.UpdateVertexBufferObjects(GL_DYNAMIC_DRAW))
+            if (_off_models[0].UpdateVertexBufferObjects(GL_DYNAMIC_DRAW))
             {
                 _angle = 0.0;
-                _timer->start();
             }
         }
+        if (_off_models[1].LoadFromOFF("Models/mouse.off", true))
+        {
+            if (_off_models[1].UpdateVertexBufferObjects(GL_DYNAMIC_DRAW))
+            {
+                _angle = 0.0;
+            }
+        }
+        if (_off_models[2].LoadFromOFF("Models/sphere.off", true))
+        {
+            if (_off_models[2].UpdateVertexBufferObjects(GL_DYNAMIC_DRAW))
+            {
+                _angle = 0.0;
+            }
+        }
+        _timer->start();
     }
 
     void GLWidget::renderOffModel()
@@ -300,7 +321,7 @@ namespace cagd
         glEnable(GL_LIGHTING);
         glEnable(GL_LIGHT0);
         glEnable(GL_NORMALIZE);
-        _mouse.Render();
+        _off_models[_render_index].Render();
         glDisable(GL_LIGHTING);
         glDisable(GL_LIGHT0);
         glDisable(GL_NORMALIZE);
@@ -383,7 +404,7 @@ namespace cagd
         _image_of_ps_vec[4] = _ps_vec[4]->GenerateImage(u_div_point_count,v_div_point_count,usage_flag);
     }
 
-    void GLWidget::renderParametricSurface(GLuint surface_index)
+    void GLWidget::renderParametricSurface()
     {
         glEnable(GL_LIGHTING);
         glEnable(GL_NORMALIZE);
@@ -392,9 +413,9 @@ namespace cagd
         {
             _directionalLight->Enable();
             MatFBTurquoise.Apply();
-            if(_image_of_ps_vec[surface_index])
+            if(_image_of_ps_vec[_render_index])
             {
-                _image_of_ps_vec[surface_index]->Render();
+                _image_of_ps_vec[_render_index]->Render();
             }
             _directionalLight->Disable();
         }
@@ -534,26 +555,33 @@ namespace cagd
     {
         _render_function = render_function;
         _render_index    = render_index;
+        updateGL();
     }
 
     void GLWidget::_animate()
     {
+
+        if (_render_function != 1)
+        {
+            updateGL();
+            return;
+        }
         // For model animation
-        GLfloat* vertex = _mouse.MapVertexBuffer(GL_READ_WRITE);
-        GLfloat* normal = _mouse.MapNormalBuffer(GL_READ_ONLY);
+        GLfloat* vertex = _off_models[_render_index].MapVertexBuffer(GL_READ_WRITE);
+        GLfloat* normal = _off_models[_render_index].MapNormalBuffer(GL_READ_ONLY);
 
         _angle += DEG_TO_RADIAN;
         if (_angle >= TWO_PI) _angle -= TWO_PI;
 
         GLfloat scale = sin(_angle) / 3000.0;
-        for (GLuint i = 0; i < _mouse.VertexCount(); ++i)
+        for (GLuint i = 0; i < _off_models[_render_index].VertexCount(); ++i)
         {
             for (GLuint coordinate = 0; coordinate < 3; ++coordinate, ++vertex, ++normal)
                 *vertex += scale * (*normal);
         }
 
-        _mouse.UnmapVertexBuffer();
-        _mouse.UnmapNormalBuffer();
+        _off_models[_render_index].UnmapVertexBuffer();
+        _off_models[_render_index].UnmapNormalBuffer();
 
         updateGL();
     }

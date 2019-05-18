@@ -25,8 +25,8 @@ namespace cagd
         Q_OBJECT
 
     private:
-        GLuint      _render_function;
-        GLuint      _render_index;
+        GLuint      _render_function{1};
+        GLuint      _render_index{0};
 
         // variables defining the projection matrix
         double       _aspect;            // aspect ratio of the rendering window
@@ -57,7 +57,7 @@ namespace cagd
         // Models - off files
         QTimer*                                 _timer;
         GLdouble                                _angle;
-        TriangulatedMesh3                       _mouse;
+        std::vector<TriangulatedMesh3>          _off_models;
 
         // Parametric surfaces
         std::vector<cagd::ParametricSurface3*>  _ps_vec;
@@ -76,11 +76,11 @@ namespace cagd
         void initElliplse(GLuint div_point_count, GLenum usage_flag);
         void initHypo(GLuint div_point_count, GLenum usage_flag);
         void initLissajou(GLuint div_point_count, GLenum usage_flag);
-        void renderParametricCurve(GLuint curve_index);
+        void renderParametricCurve();
 
 
         // OFF models
-        void initOffModel(const char* file_name);
+        void initOffModel();
         void renderOffModel();
 
 
@@ -91,7 +91,7 @@ namespace cagd
         void initHyperboloid(GLuint u_div_point_count, GLuint v_div_point_count, GLenum usage_flag);
         void initKleinbottle(GLuint u_div_point_count, GLuint v_div_point_count, GLenum usage_flag);
         void initDupincyclide(GLuint u_div_point_count, GLuint v_div_point_count, GLenum usage_flag);
-        void renderParametricSurface(GLuint surface_index);
+        void renderParametricSurface();
 
 
     public:
