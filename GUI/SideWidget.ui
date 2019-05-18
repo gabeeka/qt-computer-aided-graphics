@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>289</width>
-    <height>289</height>
+    <height>644</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -218,6 +218,214 @@
       </widget>
      </item>
     </layout>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="groupBox_3">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>269</y>
+     <width>121</width>
+     <height>181</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Curves</string>
+   </property>
+   <widget class="QRadioButton" name="spiral_on_cone">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>120</y>
+      <width>107</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Spiral cone</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="torus">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>150</y>
+      <width>107</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Torus</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="ellipse">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>30</y>
+      <width>107</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Ellipse</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="hypo">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>60</y>
+      <width>107</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Hypo</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="lissajou">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>90</y>
+      <width>107</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Lissajou</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="groupBox_4">
+   <property name="geometry">
+    <rect>
+     <x>150</x>
+     <y>270</y>
+     <width>131</width>
+     <height>181</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Surfaces</string>
+   </property>
+   <widget class="QRadioButton" name="sphere">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>150</y>
+      <width>107</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Sphere</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="dupincyclide">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>60</y>
+      <width>107</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Dupincyclide</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="hyperboloid">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>90</y>
+      <width>107</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Hyperboloid</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="kleinbottle">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>120</y>
+      <width>107</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Kleinbottle</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="chelicoid">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>30</y>
+      <width>107</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Chelicoid</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="groupBox_2">
+   <property name="geometry">
+    <rect>
+     <x>150</x>
+     <y>480</y>
+     <width>131</width>
+     <height>151</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Models</string>
+   </property>
+   <widget class="QRadioButton" name="elephant_radio_button">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>30</y>
+      <width>107</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Elephant</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="mouse_radio_button">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>60</y>
+      <width>101</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Mouse</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="sphere_radio_button">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>90</y>
+      <width>91</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Sphere</string>
+    </property>
    </widget>
   </widget>
  </widget>

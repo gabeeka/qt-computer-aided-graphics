@@ -471,6 +471,71 @@ namespace cagd
         }
     }
 
+    // models
+    void GLWidget::render_elephant()
+    {
+        render_setup(1, 0);
+    }
+    void GLWidget::render_mouse()
+    {
+        render_setup(1, 1);
+    }
+    void GLWidget::render_model_sphere()
+    {
+        render_setup(1, 2);
+    }
+
+    // curves
+    void GLWidget::render_spiral_on_cone()
+    {
+        render_setup(0, 0);
+    }
+    void GLWidget::render_torus()
+    {
+        render_setup(0, 1);
+    }
+    void GLWidget::render_ellipse()
+    {
+        render_setup(0, 2);
+    }
+    void GLWidget::render_hypo()
+    {
+        render_setup(0, 3);
+    }
+    void GLWidget::render_lissajou()
+    {
+        render_setup(0, 4);
+    }
+
+    // surfaces
+    void GLWidget::render_sphere()
+    {
+        render_setup(2, 0);
+    }
+    void GLWidget::render_chelicoid()
+    {
+        render_setup(2, 1);
+    }
+    void GLWidget::render_hyperboloid()
+    {
+        render_setup(2, 2);
+    }
+    void GLWidget::render_kleinbottle()
+    {
+        render_setup(2, 3);
+    }
+    void GLWidget::render_dupincycle()
+    {
+        render_setup(2, 4);
+    }
+
+    // render setup
+    void GLWidget::render_setup(GLuint render_function, GLuint render_index)
+    {
+        _render_function = render_function;
+        _render_index    = render_index;
+    }
+
     void GLWidget::_animate()
     {
         // For model animation

@@ -25,6 +25,8 @@ namespace cagd
         Q_OBJECT
 
     private:
+        GLuint      _render_function;
+        GLuint      _render_index;
 
         // variables defining the projection matrix
         double       _aspect;            // aspect ratio of the rendering window
@@ -115,6 +117,27 @@ namespace cagd
         void set_trans_x(double value);
         void set_trans_y(double value);
         void set_trans_z(double value);
+
+        // models
+        void render_elephant();
+        void render_mouse();
+        void render_model_sphere();
+
+        // curves
+        void render_spiral_on_cone();
+        void render_torus();
+        void render_ellipse();
+        void render_hypo();
+        void render_lissajou();
+
+        // surfaces
+        void render_sphere();
+        void render_chelicoid();
+        void render_hyperboloid();
+        void render_kleinbottle();
+        void render_dupincycle();
+
+        void render_setup(GLuint render_function, GLuint render_index);
 
     private slots:
         void _animate();
