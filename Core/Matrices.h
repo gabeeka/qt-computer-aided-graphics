@@ -255,11 +255,10 @@ namespace cagd
     template <typename T>
     inline GLboolean Matrix<T>::SetRow(GLuint index, const RowMatrix<T>& row)
     {
-        if (index >= _row_count || _column_count != row._column_count)
-        {
+        if(_column_count != row._column_count || index >= _row_count)
             return GL_FALSE;
-        }
-        _data[index][0] = row._data[0];
+        _data[index] = row._data[0];
+
         return GL_TRUE;
     }
 

@@ -46,23 +46,6 @@ namespace cagd
         // Mouse
         TriangulatedMesh3           _mouse;
 
-
-        void initBoxOfTriangles();
-        void paintBoxOfTriangles();
-
-        void initSpiralOnCone(GLuint order);
-        void paintSpiralOnCone(GLuint order);
-
-        void initTorusKnot(GLuint order);
-        void paintTorusKnot(GLuint order);
-
-        void initLissajous(GLuint order);
-        void paintLissajous(GLuint order);
-
-        void initRose(GLuint order);
-        void paintRose(GLuint order);
-
-
     public:
         // special and default constructor
         // the format specifies the properties of the rendering window

@@ -76,7 +76,10 @@ HEADERS += \
     Core/Materials.h \
     Core/TCoordinates4.h \
     Core/TriangularFaces.h \
-    Core/TriangulatedMeshes3.h
+    Core/TriangulatedMeshes3.h \
+    Cyclic/CyclicCurves3.h \
+    Core/LinearCombination3.h \
+    Core/TensorProductSurfaces3.h
 
 SOURCES += \
     GUI/GLWidget.cpp \
@@ -90,5 +93,8 @@ SOURCES += \
     Parametric/ParametricSurfaces3.cpp \
     Core/Lights.cpp \
     Core/Materials.cpp \
-    Core/TriangulatedMeshes3.cpp
+    Core/TriangulatedMeshes3.cpp \
+    Cyclic/CyclicCurves3.cpp \
+    Core/LinearCombination3.cpp \
+    Core/TensorProductSurfaces3.cpp
 

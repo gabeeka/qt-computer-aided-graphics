@@ -194,18 +194,44 @@ GLboolean LinearCombination3::UpdateDataForInterpolation(const ColumnMatrix<GLdo
 // set/get definition domain
 GLvoid LinearCombination3::SetDefinitionDomain(GLdouble u_min, GLdouble u_max)
 {
-    // homework
+    _u_min = u_min;
+    _u_max = u_max;
 }
 
 GLvoid LinearCombination3::GetDefinitionDomain(GLdouble& u_min, GLdouble& u_max) const
 {
-    // homework
+    u_min = _u_min;
+    u_max = _u_max;
 }
 
 // generate image/arc
 GenericCurve3* LinearCombination3::GenerateImage(GLuint max_order_of_derivatives, GLuint div_point_count, GLenum usage_flag) const
 {
-    // homework
+    GenericCurve3* result = 0;
+    result = new GenericCurve3(max_order_of_derivatives, div_point_count, usage_flag);
+    if (!result)
+        return 0;
+
+
+    Derivatives d;
+    // set derivatives at the endpoints of the parametric curve
+    CalculateDerivatives(max_order_of_derivatives, _u_min, d);
+    (*result)._derivative.SetColumn(0, d);
+
+    CalculateDerivatives(max_order_of_derivatives, _u_max, d);
+    (*result)._derivative.SetColumn(div_point_count - 1, d);
+
+
+    // calculate derivatives at inner curve points
+    GLdouble u_step = (_u_max - _u_min) / (div_point_count - 1);
+    GLdouble u = _u_min - u_step;
+    for (GLuint i = 1; i < div_point_count - 1; ++i)
+    {
+        u += u_step;
+        CalculateDerivatives(max_order_of_derivatives, u, d);
+        (*result)._derivative.SetColumn(i, d);
+    }
+    return result;
 }
 
 // destructor
