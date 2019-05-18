@@ -1,12 +1,4 @@
 #include "GLWidget.h"
-#include "../Core/Materials.h"
-#include "../Core/Constants.h"
-#include "../Core/TriangulatedMeshes3.h"
-#include "../Parametric/ParametricCurves3.h"
-#include "../Parametric/ParametricSurfaces3.h"
-#include "../Core/Lights.h"
-#include "../Cyclic/CyclicCurves3.h"
-#include "../Core/ShaderPrograms.h"
 
 #if !defined(__APPLE__)
 #include <GL/glu.h>
@@ -42,13 +34,13 @@ namespace cagd
             glDeleteLists(_dl, 1);
         }
 
-        if (_pc)
+        for(GLuint i = 0; i < 5; ++i)
         {
-            delete _pc, _pc = nullptr;
-        }
-        if (_image_of_pc)
-        {
-            delete _image_of_pc, _image_of_pc = nullptr;
+            if (_pc_vec[i])
+                delete _pc_vec[i], _pc_vec[i] = 0;
+
+            if (_image_of_pc_vec[i])
+                delete _image_of_pc_vec[i], _image_of_pc_vec[i] = 0;
         }
     }
 
@@ -117,15 +109,19 @@ namespace cagd
 
             // create and store your geometry in display lists or vertex buffer objects
             // ...
+            initOffModel("Models/mouse.off");
+            initParametricCurves(5);
+            initParametricSurfaces(5);
 
-            if (_mouse.LoadFromOFF("Models/mouse.off", true))
-            {
-                if (_mouse.UpdateVertexBufferObjects(GL_DYNAMIC_DRAW))
-                {
-                    _angle = 0.0;
-                    _timer->start();
-                }
-            }
+
+
+
+
+            HCoordinate3 direction(0.0, 0.0, 1.0, 0.0);
+            Color4 ambient(0.4, 0.4, 0.4, 1.0);
+            Color4 diffuse(0.8, 0.8, 0.8, 1.0);
+            Color4 specular(1.0, 1.0, 1.0, 1.0);
+            _directionalLight = new DirectionalLight(GL_LIGHT0,direction,ambient,diffuse,specular);
         }
 
         catch (Exception &e)
@@ -153,16 +149,10 @@ namespace cagd
             glScaled(_zoom, _zoom, _zoom);
 
             // render your geometry (this is oldest OpenGL rendering technique, later we will use some advanced methods)
-            //glPushMatrix();
 
-            MatFBRuby.Apply();
-            glEnable(GL_LIGHTING);
-            glEnable(GL_LIGHT0);
-            glEnable(GL_NORMALIZE);
-            _mouse.Render();
-            glDisable(GL_LIGHTING);
-            glDisable(GL_LIGHT0);
-            glDisable(GL_NORMALIZE);
+            // renderOffModel();
+            // renderParametricCurve(4);
+            renderParametricSurface(4);
 
         // pops the current matrix stack, replacing the current matrix with the one below it on the stack,
         // i.e., the original model view matrix is restored
@@ -195,6 +185,222 @@ namespace cagd
     //----------------------------------------------------
     // implementation of the private methods for homeworks
     //----------------------------------------------------
+    void GLWidget::initParametricCurves(GLuint curve_count)
+    {
+        _pc_vec.resize(curve_count);
+        _image_of_pc_vec.resize(curve_count);
+
+        initSpiralOnCone(200, GL_STATIC_DRAW);
+        initTorus(200, GL_STATIC_DRAW);
+        initElliplse(200, GL_STATIC_DRAW);
+        initHypo(200, GL_STATIC_DRAW);
+        initLissajou(200, GL_STATIC_DRAW);
+
+        for(GLuint i = 0; i < _image_of_pc_vec.size(); ++i)
+        {
+            if(_image_of_pc_vec[i])
+            {
+                _image_of_pc_vec[i]->UpdateVertexBufferObjects();
+            }
+        }
+    }
+
+    void GLWidget::initSpiralOnCone(GLuint div_point_count, GLenum usage_flag)
+    {
+        RowMatrix<ParametricCurve3::Derivative> derivative(3);
+        derivative(0) = spiral_on_cone::d0;
+        derivative(1) = spiral_on_cone::d1;
+        derivative(2) = spiral_on_cone::d2;
+        _pc_vec[0] = 0;
+        _pc_vec[0] = new ParametricCurve3(derivative, spiral_on_cone::u_min, spiral_on_cone::u_max);
+        _image_of_pc_vec[0] = 0;
+        _image_of_pc_vec[0] = _pc_vec[0]->GenerateImage(div_point_count,usage_flag);
+    }
+
+    void GLWidget::initTorus(GLuint div_point_count, GLenum usage_flag)
+    {
+        RowMatrix<ParametricCurve3::Derivative> derivative(2);
+        derivative(0) = torus::d0;
+        derivative(1) = torus::d1;
+        _pc_vec[1] = 0;
+        _pc_vec[1] = new ParametricCurve3(derivative, torus::u_min, torus::u_max);
+        _image_of_pc_vec[1] = 0;
+        _image_of_pc_vec[1] = _pc_vec[1]->GenerateImage(div_point_count,usage_flag);
+    }
+
+    void GLWidget::initElliplse(GLuint div_point_count, GLenum usage_flag)
+    {
+        RowMatrix<ParametricCurve3::Derivative> derivative(1);
+        derivative(0) = ellipse::d0;
+        _pc_vec[2] = 0;
+        _pc_vec[2] = new ParametricCurve3(derivative, ellipse::u_min, ellipse::u_max);
+        _image_of_pc_vec[2] = 0;
+        _image_of_pc_vec[2] = _pc_vec[2]->GenerateImage(div_point_count,usage_flag);
+    }
+
+    void GLWidget::initHypo(GLuint div_point_count, GLenum usage_flag)
+    {
+        RowMatrix<ParametricCurve3::Derivative> derivative(3);
+        derivative(0) = hypo::d0;
+        derivative(1) = hypo::d1;
+        derivative(2) = hypo::d2;
+        _pc_vec[3] = 0;
+        _pc_vec[3] = new ParametricCurve3(derivative, hypo::u_min, hypo::u_max);
+        _image_of_pc_vec[3] = 0;
+        _image_of_pc_vec[3] = _pc_vec[3]->GenerateImage(div_point_count,usage_flag);
+    }
+
+    void GLWidget::initLissajou(GLuint div_point_count, GLenum usage_flag)
+    {
+        RowMatrix<ParametricCurve3::Derivative> derivative(3);
+        derivative(0) = lissajou::d0;
+        derivative(1) = lissajou::d1;
+        derivative(2) = lissajou::d2;
+        _pc_vec[4] = 0;
+        _pc_vec[4] = new ParametricCurve3(derivative, lissajou::u_min, lissajou::u_max);
+        _image_of_pc_vec[4] = 0;
+        _image_of_pc_vec[4] = _pc_vec[4]->GenerateImage(div_point_count,usage_flag);
+    }
+
+    void GLWidget::renderParametricCurve(GLuint curve_index)
+    {
+        glPointSize(5.0);
+        glColor3f(1.0, 0.0, 0.0);
+        _image_of_pc_vec[curve_index]->RenderDerivatives(0, GL_LINE_STRIP);
+
+        glPointSize(5.0);
+
+        glColor3f(0.0, 0.5, 0.0);
+        _image_of_pc_vec[curve_index]->RenderDerivatives(1, GL_LINES);
+        _image_of_pc_vec[curve_index]->RenderDerivatives(1, GL_POINTS);
+
+        glColor3f(0.1, 0.5, 0.9);
+        _image_of_pc_vec[curve_index]->RenderDerivatives(2, GL_LINES);
+        _image_of_pc_vec[curve_index]->RenderDerivatives(2, GL_POINTS);
+
+        glPointSize(1.0);
+    }
+
+    // OFF models
+    void GLWidget::initOffModel(const char* file_name)
+    {
+        if (_mouse.LoadFromOFF(file_name, true))
+        {
+            if (_mouse.UpdateVertexBufferObjects(GL_DYNAMIC_DRAW))
+            {
+                _angle = 0.0;
+                _timer->start();
+            }
+        }
+    }
+
+    void GLWidget::renderOffModel()
+    {
+        MatFBRuby.Apply();
+        glEnable(GL_LIGHTING);
+        glEnable(GL_LIGHT0);
+        glEnable(GL_NORMALIZE);
+        _mouse.Render();
+        glDisable(GL_LIGHTING);
+        glDisable(GL_LIGHT0);
+        glDisable(GL_NORMALIZE);
+    }
+
+
+    // Parametric surfaces
+    void GLWidget::initParametricSurfaces(GLuint surface_count)
+    {
+        _ps_vec.resize(surface_count);
+        _image_of_ps_vec.resize(surface_count);
+
+        initSphere(200, 200, GL_STATIC_DRAW);
+        initChelicoid(200, 200, GL_STATIC_DRAW);
+        initHyperboloid(200, 200, GL_STATIC_DRAW);
+        initKleinbottle(200, 200, GL_STATIC_DRAW);
+        initDupincyclide(200, 200, GL_STATIC_DRAW);
+
+        for(GLuint i=0; i<_image_of_ps_vec.size();i++)
+        {
+            if(_image_of_ps_vec[i])
+            {
+                _image_of_ps_vec[i]->UpdateVertexBufferObjects();
+            }
+        }
+    }
+
+    void GLWidget::initSphere(GLuint u_div_point_count, GLuint v_div_point_count, GLenum usage_flag)
+    {
+        TriangularMatrix<ParametricSurface3::PartialDerivative> derivative(3);
+        derivative(0,0)=sphere::d00;
+        derivative(1,0)=sphere::d10;
+        derivative(1,1)=sphere::d01;
+        _ps_vec[0] = new ParametricSurface3(derivative,sphere::u_min,sphere::u_max,sphere::v_min,sphere::v_max);
+        _image_of_ps_vec[0] = nullptr;
+        _image_of_ps_vec[0] = _ps_vec[0]->GenerateImage(u_div_point_count,v_div_point_count,usage_flag);
+    }
+
+    void GLWidget::initChelicoid(GLuint u_div_point_count, GLuint v_div_point_count, GLenum usage_flag)
+    {
+        TriangularMatrix<ParametricSurface3::PartialDerivative> derivative(3);
+        derivative(0,0)=chelicoid::d00;
+        derivative(1,0)=chelicoid::d10;
+        derivative(1,1)=chelicoid::d01;
+        _ps_vec[1] = new ParametricSurface3(derivative,chelicoid::u_min,chelicoid::u_max,chelicoid::v_min,chelicoid::v_max);
+        _image_of_ps_vec[1] = nullptr;
+        _image_of_ps_vec[1] = _ps_vec[1]->GenerateImage(u_div_point_count,v_div_point_count,usage_flag);
+    }
+
+    void GLWidget::initHyperboloid(GLuint u_div_point_count, GLuint v_div_point_count, GLenum usage_flag)
+    {
+        TriangularMatrix<ParametricSurface3::PartialDerivative> derivative(3);
+        derivative(0,0)=hyperboloid::d00;
+        derivative(1,0)=hyperboloid::d10;
+        derivative(1,1)=hyperboloid::d01;
+        _ps_vec[2] = new ParametricSurface3(derivative,hyperboloid::u_min,hyperboloid::u_max,hyperboloid::v_min,hyperboloid::v_max);
+        _image_of_ps_vec[2] = nullptr;
+        _image_of_ps_vec[2] = _ps_vec[2]->GenerateImage(u_div_point_count,v_div_point_count,usage_flag);
+    }
+
+    void GLWidget::initKleinbottle(GLuint u_div_point_count, GLuint v_div_point_count, GLenum usage_flag)
+    {
+        TriangularMatrix<ParametricSurface3::PartialDerivative> derivative(3);
+        derivative(0,0)=kleinbottle::d00;
+        derivative(1,0)=kleinbottle::d10;
+        derivative(1,1)=kleinbottle::d01;
+        _ps_vec[3] = new ParametricSurface3(derivative,kleinbottle::u_min,kleinbottle::u_max,kleinbottle::v_min,kleinbottle::v_max);
+        _image_of_ps_vec[3] = nullptr;
+        _image_of_ps_vec[3] = _ps_vec[3]->GenerateImage(u_div_point_count,v_div_point_count,usage_flag);
+    }
+
+    void GLWidget::initDupincyclide(GLuint u_div_point_count, GLuint v_div_point_count, GLenum usage_flag)
+    {
+        TriangularMatrix<ParametricSurface3::PartialDerivative> derivative(3);
+        derivative(0,0)=dupincyclide::d00;
+        derivative(1,0)=dupincyclide::d10;
+        derivative(1,1)=dupincyclide::d01;
+        _ps_vec[4] = new ParametricSurface3(derivative,dupincyclide::u_min,dupincyclide::u_max,dupincyclide::v_min,dupincyclide::v_max);
+        _image_of_ps_vec[4] = nullptr;
+        _image_of_ps_vec[4] = _ps_vec[4]->GenerateImage(u_div_point_count,v_div_point_count,usage_flag);
+    }
+
+    void GLWidget::renderParametricSurface(GLuint surface_index)
+    {
+        glEnable(GL_LIGHTING);
+        glEnable(GL_NORMALIZE);
+
+        if(_directionalLight)
+        {
+            _directionalLight->Enable();
+            MatFBTurquoise.Apply();
+            if(_image_of_ps_vec[surface_index])
+            {
+                _image_of_ps_vec[surface_index]->Render();
+            }
+            _directionalLight->Disable();
+        }
+        glDisable(GL_LIGHTING);
+        glDisable(GL_NORMALIZE);
+    }
 
 
 
