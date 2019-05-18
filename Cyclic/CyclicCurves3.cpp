@@ -26,32 +26,28 @@ namespace cagd
         return c;
     }
 
-    GLvoid CyclicCurve3::_CalculateBinomialCoefficients(GLuint m, RealSquareMatrix &bc)
+    GLvoid CyclicCurve3::_CalculateBinomialCoefficients(GLuint m, TriangularMatrix<GLdouble>& bc)
     {
-        bc.ResizeRows(m+1);
-
-        bc(0,0)=1.0;
-
-        for(GLuint r=1;r<=m;++r)
+        bc.ResizeRows (m + 1);
+        bc (0, 0) = 1.0;
+        for (GLuint r = 1; r <= m; ++r)
         {
-            bc(r,0)=1.0;
-            bc(r,r)=1.0;
-
-            for(GLuint i=1;i<=r/2;++i)
+            bc (r, 0) = 1.0;
+            bc (r, r) = 1.0;
+            for (GLuint i = 1; i <= r / 2; ++i)
             {
-                bc(r,i) = bc(r-1,i-1) + bc(r-1,i);
-                bc(r,r-i) = bc(r,i);
+                bc (r, i) = bc (r - 1, i - 1) + bc (r - 1, i);
+                bc (r, r - i) = bc (r, i);
             }
         }
     }
 
-    CyclicCurve3::CyclicCurve3(GLuint n, GLenum data_usage_flag):
-        LinearCombination3(0.0,TWO_PI,2*n+1,data_usage_flag),
-        _n(n),
-        _c_n(_CalculateNormalizingCoefficient(n)),
-        _lambda_n(TWO_PI / (2*n+1))
+    CyclicCurve3::CyclicCurve3(GLuint n, GLenum data_usage_flag)
+        : LinearCombination3 (0.0, TWO_PI, 2 * n + 1, data_usage_flag), _n (n)
+        , _c_n (_CalculateNormalizingCoefficient (n))
+        , _lambda_n (TWO_PI / (2 * n + 1))
     {
-        _CalculateBinomialCoefficients(2*_n,_bc);
+        _CalculateBinomialCoefficients(2 * _n, _bc);
     }
 
 
@@ -69,8 +65,7 @@ namespace cagd
 
 
 
-    GLboolean CyclicCurve3::CalculateDerivatives(
-            GLuint max_order_of_derivatives, GLdouble u, Derivatives &d) const
+    GLboolean CyclicCurve3::CalculateDerivatives(GLuint max_order_of_derivatives, GLdouble u, Derivatives &d) const
     {
         d.ResizeRows(max_order_of_derivatives + 1);
         d.LoadNullVectors();

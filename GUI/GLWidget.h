@@ -46,24 +46,38 @@ namespace cagd
         std::vector<DCoordinate3>   _cloud;
         GLuint                      _dl;
 
-        // Cyclic curves
-        CyclicCurve3*               _cyclic_curve;
-        GenericCurve3*              _image_of_cc;
 
         // Prametric curves
         std::vector<ParametricCurve3*>          _pc_vec;
         std::vector<GenericCurve3*>             _image_of_pc_vec;
+
 
         // Models - off files
         QTimer*                                 _timer;
         GLdouble                                _angle;
         std::vector<TriangulatedMesh3>          _off_models;
 
+
         // Parametric surfaces
         std::vector<cagd::ParametricSurface3*>  _ps_vec;
         std::vector<cagd::TriangulatedMesh3*>   _image_of_ps_vec;
 
-        //Lighting
+
+        // Cyclic curves
+        CyclicCurve3*               _cyclic_curve;
+        GenericCurve3*              _image_of_cc;
+        CyclicCurve3*               _cyclic_curve_interpolation;
+        GenericCurve3*              _image_of_cc_interpolation;
+        GLuint                      _order;
+        bool                        _show_fod, _show_sod, _show_fod_cc, _show_sod_cc;
+        bool                        _show_control_polygon_cc, _show_interpolating_cc;
+        ColumnMatrix<GLdouble>      _knot_vector;
+        ColumnMatrix<DCoordinate3>  _data_points_to_interpolate;
+        GLuint                      _div;
+        GLuint                      _max_order;
+
+
+        // Lighting
         DirectionalLight*                       _directionalLight;
 
 
@@ -93,6 +107,10 @@ namespace cagd
         void initDupincyclide(GLuint u_div_point_count, GLuint v_div_point_count, GLenum usage_flag);
         void renderParametricSurface();
 
+
+        // Cyclic curves
+        void initCyclicCurves();
+        void renderCyclicCurves();
 
     public:
         // special and default constructor

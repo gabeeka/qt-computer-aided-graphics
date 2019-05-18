@@ -225,29 +225,25 @@ namespace cagd
     template <typename T>
     inline GLboolean Matrix<T>::ResizeRows(GLuint row_count)
     {
-        if (row_count > _row_count)
+        _data.resize(row_count);
+        for (GLuint i = 0; i < row_count; i++)
         {
-            return GL_FALSE;
+            _data[i].resize(_column_count);
         }
-        else
-        {
-            _row_count = row_count;
-            return GL_TRUE;
-        }
+        _row_count = row_count;
+        return GL_TRUE;
     }
 
     template <typename T>
     inline GLboolean Matrix<T>::ResizeColumns(GLuint column_count)
     {
-        if (column_count > _column_count)
+        _column_count = column_count;
+
+        for (GLuint i = 0; i < _row_count; i++)
         {
-            return GL_FALSE;
+            _data.at(i).resize(_column_count);
         }
-        else
-        {
-            _column_count = column_count;
-            return GL_TRUE;
-        }
+        return GL_TRUE;
     }
 
     // Update rows and columns
@@ -255,8 +251,11 @@ namespace cagd
     template <typename T>
     inline GLboolean Matrix<T>::SetRow(GLuint index, const RowMatrix<T>& row)
     {
-        if(_column_count != row._column_count || index >= _row_count)
+        if (index >= _row_count || _column_count != row._column_count)
+        {
             return GL_FALSE;
+        }
+
         _data[index] = row._data[0];
 
         return GL_TRUE;
@@ -270,9 +269,9 @@ namespace cagd
             return GL_FALSE;
         }
 
-        for (GLuint r=0; r<_row_count; r++)
+        for (GLuint i = 0; i < _row_count; i++)
         {
-            _data[r][index];
+            _data[i][index] = column[i];
         }
 
         return GL_TRUE;
@@ -333,7 +332,6 @@ namespace cagd
         }
         else
         {
-            this->_row_count = row_count;
             return GL_TRUE;
         }
     }
@@ -378,14 +376,13 @@ namespace cagd
     template <typename T>
     inline GLboolean ColumnMatrix<T>::ResizeColumns(GLuint column_count)
     {
-        if (column_count > 1)
+        if(column_count > 1)
         {
             return GL_FALSE;
         }
         else
         {
-            this->_column_count = column_count;
-            return GL_FALSE;
+            return GL_TRUE;
         }
     }
 
@@ -434,15 +431,13 @@ namespace cagd
     template <typename T>
     inline GLboolean TriangularMatrix<T>::ResizeRows(GLuint row_count)
     {
-        if (row_count > _row_count)
+        _data.resize(row_count);
+        for (GLuint i = 0; i < row_count; i++)
         {
-            return GL_FALSE;
+            _data[i].resize(i + 1);
         }
-        else
-        {
-            _row_count = row_count;
-            return GL_TRUE;
-        }
+        _row_count = row_count;
+        return GL_TRUE;
     }
 
     //------------------------------------------------------------------------------

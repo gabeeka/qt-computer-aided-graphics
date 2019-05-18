@@ -112,7 +112,7 @@ namespace cagd
             initOffModel();
             initParametricCurves(5);
             initParametricSurfaces(5);
-
+            initCyclicCurves();
 
 
             HCoordinate3 direction(0.0, 0.0, 1.0, 0.0);
@@ -421,6 +421,165 @@ namespace cagd
         }
         glDisable(GL_LIGHTING);
         glDisable(GL_NORMALIZE);
+    }
+
+
+    // Cyclic curve
+    void GLWidget::initCyclicCurves()
+    {
+        _cyclic_curve = nullptr;
+        _cyclic_curve_interpolation = nullptr;
+        _order = 4;
+        _cyclic_curve= new CyclicCurve3(_order);
+        _cyclic_curve_interpolation = new CyclicCurve3(_order);
+        _show_fod_cc = true;
+        _show_sod_cc = true;
+        _show_control_polygon_cc = true;
+        _show_interpolating_cc = true;
+
+        _knot_vector.ResizeRows(2 * _order + 1);
+        _data_points_to_interpolate.ResizeRows(2 * _order + 1);
+
+
+        if(!_cyclic_curve)
+        {
+            throw Exception("Could not create the cyclic curve!");
+        }
+        if(!_cyclic_curve_interpolation)
+        {
+            throw Exception("Could not create the interpolation for the cyclic curve!");
+        }
+
+        GLdouble step = TWO_PI/(2 * _order + 1);
+        for(GLuint i = 0; i <= 2 * _order; i++)
+        {
+            GLdouble u = i * step;
+            _knot_vector[i] = u;
+            DCoordinate3 &cp = (*_cyclic_curve)[i];
+            cp[0] = cos(u);
+            cp[1] = sin(u);
+            cp[2] = -2.0 + 4.0 * (GLdouble)rand() / (GLdouble)RAND_MAX;
+            _data_points_to_interpolate[i] = cp;
+        }
+
+        _div = 100;
+        _max_order = 5;
+        _image_of_cc = _cyclic_curve->GenerateImage(_max_order, _div);
+
+        if (!_image_of_cc)
+        {
+            if (_cyclic_curve)
+            {
+                delete _cyclic_curve, _cyclic_curve = nullptr;
+            }
+            throw Exception("Could not generate the image of the cyclic curve!");
+        }
+
+        if (!_cyclic_curve->UpdateVertexBufferObjectsOfData())
+        {
+            if (_cyclic_curve)
+            {
+                delete _cyclic_curve, _cyclic_curve = nullptr;
+            }
+            throw Exception("Could not update the VBOs of the cyclic curve's control polygon!");
+        }
+
+        if (!_image_of_cc->UpdateVertexBufferObjects())
+        {
+            if (_cyclic_curve)
+            {
+                delete _cyclic_curve, _cyclic_curve = nullptr;
+            }
+            throw Exception("Could not update the VBOs of the cyclic curve's image!");
+        }
+
+        // init interpolations
+        if (!_cyclic_curve_interpolation->UpdateDataForInterpolation(_knot_vector, _data_points_to_interpolate))
+        {
+            if (_cyclic_curve_interpolation)
+            {
+                delete _cyclic_curve_interpolation, _cyclic_curve_interpolation = nullptr;
+            }
+            throw Exception("Could not update the VBOs of the cyclic curve's interpolation!");
+        }
+
+        if (!_cyclic_curve_interpolation->UpdateVertexBufferObjectsOfData())
+        {
+            if (_cyclic_curve_interpolation)
+            {
+                delete _cyclic_curve_interpolation, _cyclic_curve_interpolation = nullptr;
+            }
+            throw Exception("Could not update the VBOs of the cyclic curve's control polygon!-interpolation");
+        }
+
+        _div = 100;
+        _max_order = 3;
+        _image_of_cc_interpolation = _cyclic_curve_interpolation->GenerateImage(_max_order, _div);
+
+        if (!_image_of_cc_interpolation)
+        {
+            if (_image_of_cc_interpolation)
+            {
+                delete _image_of_cc_interpolation, _image_of_cc_interpolation = nullptr;
+            }
+            throw Exception("Could not generate the image of the cyclic curve!-interpolation");
+        }
+
+        if (!_image_of_cc_interpolation ->UpdateVertexBufferObjects())
+        {
+            if(_cyclic_curve_interpolation)
+            {
+                delete _cyclic_curve_interpolation, _cyclic_curve_interpolation = nullptr;
+            }
+            throw Exception("Could not update the VBOs of the cyclic curve's image!-inetpolataion");
+        }
+    }
+
+
+    void GLWidget::renderCyclicCurves()
+    {
+        if (_cyclic_curve)
+        {
+            if (_show_control_polygon_cc)
+            {
+                glColor3f(1.0f, 0.7f, 0.4f);
+                _cyclic_curve->RenderData(GL_LINE_LOOP);
+                _cyclic_curve->RenderData(GL_POINTS);
+            }
+        }
+
+        if (_image_of_cc_interpolation)
+        {
+            if(_show_interpolating_cc)
+            {
+                glColor3f(0.5f, 1.0f, 1.0f);
+                _image_of_cc_interpolation->RenderDerivatives(0, GL_LINE_LOOP);
+            }
+        }
+
+        if(_image_of_cc)
+        {
+            glColor3f(1.0f, 0.0f, 0.0f);
+            _image_of_cc->RenderDerivatives(0, GL_LINE_LOOP);
+
+            glPointSize(5.0);
+
+            if(_show_fod_cc)
+            {
+                glColor3f(0.0f, 0.5f, 0.0f);
+                _image_of_cc->RenderDerivatives(1, GL_LINES);
+                _image_of_cc->RenderDerivatives(1, GL_POINTS);
+            }
+
+            if(_show_sod_cc)
+            {
+                glColor3f(0.1f, 0.5f, 0.9f);
+                _image_of_cc->RenderDerivatives(2, GL_LINES);
+                _image_of_cc->RenderDerivatives(2, GL_POINTS);
+            }
+
+        glPointSize(1.0);
+        }
     }
 
 

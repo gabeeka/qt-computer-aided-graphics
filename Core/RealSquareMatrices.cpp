@@ -6,6 +6,18 @@ using namespace std;
 namespace cagd
 {
 
+RealSquareMatrix::~RealSquareMatrix()
+{
+    for (unsigned i = 0; i < _row_count; i++)
+    {
+        _data[i].clear();
+    }
+
+    _row_count = _column_count = 0;
+
+    _data.clear();
+}
+
 RealSquareMatrix::RealSquareMatrix(GLuint size)
     : Matrix<GLdouble>(size, size)
     , _lu_decomposition_is_done(GL_FALSE)
@@ -32,14 +44,32 @@ RealSquareMatrix& RealSquareMatrix::operator =(const RealSquareMatrix& rhs)
 
 GLboolean RealSquareMatrix::ResizeRows(GLuint row_count)
 {
-    return Matrix<GLdouble>::ResizeRows(row_count) &&
-            Matrix<GLdouble>::ResizeColumns(row_count);
+//    return Matrix<GLdouble>::ResizeRows(row_count) &&
+//            Matrix<GLdouble>::ResizeColumns(row_count);
+    _row_count = row_count;
+    _column_count = row_count;
+    _data.resize(_row_count);
+    for (unsigned i = 0; i < _row_count; i++)
+    {
+        _data[i].resize(_column_count);
+    }
+
+    return GL_TRUE;
 }
 
-GLboolean RealSquareMatrix::ResizeColumns(GLuint row_count)
+GLboolean RealSquareMatrix::ResizeColumns(GLuint column_count)
 {
-    return Matrix<GLdouble>::ResizeRows(row_count) &&
-            Matrix<GLdouble>::ResizeColumns(row_count);
+//    return Matrix<GLdouble>::ResizeRows(row_count) &&
+//            Matrix<GLdouble>::ResizeColumns(row_count);
+    _row_count = column_count;
+    _column_count = column_count;
+    _data.resize(_row_count);
+    for (unsigned i = 0; i < _row_count; i++)
+    {
+        _data[i].resize(_column_count);
+    }
+
+    return GL_TRUE;
 }
 
 GLboolean RealSquareMatrix::PerformLUDecomposition()

@@ -15,9 +15,7 @@ namespace cagd
 
     public:
         // destructor
-        ~RealSquareMatrix()
-        {
-        }
+        ~RealSquareMatrix();
 
         // special/default constructor
         RealSquareMatrix(GLuint size = 1);
