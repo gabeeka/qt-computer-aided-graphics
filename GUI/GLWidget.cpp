@@ -1,6 +1,12 @@
 #include "GLWidget.h"
 #include "../Core/Materials.h"
 #include "../Core/Constants.h"
+#include "../Core/TriangulatedMeshes3.h"
+#include "../Parametric/ParametricCurves3.h"
+#include "../Parametric/ParametricSurfaces3.h"
+#include "../Core/Lights.h"
+#include "../Cyclic/CyclicCurves3.h"
+#include "../Core/ShaderPrograms.h"
 
 #if !defined(__APPLE__)
 #include <GL/glu.h>

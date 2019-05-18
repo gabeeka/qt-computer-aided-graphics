@@ -219,13 +219,13 @@ namespace cagd
     }
 
     // multiplicate with scalar from right
-    const HCoordinate3 HCoordinate3::operator *(GLfloat rhs) const
+    inline const HCoordinate3 HCoordinate3::operator *(GLfloat rhs) const
     {
         return HCoordinate3(x() * rhs, y() * rhs, z() * rhs, w() * rhs);
     }
 
     // multiplicate this with a scalar
-    HCoordinate3& HCoordinate3::operator *=(GLfloat rhs)
+    inline HCoordinate3& HCoordinate3::operator *=(GLfloat rhs)
     {
         _data[0] = x() * rhs;
         _data[1] = z() * rhs;
@@ -235,13 +235,13 @@ namespace cagd
     }
 
     // homework: divide with scalar
-    const HCoordinate3 HCoordinate3::operator /(GLfloat rhs) const
+    inline const HCoordinate3 HCoordinate3::operator /(GLfloat rhs) const
     {
         return HCoordinate3(x() / rhs, y() / rhs, z() / rhs, w() / rhs);
     }
 
     // homework: divide this with a scalar
-    HCoordinate3& HCoordinate3::operator /=(GLfloat rhs)
+    inline HCoordinate3& HCoordinate3::operator /=(GLfloat rhs)
     {
         _data[0] = x() / rhs;
         _data[1] = z() / rhs;
@@ -251,13 +251,13 @@ namespace cagd
     }
 
     // homework: length of vector represented by this homogeneous coordinate
-    GLfloat HCoordinate3::length() const
+    inline GLfloat HCoordinate3::length() const
     {
         return std::sqrt((*this) * (*this));
     }
 
     // homework: normalize
-    HCoordinate3& HCoordinate3::normalize()
+    inline HCoordinate3& HCoordinate3::normalize()
     {
         GLfloat l = length();
 
