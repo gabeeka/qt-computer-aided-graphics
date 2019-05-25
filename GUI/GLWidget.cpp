@@ -5,6 +5,7 @@
 #endif
 
 #include <iostream>
+#include <string>
 using namespace std;
 
 #include <Core/Exceptions.h>
@@ -158,6 +159,9 @@ namespace cagd
                 case 2:
                     renderParametricSurface();
                 break;
+                case 3:
+                    renderCyclicCurves();
+                break;
             }
 
         // pops the current matrix stack, replacing the current matrix with the one below it on the stack,
@@ -293,25 +297,26 @@ namespace cagd
         _off_models.resize(3);
         if (_off_models[0].LoadFromOFF("Models/elephant.off", true))
         {
-            if (_off_models[0].UpdateVertexBufferObjects(GL_DYNAMIC_DRAW))
+            if (!_off_models[0].UpdateVertexBufferObjects(GL_DYNAMIC_DRAW))
             {
-                _angle = 0.0;
+                throw std::runtime_error("Error while loading off model");
             }
         }
         if (_off_models[1].LoadFromOFF("Models/mouse.off", true))
         {
-            if (_off_models[1].UpdateVertexBufferObjects(GL_DYNAMIC_DRAW))
+            if (!_off_models[1].UpdateVertexBufferObjects(GL_DYNAMIC_DRAW))
             {
-                _angle = 0.0;
+                throw std::runtime_error("Error while loading off model");
             }
         }
         if (_off_models[2].LoadFromOFF("Models/sphere.off", true))
         {
-            if (_off_models[2].UpdateVertexBufferObjects(GL_DYNAMIC_DRAW))
+            if (!_off_models[2].UpdateVertexBufferObjects(GL_DYNAMIC_DRAW))
             {
-                _angle = 0.0;
+                throw std::runtime_error("Error while loading off model");
             }
         }
+        _angle = 0.0;
         _timer->start();
     }
 
@@ -708,6 +713,10 @@ namespace cagd
     {
         render_setup(2, 4);
     }
+    void GLWidget::render_cyclic_curve()
+    {
+        render_setup(3, 0);
+    }
 
     // render setup
     void GLWidget::render_setup(GLuint render_function, GLuint render_index)
@@ -715,6 +724,95 @@ namespace cagd
         _render_function = render_function;
         _render_index    = render_index;
         updateGL();
+    }
+
+    // shader setup
+    void GLWidget::installShader()
+    {
+
+        std::string shader_vert;
+        std::string shader_frag;
+
+        switch(_shader_index)
+        {
+        case 0:
+            {
+                shader_vert = "./Shaders/directional_light.vert";
+                shader_frag = "./Shaders/directional_light.frag";
+                break;
+            }
+        case 1:
+            {
+                shader_vert = "./Shaders/reflection_lines.vert";
+                shader_frag = "./Shaders/reflection_lines.frag";
+                break;
+            }
+        case 2:
+            {
+                shader_vert = "./Shaders/toon.vert";
+                shader_frag = "./Shaders/toon.frag";
+                break;
+            }
+        case 3:
+            {
+                shader_vert = "./Shaders/two_sided_lighting.vert";
+                shader_frag = "./Shaders/two_sided_lighting.frag";
+                break;
+            }
+        case 4:
+            {
+                _shader.Disable();
+                return;
+            }
+        }
+
+        try {
+            if(!_shader.InstallShaders(shader_vert, shader_frag, GL_FALSE))
+            {
+                // error
+            }
+            _shader.Enable();
+            // if shader is reflection lines
+            if (shader_vert == "./Shaders/reflection_lines.vert")
+            {
+                _shader.SetUniformVariable1f("scale_factor", 8.0);
+                _shader.SetUniformVariable1f("shading", 0.5);
+                _shader.SetUniformVariable1f("smoothing", 1.0);
+            }
+        } catch (Exception &e) {
+            cerr << e << endl;
+        }
+        updateGL();
+    }
+
+    void GLWidget::initDirectionalLight()
+    {
+        _shader_index = 0;
+        installShader();
+    }
+
+    void GLWidget::initReflectionLines()
+    {
+        _shader_index = 1;
+        installShader();
+    }
+
+    void GLWidget::initToon()
+    {
+        _shader_index = 2;
+        installShader();
+    }
+
+    void GLWidget::initTwoSidedLighting()
+    {
+        _shader_index = 3;
+        installShader();
+    }
+
+    void GLWidget::disableShader()
+    {
+        _shader_index = 4;
+        installShader();
     }
 
     void GLWidget::_animate()

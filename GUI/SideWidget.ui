@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>289</width>
-    <height>644</height>
+    <height>786</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -425,6 +425,110 @@
     </property>
     <property name="text">
      <string>Sphere</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="groupBox_5">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>480</y>
+     <width>120</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Cyclic Curves</string>
+   </property>
+   <widget class="QRadioButton" name="cyclic_curve">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>30</y>
+      <width>107</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Cyclic curve</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="groupBox_6">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>550</y>
+     <width>120</width>
+     <height>181</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Shaders</string>
+   </property>
+   <widget class="QRadioButton" name="dir_light">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>30</y>
+      <width>107</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Dir. light</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="ref_lines">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>60</y>
+      <width>107</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Ref. lines</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="toon">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>90</y>
+      <width>107</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Toon</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="two_s_light">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>120</y>
+      <width>107</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Two s. light</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="none">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>150</y>
+      <width>107</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>None</string>
     </property>
    </widget>
   </widget>

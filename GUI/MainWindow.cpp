@@ -67,6 +67,17 @@ namespace cagd
         connect(_side_widget->hyperboloid, SIGNAL(clicked(bool)), _gl_widget, SLOT(render_hyperboloid()));
         connect(_side_widget->kleinbottle, SIGNAL(clicked(bool)), _gl_widget, SLOT(render_kleinbottle()));
         connect(_side_widget->dupincyclide, SIGNAL(clicked(bool)), _gl_widget, SLOT(render_dupincycle()));
+
+        // cyclice curves
+        connect(_side_widget->cyclic_curve, SIGNAL(clicked(bool)), _gl_widget, SLOT(render_cyclic_curve()));
+
+        // shaders
+        connect(_side_widget->dir_light, SIGNAL(clicked(bool)), _gl_widget, SLOT(initDirectionalLight()));
+        connect(_side_widget->ref_lines, SIGNAL(clicked(bool)), _gl_widget, SLOT(initReflectionLines()));
+        connect(_side_widget->toon, SIGNAL(clicked(bool)), _gl_widget, SLOT(initToon()));
+        connect(_side_widget->two_s_light, SIGNAL(clicked(bool)), _gl_widget, SLOT(initTwoSidedLighting()));
+        connect(_side_widget->none, SIGNAL(clicked(bool)), _gl_widget, SLOT(disableShader()));
+
     }
 
     //--------------------------------

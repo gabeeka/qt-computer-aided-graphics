@@ -112,6 +112,10 @@ namespace cagd
         void initCyclicCurves();
         void renderCyclicCurves();
 
+        // Shaders
+        GLuint          _shader_index{0};
+        ShaderProgram   _shader;
+
     public:
         // special and default constructor
         // the format specifies the properties of the rendering window
@@ -154,6 +158,17 @@ namespace cagd
         void render_hyperboloid();
         void render_kleinbottle();
         void render_dupincycle();
+
+        // cyclic curve
+        void render_cyclic_curve();
+
+        // shaders
+        void initDirectionalLight();
+        void initReflectionLines();
+        void initToon();
+        void initTwoSidedLighting();
+        void installShader();
+        void disableShader();
 
         void render_setup(GLuint render_function, GLuint render_index);
 
