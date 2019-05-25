@@ -4,7 +4,7 @@ using namespace cagd;
 
 
 // special constructor
-cagd::SOQAHArcs3::SOQAHArcs3::SOQAHArcs3(
+SOQAHArcs3::SOQAHArcs3(
         GLdouble u_min,
         GLdouble u_max,
         GLdouble alpha,
@@ -15,12 +15,12 @@ cagd::SOQAHArcs3::SOQAHArcs3::SOQAHArcs3(
 {
 }
 
-GLdouble cagd::SOQAHArcs3::SOQAHArcs3::GetAlpha()
+GLdouble SOQAHArcs3::GetAlpha()
 {
     return _alpha;
 }
 
-void cagd::SOQAHArcs3::SOQAHArcs3::SetAlpha(GLdouble alpha)
+GLboolean SOQAHArcs3::SetAlpha(GLdouble alpha)
 {
     if (alpha <= 0)
     {
