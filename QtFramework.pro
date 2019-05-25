@@ -80,7 +80,8 @@ HEADERS += \
     Cyclic/CyclicCurves3.h \
     Core/LinearCombination3.h \
     Core/TensorProductSurfaces3.h \
-    Core/ShaderPrograms.h
+    Core/ShaderPrograms.h \
+    SOAH/SOQAHArcs3.h
 
 SOURCES += \
     GUI/GLWidget.cpp \
@@ -98,5 +99,6 @@ SOURCES += \
     Cyclic/CyclicCurves3.cpp \
     Core/LinearCombination3.cpp \
     Core/TensorProductSurfaces3.cpp \
-    Core/ShaderPrograms.cpp
+    Core/ShaderPrograms.cpp \
+    SOAH/SOQAHArcs3.cpp
 
