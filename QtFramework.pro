@@ -81,7 +81,7 @@ HEADERS += \
     Core/LinearCombination3.h \
     Core/TensorProductSurfaces3.h \
     Core/ShaderPrograms.h \
-    SOAH/SOQAHArcs3.h
+    SOQAH/SOQAHArcs3.h
 
 SOURCES += \
     GUI/GLWidget.cpp \
@@ -100,5 +100,5 @@ SOURCES += \
     Core/LinearCombination3.cpp \
     Core/TensorProductSurfaces3.cpp \
     Core/ShaderPrograms.cpp \
-    SOAH/SOQAHArcs3.cpp
+    SOQAH/SOQAHArcs3.cpp
 
