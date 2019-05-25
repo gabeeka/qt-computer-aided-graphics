@@ -16,6 +16,8 @@
 #include "../Cyclic/CyclicCurves3.h"
 #include "../Core/ShaderPrograms.h"
 
+#include "../SOQAH/SOQAHArcs3.h"
+
 #include <QTimer>
 
 namespace cagd
@@ -77,6 +79,11 @@ namespace cagd
         GLuint                      _max_order;
 
 
+        // SOQAH arc declarations
+        SOQAHArcs3*       _soqah_arc;
+        GenericCurve3*    _image_of_soqah_arc;
+
+
         // Lighting
         DirectionalLight*                       _directionalLight;
 
@@ -111,6 +118,12 @@ namespace cagd
         // Cyclic curves
         void initCyclicCurves();
         void renderCyclicCurves();
+
+
+        // SOQAH Arc
+        void initSOQAH();
+        void renderSOQAH();
+
 
         // Shaders
         GLuint          _shader_index{0};

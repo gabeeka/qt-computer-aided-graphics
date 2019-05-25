@@ -115,6 +115,8 @@ namespace cagd
             initParametricSurfaces(5);
             initCyclicCurves();
 
+            initSOQAH();
+
 
             HCoordinate3 direction(0.0, 0.0, 1.0, 0.0);
             Color4 ambient(0.4, 0.4, 0.4, 1.0);
@@ -151,7 +153,8 @@ namespace cagd
 
             switch (_render_function) {
                 case 0:
-                    renderParametricCurve();
+                    renderSOQAH();
+                    //renderParametricCurve();
                 break;
                 case 1:
                     renderOffModel();
@@ -585,6 +588,50 @@ namespace cagd
 
         glPointSize(1.0);
         }
+    }
+
+    void GLWidget::initSOQAH()
+    {
+        _soqah_arc = new SOQAHArcs3(-3, 3, 2);
+
+        // add control points
+        DCoordinate3 &cp0 = (*_soqah_arc )[0];
+        cp0[0] = 1.0;
+        cp0[1] = 1.0;
+        cp0[2] = 1.0;
+
+        DCoordinate3 &cp1 = (*_soqah_arc )[1];
+        cp1[0] = 1.0;
+        cp1[1] = 2.0;
+        cp1[2] = 4.0;
+
+
+        DCoordinate3 &cp2 = (*_soqah_arc )[2];
+        cp2[0] = 1.0;
+        cp2[1] = 4.0;
+        cp2[2] = 4.0;
+
+
+        DCoordinate3 &cp3 = (*_soqah_arc )[3];
+        cp3[0] = 1.0;
+        cp3[1] = 5.0;
+        cp3[2] = 1.0;
+
+        _image_of_soqah_arc = _soqah_arc->GenerateImage(0, 200);
+        _soqah_arc->UpdateVertexBufferObjectsOfData();
+        _image_of_soqah_arc->UpdateVertexBufferObjects();
+    }
+
+    void GLWidget::renderSOQAH()
+    {
+        glPointSize(3.0);
+        glColor3f(0.0, 0.0, 1.0);
+        _soqah_arc->RenderData(GL_LINE_LOOP);
+        _soqah_arc->RenderData(GL_POINTS);
+
+        glPointSize(5.0);
+        glColor3f(1.0, 0.0, 0.0);
+        _image_of_soqah_arc->RenderDerivatives(0, GL_LINE_LOOP);
     }
 
 
