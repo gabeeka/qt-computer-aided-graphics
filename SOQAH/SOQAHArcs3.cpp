@@ -44,6 +44,24 @@ GLboolean SOQAHArcs3::CalculateDerivatives(GLuint max_order_of_derivatives, GLdo
     dF(0, 2) = blendingFunction02(u);
     dF(0, 3) = blendingFunction03(u);
 
+    // Evaluate the 1st order of derivatives if required
+    if (max_order_of_derivatives >= 1)
+    {
+        dF(1, 0) = blendingFunction10(u);
+        dF(1, 1) = blendingFunction11(u);
+        dF(1, 2) = blendingFunction12(u);
+        dF(1, 3) = blendingFunction13(u);
+    }
+
+    // Evaluate the 2nd order of derivatives if required
+    if(max_order_of_derivatives >= 2)
+    {
+        dF(2, 0) = blendingFunction20(u);
+        dF(2, 1) = blendingFunction21(u);
+        dF(2, 2) = blendingFunction22(u);
+        dF(2, 3) = blendingFunction23(u);
+    }
+
 
     for (GLuint order = 0; order <= max_order_of_derivatives; order++)
     {
@@ -112,4 +130,85 @@ GLdouble SOQAHArcs3::blendingFunction03(GLdouble u) const
 {
     GLdouble c4 = 1.0 / (2 * cosh(_alpha) - _alpha * _alpha - 2);
     return c4 * (2 * cosh(u) - u * u - 2);
+}
+
+// 1st order derivatives
+GLdouble SOQAHArcs3::blendingFunction10(GLdouble u) const
+{
+    return -1.0 * blendingFunction13(_alpha - u);
+}
+
+GLdouble SOQAHArcs3::blendingFunction11(GLdouble u) const
+{
+    return -1.0 * blendingFunction12(_alpha - u);
+}
+
+GLdouble SOQAHArcs3::blendingFunction12(GLdouble u) const
+{
+    // forward calculation in order to increas the speed of the formula's evaluation
+    GLdouble a2 = _alpha * _alpha;
+    GLdouble u2 = u * u;
+    GLdouble sha = sinh(_alpha);
+    GLdouble cha = cosh(_alpha);
+    GLdouble shu = sinh(u);
+    GLdouble chu = cosh(u);
+
+    GLdouble c2_s = (2 * _alpha * sha - 4 * cha + 4);
+    GLdouble c2_gy_n = (4 * cha + a2+ a2* cha - 4 * _alpha * sha - 4);
+    GLdouble c2 = c2_s / (c2_gy_n * c2_gy_n);
+
+    GLdouble c3 = (2 * (sha - _alpha)) / ((4 * cha + a2 + a2 * cha - 4 * _alpha * sha - 4) * (a2 - 2 * cha + 2));
+
+    GLdouble k = c3 * (2 * u * (_alpha - sha) + 2 * cha + a2 * (chu - 1) + 2 * cha - 2);
+
+    GLdouble h = c2 * (4 * u * cha - 4 * u + 2 * _alpha * cosh(_alpha - u) + a2 * shu
+                 - a2 * sinh(_alpha - u) - 2 * _alpha * chu + a2 * sha + 2 * _alpha);
+
+    return 0.5 * h + k;
+}
+
+GLdouble SOQAHArcs3::blendingFunction13(GLdouble u) const
+{
+    GLdouble c4 = 1.0 / (2 * cosh(_alpha) - _alpha * _alpha - 2);
+    return c4 * (2 * sinh(u) - 2 * u);
+}
+
+// 2nd order derivatives
+GLdouble SOQAHArcs3::blendingFunction20(GLdouble u) const
+{
+    return blendingFunction23(_alpha - u);
+}
+
+GLdouble SOQAHArcs3::blendingFunction21(GLdouble u) const
+{
+    return blendingFunction22(_alpha - u);
+}
+
+GLdouble SOQAHArcs3::blendingFunction22(GLdouble u) const
+{
+    // forward calculation in order to increas the speed of the formula's evaluation
+    GLdouble a2 = _alpha * _alpha;
+    GLdouble u2 = u * u;
+    GLdouble sha = sinh(_alpha);
+    GLdouble cha = cosh(_alpha);
+    GLdouble shu = sinh(u);
+    GLdouble chu = cosh(u);
+
+    GLdouble c2_s = (2 * _alpha * sha - 4 * cha + 4);
+    GLdouble c2_gy_n = (4 * cha + a2+ a2* cha - 4 * _alpha * sha - 4);
+    GLdouble c2 = c2_s / (c2_gy_n * c2_gy_n);
+
+    GLdouble c3 = (2 * (sha - _alpha)) / ((4 * cha + a2 + a2 * cha - 4 * _alpha * sha - 4) * (a2 - 2 * cha + 2));
+
+    GLdouble k = c3 * (2 * shu + a2 * shu + 2 * (_alpha - sha));
+
+    GLdouble h = c2 * (a2 * cosh(_alpha - u) + a2 * chu - 2 * _alpha * sinh(_alpha - u) - 2 * _alpha * shu + 4 * cha - 4);
+
+    return 0.5 * h + k;
+}
+
+GLdouble SOQAHArcs3::blendingFunction23(GLdouble u) const
+{
+    GLdouble c4 = 1.0 / (2 * cosh(_alpha) - _alpha * _alpha - 2);
+    return c4 * (2 * cosh(u) - 2);
 }

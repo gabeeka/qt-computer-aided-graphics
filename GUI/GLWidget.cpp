@@ -595,9 +595,9 @@ namespace cagd
         _soqah_arc = new SOQAHArcs3();
 
         // add control points
-        (*_soqah_arc )[0] = DCoordinate3(1.0, 0, 0);
-        (*_soqah_arc )[1] = DCoordinate3(1.0, 1.0, 0.0);
-        (*_soqah_arc )[2] = DCoordinate3(-1.0, 1.0, 0.0);
+        (*_soqah_arc )[0] = DCoordinate3( 1.0,  0.0, 0.0);
+        (*_soqah_arc )[1] = DCoordinate3( 1.0,  1.0, 0.0);
+        (*_soqah_arc )[2] = DCoordinate3(-1.0,  1.0, 0.0);
         (*_soqah_arc )[3] = DCoordinate3(-1.0, -1.0, 0.0);
 
         _soqah_arc->UpdateVertexBufferObjectsOfData();
@@ -618,11 +618,11 @@ namespace cagd
             glColor3f(0.3f, 0.5f, 0.0f);
             _image_of_soqah_arc->RenderDerivatives(0, GL_LINE_STRIP);
 
-//            glColor3f(0.0f, 0.5f, 0.0f);
-//            _image_of_soqah_arc->RenderDerivatives(1, GL_LINES);
+            glColor3f(0.2f, 0.5f, 0.7f);
+            _image_of_soqah_arc->RenderDerivatives(1, GL_LINES);
 
-//            glColor3f(0.1f, 0.5f, 0.9f);
-//            _image_of_soqah_arc->RenderDerivatives(2, GL_LINES);
+            glColor3f(0.7f, 0.5f, 0.9f);
+            _image_of_soqah_arc->RenderDerivatives(2, GL_LINES);
         }
     }
 
