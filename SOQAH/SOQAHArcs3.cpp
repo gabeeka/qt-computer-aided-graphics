@@ -1,16 +1,17 @@
 #include "SOQAHArcs3.h"
 
+#include <iostream>
+using namespace std;
+
 using namespace cagd;
 
 
 // special constructor
 SOQAHArcs3::SOQAHArcs3(
-        GLdouble u_min,
-        GLdouble u_max,
         GLdouble alpha,
         GLuint data_count,
         GLenum data_usage_flag)
-    : LinearCombination3(u_min, u_max, data_count, data_usage_flag)
+    : LinearCombination3(0.0, alpha, data_count, data_usage_flag)
     , _alpha(alpha)
     , _data_count(data_count)
 {
@@ -24,9 +25,9 @@ GLboolean SOQAHArcs3::BlendingFunctionValues(GLdouble u, RowMatrix<GLdouble> &va
         return GL_FALSE;
     }
     values(0) = blendingFunction00(u);
-    values(0) = blendingFunction01(u);
-    values(0) = blendingFunction02(u);
-    values(0) = blendingFunction03(u);
+    values(1) = blendingFunction01(u);
+    values(2) = blendingFunction02(u);
+    values(3) = blendingFunction03(u);
     return GL_TRUE;
 }
 
@@ -37,12 +38,19 @@ GLboolean SOQAHArcs3::CalculateDerivatives(GLuint max_order_of_derivatives, GLdo
 
     Matrix<GLdouble> dF(max_order_of_derivatives + 1, _data.GetRowCount());
 
-    if (max_order_of_derivatives == 0)
+    // We always evaluate the function's value (0th order derivative)
+    dF(0, 0) = blendingFunction00(u);
+    dF(0, 1) = blendingFunction01(u);
+    dF(0, 2) = blendingFunction02(u);
+    dF(0, 3) = blendingFunction03(u);
+
+
+    for (GLuint order = 0; order <= max_order_of_derivatives; order++)
     {
-        dF(0, 0) = blendingFunction00(u);
-        dF(0, 1) = blendingFunction01(u);
-        dF(0, 2) = blendingFunction02(u);
-        dF(0, 3) = blendingFunction03(u);
+        for (GLuint i = 0; i <= 3; i++)
+        {
+            d[order] += _data[i] * dF(order, i);
+        }
     }
 
     return GL_TRUE;
@@ -94,7 +102,7 @@ GLdouble SOQAHArcs3::blendingFunction02(GLdouble u) const
     GLdouble h = c2 * (a2 * chu + 2 * u2 * cha + a2 * cosh(_alpha - u) + 2 * u * _alpha - a2 - a2 * cha - 2 * _alpha * shu
                 - 2 * _alpha * sinh(_alpha - u) + 2 * _alpha * sha - 2 * u2 + u * a2 * sha - u2 * _alpha * sha - 2 * u * _alpha * cha);
 
-    GLdouble k = c3 * (2 * (_alpha - u) + 2 * sinh(_alpha - u) + (2 * shu - sha) + a2 * (shu - u) + u2 * (_alpha - sha)
+    GLdouble k = c3 * (2 * (_alpha - u) + 2 * sinh(_alpha - u) + 2 * (shu - sha) + a2 * (shu - u) + u2 * (_alpha - sha)
                 + 2 * (u * cha - _alpha * chu));
 
     return 0.5 * h + k;
@@ -102,6 +110,6 @@ GLdouble SOQAHArcs3::blendingFunction02(GLdouble u) const
 
 GLdouble SOQAHArcs3::blendingFunction03(GLdouble u) const
 {
-    GLdouble c4 = 1 / (2 * cosh(_alpha) - _alpha * _alpha - 2);
+    GLdouble c4 = 1.0 / (2 * cosh(_alpha) - _alpha * _alpha - 2);
     return c4 * (2 * cosh(u) - u * u - 2);
 }

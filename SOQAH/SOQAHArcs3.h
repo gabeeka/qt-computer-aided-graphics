@@ -11,9 +11,7 @@ namespace cagd
     public:
         // special constructor
         SOQAHArcs3(
-                GLdouble u_min,
-                GLdouble u_max,
-                GLdouble alpha,
+                GLdouble alpha = 1.0,
                 GLuint data_count = 4,
                 GLenum data_usage_flag = GL_STATIC_DRAW);
 

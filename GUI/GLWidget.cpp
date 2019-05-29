@@ -154,7 +154,7 @@ namespace cagd
             switch (_render_function) {
                 case 0:
                     renderSOQAH();
-                    //renderParametricCurve();
+//                    renderParametricCurve();
                 break;
                 case 1:
                     renderOffModel();
@@ -592,46 +592,38 @@ namespace cagd
 
     void GLWidget::initSOQAH()
     {
-        _soqah_arc = new SOQAHArcs3(-3, 3, 2);
+        _soqah_arc = new SOQAHArcs3();
 
         // add control points
-        DCoordinate3 &cp0 = (*_soqah_arc )[0];
-        cp0[0] = 1.0;
-        cp0[1] = 1.0;
-        cp0[2] = 1.0;
+        (*_soqah_arc )[0] = DCoordinate3(1.0, 0, 0);
+        (*_soqah_arc )[1] = DCoordinate3(1.0, 1.0, 0.0);
+        (*_soqah_arc )[2] = DCoordinate3(-1.0, 1.0, 0.0);
+        (*_soqah_arc )[3] = DCoordinate3(-1.0, -1.0, 0.0);
 
-        DCoordinate3 &cp1 = (*_soqah_arc )[1];
-        cp1[0] = 1.0;
-        cp1[1] = 2.0;
-        cp1[2] = 4.0;
-
-
-        DCoordinate3 &cp2 = (*_soqah_arc )[2];
-        cp2[0] = 1.0;
-        cp2[1] = 4.0;
-        cp2[2] = 4.0;
-
-
-        DCoordinate3 &cp3 = (*_soqah_arc )[3];
-        cp3[0] = 1.0;
-        cp3[1] = 5.0;
-        cp3[2] = 1.0;
-
-        _image_of_soqah_arc = _soqah_arc->GenerateImage(0, 200);
         _soqah_arc->UpdateVertexBufferObjectsOfData();
-        _image_of_soqah_arc->UpdateVertexBufferObjects();
+
+        _image_of_soqah_arc = _soqah_arc->GenerateImage(3, 40, GL_STATIC_DRAW);
+        if (!_image_of_soqah_arc) throw std::runtime_error("Failed to generate image for Arc!");
+        // cout << *_image_of_soqah_arc << endl;
+        _image_of_soqah_arc->UpdateVertexBufferObjects(GL_STATIC_DRAW);
     }
 
     void GLWidget::renderSOQAH()
     {
-        glPointSize(3.0);
-        glColor3f(0.0, 0.0, 1.0);
-        _soqah_arc->RenderData(GL_LINE_LOOP);
-        _soqah_arc->RenderData(GL_POINTS);
+        glDisable(GL_LIGHTING);
+        glColor3f(0.8f, 0.0f, 0.0f);
+        _soqah_arc->RenderData();
+        if (_image_of_soqah_arc)
+        {
+            glColor3f(0.3f, 0.5f, 0.0f);
+            _image_of_soqah_arc->RenderDerivatives(0, GL_LINE_STRIP);
 
-        glPointSize(5.0);
-        glColor3f(1.0, 0.0, 0.0);
-        _image_of_soqah_arc->RenderDerivatives(0, GL_LINE_LOOP);
+//            glColor3f(0.0f, 0.5f, 0.0f);
+//            _image_of_soqah_arc->RenderDerivatives(1, GL_LINES);
+
+//            glColor3f(0.1f, 0.5f, 0.9f);
+//            _image_of_soqah_arc->RenderDerivatives(2, GL_LINES);
+        }
     }
 
 
