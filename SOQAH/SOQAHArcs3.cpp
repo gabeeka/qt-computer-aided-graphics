@@ -147,7 +147,6 @@ GLdouble SOQAHArcs3::blendingFunction12(GLdouble u) const
 {
     // forward calculation in order to increas the speed of the formula's evaluation
     GLdouble a2 = _alpha * _alpha;
-    GLdouble u2 = u * u;
     GLdouble sha = sinh(_alpha);
     GLdouble cha = cosh(_alpha);
     GLdouble shu = sinh(u);
@@ -159,10 +158,9 @@ GLdouble SOQAHArcs3::blendingFunction12(GLdouble u) const
 
     GLdouble c3 = (2 * (sha - _alpha)) / ((4 * cha + a2 + a2 * cha - 4 * _alpha * sha - 4) * (a2 - 2 * cha + 2));
 
-    GLdouble k = c3 * (2 * u * (_alpha - sha) + 2 * cha + a2 * (chu - 1) + 2 * cha - 2);
+    GLdouble k = c3 * (-2 -2*cosh(_alpha - u) + 2*chu + a2*(chu - 1) + 2*u*(_alpha - sha) + 2*(cha - _alpha*(shu)));
 
-    GLdouble h = c2 * (4 * u * cha - 4 * u + 2 * _alpha * cosh(_alpha - u) + a2 * shu
-                 - a2 * sinh(_alpha - u) - 2 * _alpha * chu + a2 * sha + 2 * _alpha);
+    GLdouble h = c2 * (a2*shu + a2*sha - a2*sinh(_alpha - u) + 2*_alpha + 2*_alpha*cosh(_alpha - u) - 2*_alpha*u*sha - 2*_alpha*chu - 2*_alpha*cha + 4*u*cha - 4*u);
 
     return 0.5 * h + k;
 }
@@ -188,7 +186,6 @@ GLdouble SOQAHArcs3::blendingFunction22(GLdouble u) const
 {
     // forward calculation in order to increas the speed of the formula's evaluation
     GLdouble a2 = _alpha * _alpha;
-    GLdouble u2 = u * u;
     GLdouble sha = sinh(_alpha);
     GLdouble cha = cosh(_alpha);
     GLdouble shu = sinh(u);
@@ -200,10 +197,9 @@ GLdouble SOQAHArcs3::blendingFunction22(GLdouble u) const
 
     GLdouble c3 = (2 * (sha - _alpha)) / ((4 * cha + a2 + a2 * cha - 4 * _alpha * sha - 4) * (a2 - 2 * cha + 2));
 
-    GLdouble k = c3 * (2 * shu + a2 * shu + 2 * (_alpha - sha));
+    GLdouble k = c3 * (2*sinh(_alpha - u) + 2*shu + a2*shu - 2*_alpha*chu + 2*(_alpha - sha));
 
-    GLdouble h = c2 * (a2 * cosh(_alpha - u) + a2 * chu - 2 * _alpha * sinh(_alpha - u) - 2 * _alpha * shu + 4 * cha - 4);
-
+    GLdouble h = c2 * (a2*chu + a2*cosh(_alpha - u) - 2*_alpha*shu - 2*_alpha*sinh(_alpha - u) - 2*_alpha*sha + 4*cha - 4);
     return 0.5 * h + k;
 }
 
