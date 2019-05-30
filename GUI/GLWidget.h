@@ -17,6 +17,7 @@
 #include "../Core/ShaderPrograms.h"
 
 #include "../SOQAH/SOQAHArcs3.h"
+#include "../SOQAH/SOQAHPatch3.h"
 
 #include <QTimer>
 
@@ -83,6 +84,11 @@ namespace cagd
         SOQAHArcs3*       _soqah_arc;
         GenericCurve3*    _image_of_soqah_arc;
 
+        // SOQAH patch declarations
+        SOQAHPatch3                     _patch;
+        TriangulatedMesh3               *_before_interpolation, *_after_interpolation;
+        RowMatrix<GenericCurve3*>*       _u_lines;
+        RowMatrix<GenericCurve3*>*       _v_lines;
 
         // Lighting
         DirectionalLight*                       _directionalLight;
@@ -121,9 +127,12 @@ namespace cagd
 
 
         // SOQAH Arc
-        void initSOQAH();
-        void renderSOQAH();
+        void initSOQAHArc();
+        void renderSOQAHArc();
 
+        // SOQAH Patch
+        void initSOQAHPatch();
+        void renderSOQAHPatch();
 
         // Shaders
         GLuint          _shader_index{0};

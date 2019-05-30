@@ -111,16 +111,10 @@ GLdouble SOQAHArcs3::blendingFunction02(GLdouble u) const
     GLdouble shu = sinh(u);
     GLdouble chu = cosh(u);
 
-    GLdouble c2_s = (2 * _alpha * sha - 4 * cha + 4);
-    GLdouble c2_gy_n = (4 * cha + a2+ a2* cha - 4 * _alpha * sha - 4);
-    GLdouble c2 = c2_s / (c2_gy_n * c2_gy_n);
-
-    GLdouble c3 = (2 * (sha - _alpha)) / ((4 * cha + a2 + a2 * cha - 4 * _alpha * sha - 4) * (a2 - 2 * cha + 2));
-
-    GLdouble h = c2 * (a2 * chu + 2 * u2 * cha + a2 * cosh(_alpha - u) + 2 * u * _alpha - a2 - a2 * cha - 2 * _alpha * shu
+    GLdouble h = getConstant2() * (a2 * chu + 2 * u2 * cha + a2 * cosh(_alpha - u) + 2 * u * _alpha - a2 - a2 * cha - 2 * _alpha * shu
                 - 2 * _alpha * sinh(_alpha - u) + 2 * _alpha * sha - 2 * u2 + u * a2 * sha - u2 * _alpha * sha - 2 * u * _alpha * cha);
 
-    GLdouble k = c3 * (2 * (_alpha - u) + 2 * sinh(_alpha - u) + 2 * (shu - sha) + a2 * (shu - u) + u2 * (_alpha - sha)
+    GLdouble k = getConstant3() * (2 * (_alpha - u) + 2 * sinh(_alpha - u) + 2 * (shu - sha) + a2 * (shu - u) + u2 * (_alpha - sha)
                 + 2 * (u * cha - _alpha * chu));
 
     return 0.5 * h + k;
@@ -128,8 +122,7 @@ GLdouble SOQAHArcs3::blendingFunction02(GLdouble u) const
 
 GLdouble SOQAHArcs3::blendingFunction03(GLdouble u) const
 {
-    GLdouble c4 = 1.0 / (2 * cosh(_alpha) - _alpha * _alpha - 2);
-    return c4 * (2 * cosh(u) - u * u - 2);
+    return getConstant4() * (2 * cosh(u) - u * u - 2);
 }
 
 // 1st order derivatives
@@ -152,23 +145,17 @@ GLdouble SOQAHArcs3::blendingFunction12(GLdouble u) const
     GLdouble shu = sinh(u);
     GLdouble chu = cosh(u);
 
-    GLdouble c2_s = (2 * _alpha * sha - 4 * cha + 4);
-    GLdouble c2_gy_n = (4 * cha + a2+ a2* cha - 4 * _alpha * sha - 4);
-    GLdouble c2 = c2_s / (c2_gy_n * c2_gy_n);
+    GLdouble k = getConstant3() * (-2 -2*cosh(_alpha - u) + 2*chu + a2*(chu - 1) + 2*u*(_alpha - sha) + 2*(cha - _alpha*(shu)));
 
-    GLdouble c3 = (2 * (sha - _alpha)) / ((4 * cha + a2 + a2 * cha - 4 * _alpha * sha - 4) * (a2 - 2 * cha + 2));
-
-    GLdouble k = c3 * (-2 -2*cosh(_alpha - u) + 2*chu + a2*(chu - 1) + 2*u*(_alpha - sha) + 2*(cha - _alpha*(shu)));
-
-    GLdouble h = c2 * (a2*shu + a2*sha - a2*sinh(_alpha - u) + 2*_alpha + 2*_alpha*cosh(_alpha - u) - 2*_alpha*u*sha - 2*_alpha*chu - 2*_alpha*cha + 4*u*cha - 4*u);
+    GLdouble h = getConstant2() * (a2*shu + a2*sha - a2*sinh(_alpha - u) + 2*_alpha + 2*_alpha*cosh(_alpha - u) - 2*_alpha*u*sha
+                                   - 2*_alpha*chu - 2*_alpha*cha + 4*u*cha - 4*u);
 
     return 0.5 * h + k;
 }
 
 GLdouble SOQAHArcs3::blendingFunction13(GLdouble u) const
 {
-    GLdouble c4 = 1.0 / (2 * cosh(_alpha) - _alpha * _alpha - 2);
-    return c4 * (2 * sinh(u) - 2 * u);
+    return getConstant4() * (2 * sinh(u) - 2 * u);
 }
 
 // 2nd order derivatives
@@ -191,20 +178,45 @@ GLdouble SOQAHArcs3::blendingFunction22(GLdouble u) const
     GLdouble shu = sinh(u);
     GLdouble chu = cosh(u);
 
-    GLdouble c2_s = (2 * _alpha * sha - 4 * cha + 4);
-    GLdouble c2_gy_n = (4 * cha + a2+ a2* cha - 4 * _alpha * sha - 4);
-    GLdouble c2 = c2_s / (c2_gy_n * c2_gy_n);
+    GLdouble k = getConstant3() * (2*sinh(_alpha - u) + 2*shu + a2*shu - 2*_alpha*chu + 2*(_alpha - sha));
 
-    GLdouble c3 = (2 * (sha - _alpha)) / ((4 * cha + a2 + a2 * cha - 4 * _alpha * sha - 4) * (a2 - 2 * cha + 2));
-
-    GLdouble k = c3 * (2*sinh(_alpha - u) + 2*shu + a2*shu - 2*_alpha*chu + 2*(_alpha - sha));
-
-    GLdouble h = c2 * (a2*chu + a2*cosh(_alpha - u) - 2*_alpha*shu - 2*_alpha*sinh(_alpha - u) - 2*_alpha*sha + 4*cha - 4);
+    GLdouble h = getConstant2() * (a2*chu + a2*cosh(_alpha - u) - 2*_alpha*shu - 2*_alpha*sinh(_alpha - u) - 2*_alpha*sha + 4*cha - 4);
     return 0.5 * h + k;
 }
 
 GLdouble SOQAHArcs3::blendingFunction23(GLdouble u) const
 {
-    GLdouble c4 = 1.0 / (2 * cosh(_alpha) - _alpha * _alpha - 2);
-    return c4 * (2 * cosh(u) - 2);
+    return getConstant4() * (2 * cosh(u) - 2);
 }
+
+// TODO: move these methods to a common class to be used by SOQAHArcs3 and SOQAHPatch3
+GLdouble SOQAHArcs3::getConstant2() const
+{
+    GLdouble a2 = _alpha * _alpha;
+    GLdouble sha = sinh(_alpha);
+    GLdouble cha = cosh(_alpha);
+
+    GLdouble c2_s = (2 * _alpha * sha - 4 * cha + 4);
+    GLdouble c2_gy_n = (4 * cha + a2+ a2* cha - 4 * _alpha * sha - 4);
+    GLdouble c2 = c2_s / (c2_gy_n * c2_gy_n);
+
+    return c2;
+}
+
+GLdouble SOQAHArcs3::getConstant3() const
+{
+    GLdouble a2 = _alpha * _alpha;
+    GLdouble sha = sinh(_alpha);
+    GLdouble cha = cosh(_alpha);
+
+    GLdouble c3 = (2 * (sha - _alpha)) / ((4 * cha + a2 + a2 * cha - 4 * _alpha * sha - 4) * (a2 - 2 * cha + 2));
+
+    return c3;
+}
+
+GLdouble SOQAHArcs3::getConstant4() const
+{
+    GLdouble c4 = 1.0 / (2 * cosh(_alpha) - _alpha * _alpha - 2);
+    return c4;
+}
+

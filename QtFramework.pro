@@ -68,6 +68,7 @@ HEADERS += \
     Core/Matrices.h \
     Core/RealSquareMatrices.h \
     Parametric/ParametricCurves3.h \
+    SOQAH/SOQAHPatch3.h \
     Test/TestFunctions.h \
     Parametric/ParametricSurfaces3.h \
     Core/Colors4.h \
@@ -90,6 +91,7 @@ SOURCES += \
     Core/GenericCurves3.cpp \
     Core/RealSquareMatrices.cpp \
     Parametric/ParametricCurves3.cpp \
+    SOQAH/SOQAHPatch3.cpp \
     Test/TestFunctions.cpp \
     main.cpp \
     Parametric/ParametricSurfaces3.cpp \

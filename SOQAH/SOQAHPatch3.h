@@ -1,31 +1,22 @@
 #pragma once
 
-#include "../Core/LinearCombination3.h"
-
+#include "../Core/TensorProductSurfaces3.h"
 
 namespace cagd
 {
-    //! @brief Class definition for Second order/quartic algebraic-hyperbolic arc
-    class SOQAHArcs3 : public LinearCombination3
+    class SOQAHPatch3: public TensorProductSurface3
     {
-    public:
-        // special constructor
-        SOQAHArcs3(
-                GLdouble alpha = 1.0,
-                GLuint data_count = 4,
-                GLenum data_usage_flag = GL_STATIC_DRAW);
-
-        GLboolean BlendingFunctionValues(GLdouble u, RowMatrix<GLdouble> &values) const;
-        GLboolean CalculateDerivatives(GLuint max_order_of_derivatives, GLdouble u, Derivatives &d) const;
-
-        // gette/setter for alpha
-        GLdouble GetAlpha();
-        GLboolean SetAlpha(GLdouble alpha);
-
     protected:
-        GLdouble _alpha{0.0};
-        GLuint   _data_count{4};
+        GLdouble _alpha;
+    public:
+        SOQAHPatch3(GLdouble alpha = 1.0);
 
+        GLboolean UBlendingFunctionValues(GLdouble u_knot, RowMatrix<GLdouble> &blending_values) const;
+        GLboolean VBlendingFunctionValues(GLdouble u_knot, RowMatrix<GLdouble> &blending_values) const;
+        GLboolean CalculatePartialDerivatives(GLuint max_order_of_derivatives, GLdouble u, GLdouble v, PartialDerivatives& partial_derivatives) const;
+
+        void set_alpha(double alpha);
+        GLdouble get_alpha();
     private:
         GLdouble getConstant2() const;
         GLdouble getConstant3() const;

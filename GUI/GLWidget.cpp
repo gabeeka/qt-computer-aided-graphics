@@ -115,7 +115,8 @@ namespace cagd
             initParametricSurfaces(5);
             initCyclicCurves();
 
-            initSOQAH();
+            initSOQAHArc();
+//            initSOQAHPatch();
 
 
             HCoordinate3 direction(0.0, 0.0, 1.0, 0.0);
@@ -153,7 +154,8 @@ namespace cagd
 
             switch (_render_function) {
                 case 0:
-                    renderSOQAH();
+                    renderSOQAHArc();
+//                    renderSOQAHPatch();
 //                    renderParametricCurve();
                 break;
                 case 1:
@@ -590,7 +592,142 @@ namespace cagd
         }
     }
 
-    void GLWidget::initSOQAH()
+    void GLWidget::initSOQAHPatch()
+    {
+        _patch.SetData(0, 0, -2.0, -2.0, 0.0);
+        _patch.SetData(0, 1, -2.0, -1.0, 0.0);
+        _patch.SetData(0, 2, -2.0, 1.0, 0.0);
+        _patch.SetData(0, 3, -2.0, 2.0, 0.0);
+
+        _patch.SetData(1, 0, -1.0, -2.0, 0.0);
+        _patch.SetData(1, 1, -1.0, -1.0, 2.0);
+        _patch.SetData(1, 2, -1.0, 1.0, 2.0);
+        _patch.SetData(1, 3, -1.0, 2.0, 0.0);
+
+        _patch.SetData(2, 0, 1.0, -2.0, 0.0);
+        _patch.SetData(2, 1, 1.0, -1.0, 2.0);
+        _patch.SetData(2, 2, 1.0, 1.0, 2.0);
+        _patch.SetData(2, 3, 1.0, 2.0, 0.0);
+
+        _patch.SetData(3, 0, 2.0, -2.0, 0.0);
+        _patch.SetData(3, 1, 2.0, -1.0, 0.0);
+        _patch.SetData(3, 2, 2.0, 1.0, 0.0);
+        _patch.SetData(3, 3, 2.0, 2.0, 0.0);
+
+        _u_lines = _patch.GenerateUIsoparametricLines(3, 1, 30);
+        _v_lines = _patch.GenerateVIsoparametricLines(3, 1, 30);
+
+        for(GLuint i = 0; i < _u_lines->GetColumnCount(); i++)
+        {
+
+            if((*_u_lines)[i])
+            {
+                (*_u_lines)[i]->UpdateVertexBufferObjects();
+            }
+        }
+
+        for(GLuint i = 0; i < _v_lines->GetColumnCount(); i++)
+        {
+            if((*_v_lines)[i])
+            {
+                (*_v_lines)[i]->UpdateVertexBufferObjects();
+            }
+        }
+
+        // g e n e r a t e t h e mesh o f t h e s u r f a c e p a t c h
+        _before_interpolation = _patch.GenerateImage(30, 30, GL_STATIC_DRAW);
+
+        if(_before_interpolation)
+        {
+            _before_interpolation->UpdateVertexBufferObjects();
+        }
+
+        // d e f i n e an i n t e r p o l a t i o n p r o blem :
+        // 1 : c r e a t e a k n o t v e c t o r i n u−d i r e c t i o n
+        RowMatrix<GLdouble> u_knot_vector(4);
+        u_knot_vector(0) = 0.0;
+        u_knot_vector(1) = 1.0 / 3.0;
+        u_knot_vector(2) = 2.0 / 3.0;
+        u_knot_vector(3) = 1.0;
+
+        // 2 : c r e a t e a k n o t v e c t o r i n v−d i r e c t i o n
+        ColumnMatrix<GLdouble> v_knot_vector(4);
+        v_knot_vector(0) = 0.0;
+        v_knot_vector(1) = 1.0 / 3.0;
+        v_knot_vector(2) = 2.0 / 3.0;
+        v_knot_vector(3) = 1.0;
+
+        // 3 : d e f i n e a m a t r i x o f d a t a p o i n t s , e . g . s e t them t o t h e o r i g i n a l c o n t r o l p o i n t s
+        Matrix<DCoordinate3> data_points_to_interpolate(4, 4);
+        for(GLuint row = 0; row < 4; ++row)
+        {
+            for(GLuint column = 0; column < 4; ++column)
+            {
+                _patch.GetData(row, column, data_points_to_interpolate(row, column));
+            }
+        }
+
+        // 4 : s o l v e t h e i n t e r p o l a t i o n p r o blem and g e n e r a t e t h e mesh o f t h e i n t e r p o l a t i n g p a t c h
+        if(_patch.UpdateDataForInterpolation(u_knot_vector, v_knot_vector, data_points_to_interpolate))
+        {
+            _after_interpolation = _patch.GenerateImage(30, 30, GL_STATIC_DRAW);
+
+            if(_after_interpolation)
+            {
+                _after_interpolation->UpdateVertexBufferObjects();
+            }
+        }
+    }
+
+    void GLWidget::renderSOQAHPatch()
+    {
+        if(_before_interpolation)
+        {
+            MatFBRuby.Apply();
+            _before_interpolation->Render();
+        }
+
+        if(_after_interpolation)
+        {
+            glEnable(GL_LIGHTING);
+            glEnable(GL_LIGHT0);
+            glEnable(GL_NORMALIZE);
+
+            glEnable(GL_BLEND);
+            glDepthMask(GL_FALSE);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+            MatFBTurquoise.Apply();
+            _after_interpolation->Render();
+            glDepthMask(GL_TRUE);
+            glDisable(GL_BLEND);
+        }
+
+        for(GLuint i = 0; i < _u_lines->GetColumnCount(); i++)
+        {
+            if((*_u_lines)[i])
+            {
+                (*_u_lines)[i]->RenderDerivatives(0, GL_LINE_STRIP);
+            }
+        }
+
+        for(GLuint i = 0; i < _u_lines->GetColumnCount(); i++)
+        {
+            if((*_u_lines)[i])
+            {
+                (*_u_lines)[i]->RenderDerivatives(1, GL_LINES);
+            }
+        }
+
+        for(GLuint i = 0; i < _v_lines->GetColumnCount(); i++)
+        {
+            if((*_v_lines)[i])
+            {
+                (*_v_lines)[i]->RenderDerivatives(0, GL_LINE_STRIP);
+            }
+        }
+    }
+
+    void GLWidget::initSOQAHArc()
     {
         _soqah_arc = new SOQAHArcs3();
 
@@ -608,7 +745,7 @@ namespace cagd
         _image_of_soqah_arc->UpdateVertexBufferObjects(GL_STATIC_DRAW);
     }
 
-    void GLWidget::renderSOQAH()
+    void GLWidget::renderSOQAHArc()
     {
         glDisable(GL_LIGHTING);
         glColor3f(0.8f, 0.0f, 0.0f);
@@ -621,8 +758,10 @@ namespace cagd
             glColor3f(0.2f, 0.5f, 0.7f);
             _image_of_soqah_arc->RenderDerivatives(1, GL_LINES);
 
+
             glColor3f(0.7f, 0.5f, 0.9f);
             _image_of_soqah_arc->RenderDerivatives(2, GL_LINES);
+
         }
     }
 
