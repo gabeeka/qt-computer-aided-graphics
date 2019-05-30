@@ -1,8 +1,8 @@
 #pragma once
 
-#include "DCoordinates3.h"
+#include "../Core/DCoordinates3.h"
 #include <GL/glew.h>
-#include "Matrices.h"
+#include "../Core/Matrices.h"
 #include <iostream>
 
 namespace cagd

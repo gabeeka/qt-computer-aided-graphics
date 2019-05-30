@@ -179,7 +179,7 @@ namespace cagd
 
     // Assignment Operator
     template <typename T>
-    Matrix<T>& Matrix<T>::operator =(const Matrix& m)
+    inline Matrix<T>& Matrix<T>::operator =(const Matrix& m)
     {
         if (this != &m)
         {
@@ -194,14 +194,14 @@ namespace cagd
     template <typename T>
     inline T& Matrix<T>::operator ()(GLuint row, GLuint column)
     {
-        return _data[row][column];
+        return _data.at(row).at(column); //_data[row][column];
     }
 
     // Get copy of element (simple getter)
     template <typename T>
     inline T Matrix<T>::operator ()(GLuint row, GLuint column) const
     {
-        return _data[row][column];
+        return _data.at(row).at(column); //_data[row][column];
     }
 
     // Get dimensions
@@ -281,8 +281,13 @@ namespace cagd
     template <typename T>
     Matrix<T>::~Matrix()
     {
-        _row_count = _column_count = 0;
+        for(GLuint i = 0; i < _row_count; i++)
+        {
+            _data[i].clear();
+        }
         _data.clear();
+
+        _row_count = _column_count = 0;
     }
 
 
@@ -393,14 +398,13 @@ namespace cagd
     template <typename T>
     TriangularMatrix<T>::TriangularMatrix(GLuint row_count)
         : _row_count(row_count)
-        , _data(row_count)
     {
         GLuint column_count = 1;
-        for (auto row = _data.begin();
-             row <= _data.end();
-             ++row, ++column_count)
+        _data.resize(_row_count);
+        for (GLuint i = 0; i < _row_count; i++)
         {
-            row->resize(column_count);
+            _data[i].resize(column_count);
+            column_count++;
         }
     }
 

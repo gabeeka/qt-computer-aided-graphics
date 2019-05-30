@@ -4,7 +4,9 @@
 using namespace std;
 using namespace cagd;
 
-SOQAHPatch3::SOQAHPatch3(GLdouble alpha):TensorProductSurface3(0.0, alpha, 0.0, alpha, 4, 4), _alpha(alpha)
+SOQAHPatch3::SOQAHPatch3(GLdouble alpha)
+    : TensorProductSurface3(0.0, alpha, 0.0, alpha, 4, 4)
+    , _alpha(alpha)
 {
 }
 
@@ -40,7 +42,13 @@ GLboolean SOQAHPatch3::VBlendingFunctionValues(GLdouble v_knot, RowMatrix<GLdoub
     return GL_TRUE;
 }
 
-GLboolean SOQAHPatch3::CalculatePartialDerivatives(GLuint max_order_of_derivatives, GLdouble u, GLdouble v, PartialDerivatives &partial_derivatives) const
+GLboolean SOQAHPatch3::CalculatePartialDerivatives
+    (
+    GLuint max_order_of_derivatives,
+    GLdouble u,
+    GLdouble v,
+    PartialDerivatives &partial_derivatives
+    ) const
 {
     if(u < 0.0 || u > _alpha || v < 0.0 || v > _alpha || max_order_of_derivatives > 1)
     {
@@ -85,7 +93,7 @@ GLboolean SOQAHPatch3::CalculatePartialDerivatives(GLuint max_order_of_derivativ
         partial_derivatives(1, 1) += aux_d1_v * u_blending_values_0(row);
     }
 
-    return GL_FALSE;
+    return GL_TRUE;
 }
 
 void SOQAHPatch3::set_alpha(double alpha)

@@ -62,16 +62,19 @@ GLvoid TriangulatedMesh3::DeleteVertexBufferObjects()
     if (_vbo_normals)
     {
         glDeleteBuffers(1, &_vbo_normals);
+        _vbo_normals = 0;
     }
 
     if (_vbo_tex_coordinates)
     {
         glDeleteBuffers(1, &_vbo_tex_coordinates);
+        _vbo_tex_coordinates = 0;
     }
 
     if (_vbo_indices)
     {
         glDeleteBuffers(1, &_vbo_indices);
+        _vbo_indices = 0;
     }
 }
 
@@ -444,4 +447,68 @@ GLuint TriangulatedMesh3::FaceCount() const
 TriangulatedMesh3::~TriangulatedMesh3()
 {
     DeleteVertexBufferObjects();
+}
+
+//homework
+std::ostream & cagd::operator<<(std::ostream & lhs, const TriangulatedMesh3 & rhs)
+{
+    lhs << rhs._vertex.size() << " " << rhs._face.size() << std::endl;
+
+    for (typename std::vector< DCoordinate3 >::const_iterator row = rhs._vertex.begin();
+        row != rhs._vertex.end(); ++row)
+    {
+        lhs << *row << " ";
+    }
+
+    for (typename std::vector< DCoordinate3 >::const_iterator row = rhs._normal.begin();
+        row != rhs._normal.end(); ++row)
+    {
+        lhs << *row << " ";
+    }
+
+    for (typename std::vector< TCoordinate4 > ::const_iterator row = rhs._tex.begin();
+        row != rhs._tex.end(); ++row)
+    {
+        lhs << *row << " ";
+    }
+
+    for (typename std::vector< TriangularFace >::const_iterator row = rhs._face.begin();
+        row != rhs._face.end(); ++row)
+    {
+        lhs << *row << " ";
+    }
+
+    return lhs;
+}
+
+//homework
+std::istream & cagd::operator>>(std::istream & lhs, TriangulatedMesh3 & rhs)
+{
+    GLint vertex_size, face_size;
+    lhs >> vertex_size >> face_size;
+
+    rhs._vertex.resize(vertex_size);
+    rhs._face.resize(face_size);
+
+    for (typename std::vector< DCoordinate3 >::iterator row = rhs._vertex.begin(); row != rhs._vertex.end(); ++row)
+    {
+        lhs >> *row;
+    }
+
+    for (typename std::vector< DCoordinate3 >::iterator row = rhs._normal.begin(); row != rhs._normal.end(); ++row)
+    {
+        lhs >> *row;
+    }
+
+    for (typename std::vector< TCoordinate4 >::iterator row = rhs._tex.begin(); row != rhs._tex.end(); ++row)
+    {
+        lhs >> *row;
+    }
+
+    for (typename std::vector< TriangularFace >::iterator row = rhs._face.begin();row != rhs._face.end(); ++row)
+    {
+        lhs >> *row;
+    }
+
+    return lhs;
 }

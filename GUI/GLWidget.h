@@ -85,10 +85,11 @@ namespace cagd
         GenericCurve3*    _image_of_soqah_arc;
 
         // SOQAH patch declarations
-        SOQAHPatch3                     _patch;
-        TriangulatedMesh3               *_before_interpolation, *_after_interpolation;
-        RowMatrix<GenericCurve3*>*       _u_lines;
-        RowMatrix<GenericCurve3*>*       _v_lines;
+        SOQAHPatch3*                    _patch;
+        TriangulatedMesh3*              _before_interpolation;
+        TriangulatedMesh3*              _after_interpolation;
+        RowMatrix<GenericCurve3*>*      _u_lines;
+        RowMatrix<GenericCurve3*>*      _v_lines;
 
         // Lighting
         DirectionalLight*                       _directionalLight;
