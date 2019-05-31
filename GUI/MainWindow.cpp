@@ -78,6 +78,9 @@ namespace cagd
         connect(_side_widget->two_s_light, SIGNAL(clicked(bool)), _gl_widget, SLOT(initTwoSidedLighting()));
         connect(_side_widget->none, SIGNAL(clicked(bool)), _gl_widget, SLOT(disableShader()));
 
+        connect(_side_widget->arc_radio_button, SIGNAL(clicked(bool)), _gl_widget, SLOT(renderArc()));
+        connect(_side_widget->patch_radio_button, SIGNAL(clicked(bool)), _gl_widget, SLOT(renderPatch()));
+
     }
 
     //--------------------------------

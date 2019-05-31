@@ -154,9 +154,7 @@ namespace cagd
 
             switch (_render_function) {
                 case 0:
-//                    renderSOQAHArc();
-                    renderSOQAHPatch();
-//                    renderParametricCurve();
+                    renderParametricCurve();
                 break;
                 case 1:
                     renderOffModel();
@@ -167,6 +165,12 @@ namespace cagd
                 case 3:
                     renderCyclicCurves();
                 break;
+                case 4:
+                    if (_render_index == 0)
+                        renderSOQAHArc();
+                    else
+                        renderSOQAHPatch();
+                    break;
             }
 
         // pops the current matrix stack, replacing the current matrix with the one below it on the stack,
@@ -896,6 +900,16 @@ namespace cagd
     void GLWidget::render_cyclic_curve()
     {
         render_setup(3, 0);
+    }
+
+    // project
+    void GLWidget::renderArc()
+    {
+        render_setup(4, 0);
+    }
+    void GLWidget::renderPatch()
+    {
+        render_setup(4, 1);
     }
 
     // render setup

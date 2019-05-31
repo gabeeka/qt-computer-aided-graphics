@@ -193,6 +193,10 @@ namespace cagd
         void installShader();
         void disableShader();
 
+        // project
+        void renderArc();
+        void renderPatch();
+
         void render_setup(GLuint render_function, GLuint render_index);
 
     private slots:
