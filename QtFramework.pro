@@ -68,6 +68,7 @@ HEADERS += \
     Core/Matrices.h \
     Core/RealSquareMatrices.h \
     Parametric/ParametricCurves3.h \
+    SOQAH/BlendingFunctionUtil.h \
     SOQAH/SOQAHPatch3.h \
     Test/TestFunctions.h \
     Parametric/ParametricSurfaces3.h \
@@ -91,6 +92,7 @@ SOURCES += \
     Core/GenericCurves3.cpp \
     Core/RealSquareMatrices.cpp \
     Parametric/ParametricCurves3.cpp \
+    SOQAH/BlendingFunctionUtil.cpp \
     SOQAH/SOQAHPatch3.cpp \
     Test/TestFunctions.cpp \
     main.cpp \
