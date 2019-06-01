@@ -1009,6 +1009,34 @@ namespace cagd
         installShader();
     }
 
+    void GLWidget::arcIndexChanged(int value)
+    {
+        _arc_index = value;
+    }
+
+    void GLWidget::cpIndexChanged(int value)
+    {
+        _cp_index = value;
+    }
+
+    void GLWidget::updateCpXCoord(int value)
+    {
+        // getControlPoint(_arc_index, _cp_index);
+        // update and render
+    }
+
+    void GLWidget::updateCpYCoord(int value)
+    {
+        // getControlPoint(_arc_index, _cp_index);
+        // update and render
+    }
+
+    void GLWidget::updateCpZCoord(int value)
+    {
+        // getControlPoint(_arc_index, _cp_index);
+        // update and render
+    }
+
     void GLWidget::_animate()
     {
 

@@ -78,8 +78,17 @@ namespace cagd
         connect(_side_widget->two_s_light, SIGNAL(clicked(bool)), _gl_widget, SLOT(initTwoSidedLighting()));
         connect(_side_widget->none, SIGNAL(clicked(bool)), _gl_widget, SLOT(disableShader()));
 
+        // project
         connect(_side_widget->arc_radio_button, SIGNAL(clicked(bool)), _gl_widget, SLOT(renderArc()));
         connect(_side_widget->patch_radio_button, SIGNAL(clicked(bool)), _gl_widget, SLOT(renderPatch()));
+
+        // control point manipulation
+        connect(_side_widget->arc_index, SIGNAL(value_changed(bool)), _gl_widget, SLOT(arcIndexChanged(int)));
+        connect(_side_widget->cp_index, SIGNAL(value_changed(bool)), _gl_widget, SLOT(cpIndexChanged(int)));
+
+        connect(_side_widget->cp_x_coord, SIGNAL(value_changed(bool)), _gl_widget, SLOT(updateCpXCoord(int)));
+        connect(_side_widget->cp_y_coord, SIGNAL(value_changed(bool)), _gl_widget, SLOT(updateCpYCoord(int)));
+        connect(_side_widget->cp_z_coord, SIGNAL(value_changed(bool)), _gl_widget, SLOT(updateCpZCoord(int)));
 
     }
 

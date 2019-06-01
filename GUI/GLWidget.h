@@ -31,6 +31,9 @@ namespace cagd
         GLuint      _render_function{1};
         GLuint      _render_index{0};
 
+        int      _arc_index{0};
+        int      _cp_index{0};
+
         // variables defining the projection matrix
         double       _aspect;            // aspect ratio of the rendering window
         double       _fovy;              // field of view in direction y
@@ -196,6 +199,14 @@ namespace cagd
         // project
         void renderArc();
         void renderPatch();
+
+        // control point manipulation
+        void arcIndexChanged(int  value);
+        void cpIndexChanged(int value);
+
+        void updateCpXCoord(int value);
+        void updateCpYCoord(int value);
+        void updateCpZCoord(int value);
 
         void render_setup(GLuint render_function, GLuint render_index);
 
