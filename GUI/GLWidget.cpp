@@ -116,6 +116,8 @@ namespace cagd
             initCyclicCurves();
 
             initSOQAHArc();
+            initSOQAHArcComposite();
+
             initSOQAHPatch();
 
 
@@ -167,7 +169,8 @@ namespace cagd
                 break;
                 case 4:
                     if (_render_index == 0)
-                        renderSOQAHArc();
+//                        renderSOQAHArc();
+                        renderSOQAHArcComposite();
                     else
                         renderSOQAHPatch();
                     break;
@@ -769,6 +772,36 @@ namespace cagd
             _image_of_soqah_arc->RenderDerivatives(2, GL_LINES);
 
         }
+    }
+
+    void GLWidget::initSOQAHArcComposite()
+    {
+        _soqah_arc_composite = new SOQAHCompositeCurve3(500);
+
+        // add arc
+        auto* arc1 = _soqah_arc_composite->AppendArc();
+        _soqah_arc_composite->GetArcPoint(0, 0) = DCoordinate3(  1.0,   0.0,  0.0);
+        _soqah_arc_composite->GetArcPoint(0, 1) = DCoordinate3(  1.0,   1.0,  0.0);
+        _soqah_arc_composite->GetArcPoint(0, 2) = DCoordinate3( -1.0,   1.0,  0.0);
+        _soqah_arc_composite->GetArcPoint(0, 3) = DCoordinate3( -1.0,  -1.0,  0.0);
+        arc1->_arc_color = Color4(0.0, 0.0, 1.0);
+        arc1->_img_color_0 = Color4(1.0, 0.0, 0.0);
+        arc1->_img_color_1 = Color4(0.0, 0.0, 1.0);
+        arc1->_img_color_2 = Color4(0.0, 0.0, 1.0);
+
+        // bla bla additional arcs
+
+
+
+        // Update stuff
+        _soqah_arc_composite->UpdateVBODatas();
+        _soqah_arc_composite->GenerateImages(2, 40);
+        _soqah_arc_composite->UpdateVBOs();
+    }
+
+    void GLWidget::renderSOQAHArcComposite()
+    {
+        (void)_soqah_arc_composite->Render(2, GL_TRUE);
     }
 
 

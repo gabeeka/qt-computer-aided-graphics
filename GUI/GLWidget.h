@@ -19,6 +19,8 @@
 #include "../SOQAH/SOQAHArcs3.h"
 #include "../SOQAH/SOQAHPatch3.h"
 
+#include "../SOQAH/SOQAHCompositeCurve3.h"
+
 #include <QTimer>
 
 namespace cagd
@@ -87,6 +89,10 @@ namespace cagd
         SOQAHArcs3*       _soqah_arc;
         GenericCurve3*    _image_of_soqah_arc;
 
+        // SOQAH composite
+        SOQAHCompositeCurve3*   _soqah_arc_composite;
+
+
         // SOQAH patch declarations
         SOQAHPatch3*                    _patch;
         TriangulatedMesh3*              _before_interpolation;
@@ -133,6 +139,11 @@ namespace cagd
         // SOQAH Arc
         void initSOQAHArc();
         void renderSOQAHArc();
+
+        // Composite
+        void initSOQAHArcComposite();
+        void renderSOQAHArcComposite();
+
 
         // SOQAH Patch
         void initSOQAHPatch();
