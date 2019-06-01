@@ -29,6 +29,11 @@ DCoordinate3& SOQAHCompositeCurve3::GetArcPoint(GLuint arc_index, GLuint point_i
     return _arcs[arc_index]->_arc->operator [](point_ind);
 }
 
+size_t SOQAHCompositeCurve3::GetArcCount() const
+{
+    return _arcs.size();
+}
+
 GLboolean SOQAHCompositeCurve3::UpdateVBODatas(GLenum usage_flag)
 {
     GLboolean ok = GL_TRUE;

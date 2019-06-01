@@ -83,12 +83,14 @@ namespace cagd
         connect(_side_widget->patch_radio_button, SIGNAL(clicked(bool)), _gl_widget, SLOT(renderPatch()));
 
         // control point manipulation
-        connect(_side_widget->arc_index, SIGNAL(value_changed(bool)), _gl_widget, SLOT(arcIndexChanged(int)));
-        connect(_side_widget->cp_index, SIGNAL(value_changed(bool)), _gl_widget, SLOT(cpIndexChanged(int)));
+        connect(_side_widget->arc_index, SIGNAL(valueChanged(int)), _gl_widget, SLOT(arcIndexChanged(int)));
+        connect(_side_widget->cp_index, SIGNAL(valueChanged(int)), _gl_widget, SLOT(cpIndexChanged(int)));
 
-        connect(_side_widget->cp_x_coord, SIGNAL(value_changed(bool)), _gl_widget, SLOT(updateCpXCoord(int)));
-        connect(_side_widget->cp_y_coord, SIGNAL(value_changed(bool)), _gl_widget, SLOT(updateCpYCoord(int)));
-        connect(_side_widget->cp_z_coord, SIGNAL(value_changed(bool)), _gl_widget, SLOT(updateCpZCoord(int)));
+        connect(_side_widget->cp_x_coord, SIGNAL(valueChanged(double)), _gl_widget, SLOT(updateCpXCoord(double)));
+        connect(_side_widget->cp_y_coord, SIGNAL(valueChanged(double)), _gl_widget, SLOT(updateCpYCoord(double)));
+        connect(_side_widget->cp_z_coord, SIGNAL(valueChanged(double)), _gl_widget, SLOT(updateCpZCoord(double)));
+
+        connect(_side_widget->appendArc, SIGNAL(clicked(bool)), _gl_widget, SLOT(addNewArc()));
 
     }
 

@@ -30,6 +30,8 @@ namespace cagd
         Q_OBJECT
 
     private:
+        QWidget*     _main_widget;
+
         GLuint      _render_function{1};
         GLuint      _render_index{0};
 
@@ -144,6 +146,8 @@ namespace cagd
         void initSOQAHArcComposite();
         void renderSOQAHArcComposite();
 
+        void updateSOQAHArcComposite();
+        void addNewSOQAHArc();
 
         // SOQAH Patch
         void initSOQAHPatch();
@@ -215,9 +219,11 @@ namespace cagd
         void arcIndexChanged(int  value);
         void cpIndexChanged(int value);
 
-        void updateCpXCoord(int value);
-        void updateCpYCoord(int value);
-        void updateCpZCoord(int value);
+        void updateCpXCoord(double value);
+        void updateCpYCoord(double value);
+        void updateCpZCoord(double value);
+
+        void addNewArc();
 
         void render_setup(GLuint render_function, GLuint render_index);
 

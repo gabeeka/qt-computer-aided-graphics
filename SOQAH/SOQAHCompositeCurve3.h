@@ -43,6 +43,8 @@ public:
 
     DCoordinate3& GetArcPoint(GLuint arc_index, GLuint point_ind);
 
+    size_t GetArcCount() const;
+
     GLboolean UpdateVBODatas(GLenum usage_flag = GL_STATIC_DRAW);
     GLboolean GenerateImages(GLuint max_order_of_derivatives, GLuint div_point_count, GLenum usage_flag = GL_STATIC_DRAW);
     GLboolean UpdateVBOs(GLenum usage_flag = GL_STATIC_DRAW);

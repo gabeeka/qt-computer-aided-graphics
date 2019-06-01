@@ -4,8 +4,12 @@
 #include <GL/glu.h>
 #endif
 
+#include "../GUI/MainWindow.h"
+
 #include <iostream>
 #include <string>
+#include <cstdlib>
+#include <ctime>
 using namespace std;
 
 #include <Core/Exceptions.h>
@@ -20,6 +24,8 @@ namespace cagd
     //--------------------------------
     GLWidget::GLWidget(QWidget *parent, const QGLFormat &format): QGLWidget(format, parent)
     {
+        _main_widget = parent;
+        srand(time(nullptr));
         _timer = new QTimer(this);
         _timer->setInterval(0);
         connect(_timer, SIGNAL(timeout()), this, SLOT(_animate()));
@@ -777,26 +783,7 @@ namespace cagd
     void GLWidget::initSOQAHArcComposite()
     {
         _soqah_arc_composite = new SOQAHCompositeCurve3(500);
-
-        // add arc
-        auto* arc1 = _soqah_arc_composite->AppendArc();
-        _soqah_arc_composite->GetArcPoint(0, 0) = DCoordinate3(  1.0,   0.0,  0.0);
-        _soqah_arc_composite->GetArcPoint(0, 1) = DCoordinate3(  1.0,   1.0,  0.0);
-        _soqah_arc_composite->GetArcPoint(0, 2) = DCoordinate3( -1.0,   1.0,  0.0);
-        _soqah_arc_composite->GetArcPoint(0, 3) = DCoordinate3( -1.0,  -1.0,  0.0);
-        arc1->_arc_color = Color4(0.0, 0.0, 1.0);
-        arc1->_img_color_0 = Color4(1.0, 0.0, 0.0);
-        arc1->_img_color_1 = Color4(0.0, 0.0, 1.0);
-        arc1->_img_color_2 = Color4(0.0, 0.0, 1.0);
-
-        // bla bla additional arcs
-
-
-
-        // Update stuff
-        _soqah_arc_composite->UpdateVBODatas();
-        _soqah_arc_composite->GenerateImages(2, 40);
-        _soqah_arc_composite->UpdateVBOs();
+        addNewSOQAHArc();
     }
 
     void GLWidget::renderSOQAHArcComposite()
@@ -804,6 +791,37 @@ namespace cagd
         (void)_soqah_arc_composite->Render(2, GL_TRUE);
     }
 
+    void GLWidget::updateSOQAHArcComposite()
+    {
+        _soqah_arc_composite->UpdateVBODatas();
+        _soqah_arc_composite->GenerateImages(2, 40);
+        _soqah_arc_composite->UpdateVBOs();
+    }
+
+    void GLWidget::addNewSOQAHArc()
+    {
+        auto* arc1 = _soqah_arc_composite->AppendArc();
+        auto index = static_cast<GLuint>(_soqah_arc_composite->GetArcCount() - 1);
+
+        _soqah_arc_composite->GetArcPoint(index, 0) = DCoordinate3(  1.0,   0.0,  index * 5.0);
+        _soqah_arc_composite->GetArcPoint(index, 1) = DCoordinate3(  1.0,   1.0,  index * 5.0);
+        _soqah_arc_composite->GetArcPoint(index, 2) = DCoordinate3( -1.0,   1.0,  index * 5.0);
+        _soqah_arc_composite->GetArcPoint(index, 3) = DCoordinate3( -1.0,  -1.0,  index * 5.0);
+
+        arc1->_arc_color    = Color4((static_cast<float>(rand()) / (RAND_MAX)), (static_cast<float>(rand()) / (RAND_MAX)), (static_cast<float>(rand()) / (RAND_MAX)));
+        arc1->_img_color_0  = Color4((static_cast<float>(rand()) / (RAND_MAX)), (static_cast<float>(rand()) / (RAND_MAX)), (static_cast<float>(rand()) / (RAND_MAX)));
+        arc1->_img_color_1  = Color4((static_cast<float>(rand()) / (RAND_MAX)), (static_cast<float>(rand()) / (RAND_MAX)), (static_cast<float>(rand()) / (RAND_MAX)));
+        arc1->_img_color_2  = Color4((static_cast<float>(rand()) / (RAND_MAX)), (static_cast<float>(rand()) / (RAND_MAX)), (static_cast<float>(rand()) / (RAND_MAX)));
+
+
+        // Update stuff
+        updateSOQAHArcComposite();
+    }
+
+    void GLWidget::addNewArc()
+    {
+        addNewSOQAHArc();
+    }
 
 
     //-----------------------------------
@@ -1050,24 +1068,28 @@ namespace cagd
     void GLWidget::cpIndexChanged(int value)
     {
         _cp_index = value;
+        auto* widget = reinterpret_cast<MainWindow*>(_main_widget);
+        widget->_side_widget->cp_x_coord->setValue(_soqah_arc_composite->GetArcPoint(_arc_index, _cp_index).x());
+        widget->_side_widget->cp_y_coord->setValue(_soqah_arc_composite->GetArcPoint(_arc_index, _cp_index).y());
+        widget->_side_widget->cp_z_coord->setValue(_soqah_arc_composite->GetArcPoint(_arc_index, _cp_index).z());
     }
 
-    void GLWidget::updateCpXCoord(int value)
+    void GLWidget::updateCpXCoord(double value)
     {
-        // getControlPoint(_arc_index, _cp_index);
-        // update and render
+        _soqah_arc_composite->GetArcPoint(_arc_index, _cp_index).x()=value;
+        updateSOQAHArcComposite();
     }
 
-    void GLWidget::updateCpYCoord(int value)
+    void GLWidget::updateCpYCoord(double value)
     {
-        // getControlPoint(_arc_index, _cp_index);
-        // update and render
+        _soqah_arc_composite->GetArcPoint(_arc_index, _cp_index).y()=value;
+        updateSOQAHArcComposite();
     }
 
-    void GLWidget::updateCpZCoord(int value)
+    void GLWidget::updateCpZCoord(double value)
     {
-        // getControlPoint(_arc_index, _cp_index);
-        // update and render
+        _soqah_arc_composite->GetArcPoint(_arc_index, _cp_index).z()=value;
+        updateSOQAHArcComposite();
     }
 
     void GLWidget::_animate()

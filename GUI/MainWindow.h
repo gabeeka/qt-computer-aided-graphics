@@ -13,12 +13,13 @@ namespace cagd
         Q_OBJECT
 
     private:
-        SideWidget  *_side_widget;      // pointer to our side widget
         GLWidget    *_gl_widget;        // pointer to our rendering OpenGL widget
 
         QScrollArea *_scroll_area;      // provides a scrolling view onto our side widget
 
     public:
+        SideWidget  *_side_widget;      // pointer to our side widget
+
         // special and default constructor
         MainWindow(QWidget *parent = 0);
 
