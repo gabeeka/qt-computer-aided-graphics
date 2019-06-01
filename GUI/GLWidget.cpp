@@ -784,6 +784,12 @@ namespace cagd
     {
         _soqah_arc_composite = new SOQAHCompositeCurve3(500);
         addNewSOQAHArc();
+        addNewSOQAHArc();
+        // join the first 2 arcs
+        _soqah_arc_composite->JoinArcs(0, SOQAHCompositeCurve3::Direction::RIGHT,
+                                       1, SOQAHCompositeCurve3::Direction::RIGHT);
+        // we need to update after each join
+        updateSOQAHArcComposite();
     }
 
     void GLWidget::renderSOQAHArcComposite()

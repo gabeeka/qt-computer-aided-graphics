@@ -11,10 +11,10 @@ namespace cagd
 class SOQAHCompositeCurve3
 {
 public:
-    enum
+    enum class Direction
     {
         LEFT  = 0,
-        RIGHT = 0
+        RIGHT = 1
     };
 
     struct ArcAttributes
@@ -42,6 +42,7 @@ public:
     ArcAttributes* AppendArc();
 
     DCoordinate3& GetArcPoint(GLuint arc_index, GLuint point_ind);
+    DCoordinate3 GetArcPoint(GLuint arc_index, GLuint point_ind) const;
 
     size_t GetArcCount() const;
 
@@ -50,6 +51,9 @@ public:
     GLboolean UpdateVBOs(GLenum usage_flag = GL_STATIC_DRAW);
 
     GLboolean Render(GLuint order, GLboolean renderControlPoints = GL_FALSE) const;
+
+    GLboolean JoinArcs(GLuint ind1, Direction dir1, GLuint ind2, Direction dir2);
+    void RefreshJoins(ArcAttributes* arc_left, ArcAttributes* arc_between, ArcAttributes* arc_right);
 
 private:
     std::vector<ArcAttributes*>  _arcs;
