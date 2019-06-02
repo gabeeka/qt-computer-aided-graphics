@@ -909,16 +909,37 @@ namespace cagd
     void GLWidget::updatePatchIndex(int value)
     {
         _patch_index = value;
+        auto* widget = reinterpret_cast<MainWindow*>(_main_widget);
+        DCoordinate3 point;
+        _soqah_patch_composite->GetPatchPoint(_patch_index, _p_cp_index_1, _p_cp_index_2, point);
+
+        widget->_side_widget->p_cp_x_coord->setValue(point.x());
+        widget->_side_widget->p_cp_y_coord->setValue(point.y());
+        widget->_side_widget->p_cp_z_coord->setValue(point.z());
     }
 
     void GLWidget::updatePatchCpIndex1(int value)
     {
         _p_cp_index_1 = value;
+        auto* widget = reinterpret_cast<MainWindow*>(_main_widget);
+        DCoordinate3 point;
+        _soqah_patch_composite->GetPatchPoint(_patch_index, _p_cp_index_1, _p_cp_index_2, point);
+
+        widget->_side_widget->p_cp_x_coord->setValue(point.x());
+        widget->_side_widget->p_cp_y_coord->setValue(point.y());
+        widget->_side_widget->p_cp_z_coord->setValue(point.z());
     }
 
     void GLWidget::updatePatchCpIndex2(int value)
     {
         _p_cp_index_2 = value;
+        auto* widget = reinterpret_cast<MainWindow*>(_main_widget);
+        DCoordinate3 point;
+        _soqah_patch_composite->GetPatchPoint(_patch_index, _p_cp_index_1, _p_cp_index_2, point);
+
+        widget->_side_widget->p_cp_x_coord->setValue(point.x());
+        widget->_side_widget->p_cp_y_coord->setValue(point.y());
+        widget->_side_widget->p_cp_z_coord->setValue(point.z());
     }
 
     void GLWidget::updatePatchCpXCoord(double value)
@@ -926,6 +947,7 @@ namespace cagd
         DCoordinate3 point;
         _soqah_patch_composite->GetPatchPoint(_patch_index, _p_cp_index_1, _p_cp_index_2, point);
         point.x()=value;
+        _soqah_patch_composite->SetPatchPoint(_patch_index, _p_cp_index_1, _p_cp_index_2, point);
        _soqah_patch_composite->UpdatePatches();
     }
 
@@ -934,6 +956,7 @@ namespace cagd
         DCoordinate3 point;
         _soqah_patch_composite->GetPatchPoint(_patch_index, _p_cp_index_1, _p_cp_index_2, point);
         point.y()=value;
+        _soqah_patch_composite->SetPatchPoint(_patch_index, _p_cp_index_1, _p_cp_index_2, point);
         _soqah_patch_composite->UpdatePatches();
     }
 
@@ -942,6 +965,7 @@ namespace cagd
         DCoordinate3 point;
         _soqah_patch_composite->GetPatchPoint(_patch_index, _p_cp_index_1, _p_cp_index_2, point);
         point.z()=value;
+        _soqah_patch_composite->SetPatchPoint(_patch_index, _p_cp_index_1, _p_cp_index_2, point);
         _soqah_patch_composite->UpdatePatches();
     }
 
