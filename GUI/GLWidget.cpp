@@ -784,17 +784,12 @@ namespace cagd
     {
         _soqah_arc_composite = new SOQAHCompositeCurve3(500);
         addNewSOQAHArc();
-        addNewSOQAHArc();
-        // join the first 2 arcs
-        _soqah_arc_composite->JoinArcs(0, SOQAHCompositeCurve3::Direction::RIGHT,
-                                       1, SOQAHCompositeCurve3::Direction::RIGHT);
-        // we need to update after each join
         updateSOQAHArcComposite();
     }
 
     void GLWidget::renderSOQAHArcComposite()
     {
-        (void)_soqah_arc_composite->Render(2, GL_TRUE);
+        (void)_soqah_arc_composite->Render(0, GL_TRUE);
     }
 
     void GLWidget::updateSOQAHArcComposite()
@@ -829,6 +824,38 @@ namespace cagd
         addNewSOQAHArc();
     }
 
+    void GLWidget::updateArcJoinIndex1(int value)
+    {
+        _joinIndex1 = value;
+    }
+
+
+    void GLWidget::updateArcJoinIndex2(int value)
+    {
+        _joinIndex2 = value;
+    }
+
+    void GLWidget::updateArcJoinDir1(int value)
+    {
+        if (value == 0)
+            _joinDirection1 = SOQAHCompositeCurve3::Direction::LEFT;
+        else
+            _joinDirection1 = SOQAHCompositeCurve3::Direction::RIGHT;
+    }
+
+    void GLWidget::updateArcJoinDir2(int value)
+    {
+        if (value == 0)
+            _joinDirection2 = SOQAHCompositeCurve3::Direction::LEFT;
+        else
+            _joinDirection2 = SOQAHCompositeCurve3::Direction::RIGHT;
+    }
+
+    void GLWidget::joinArcs()
+    {
+        _soqah_arc_composite->JoinArcs(_joinIndex1, _joinDirection1, _joinIndex2, _joinDirection2);
+        updateSOQAHArcComposite();
+    }
 
     //-----------------------------------
     // implementation of the public slots

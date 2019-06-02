@@ -35,6 +35,13 @@ namespace cagd
         GLuint      _render_function{1};
         GLuint      _render_index{0};
 
+        // arc join operation flags
+        GLuint _joinIndex1{0};
+        GLuint _joinIndex2{1};
+
+        SOQAHCompositeCurve3::Direction _joinDirection1{SOQAHCompositeCurve3::Direction::LEFT};
+        SOQAHCompositeCurve3::Direction _joinDirection2{SOQAHCompositeCurve3::Direction::LEFT};
+
         int      _arc_index{0};
         int      _cp_index{0};
 
@@ -224,6 +231,15 @@ namespace cagd
         void updateCpZCoord(double value);
 
         void addNewArc();
+
+        // arc join operation
+        void updateArcJoinIndex1(int value);
+        void updateArcJoinIndex2(int value);
+
+        void updateArcJoinDir1(int value);
+        void updateArcJoinDir2(int value);
+
+        void joinArcs();
 
         void render_setup(GLuint render_function, GLuint render_index);
 

@@ -92,6 +92,14 @@ namespace cagd
 
         connect(_side_widget->appendArc, SIGNAL(clicked(bool)), _gl_widget, SLOT(addNewArc()));
 
+        // arc join operation
+        connect(_side_widget->arc_join_ind_1, SIGNAL(valueChanged(int)), _gl_widget, SLOT(updateArcJoinIndex1(int)));
+        connect(_side_widget->arc_join_ind_2, SIGNAL(valueChanged(int)), _gl_widget, SLOT(updateArcJoinIndex2(int)));
+
+        connect(_side_widget->arc_join_dir_1, SIGNAL(currentIndexChanged(int)), _gl_widget, SLOT(updateArcJoinDir1(int)));
+        connect(_side_widget->arc_join_dir_2, SIGNAL(currentIndexChanged(int)), _gl_widget, SLOT(updateArcJoinDir2(int)));
+
+        connect(_side_widget->join_arcs, SIGNAL(clicked(bool)), _gl_widget, SLOT(joinArcs()));
     }
 
     //--------------------------------

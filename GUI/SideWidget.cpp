@@ -1,4 +1,5 @@
 #include "SideWidget.h"
+#include "../SOQAH/SOQAHCompositeCurve3.h";
 
 namespace cagd
 {
@@ -17,5 +18,11 @@ namespace cagd
         p.setColor(QPalette::Highlight, QColor(50,255,10).lighter());
 
         rotate_y_slider->setPalette(p);
+
+        arc_join_dir_1->addItem("LEFT", 0);
+        arc_join_dir_1->addItem("RIGHT", 1);
+
+        arc_join_dir_2->addItem("LEFT", 0);
+        arc_join_dir_2->addItem("RIGHT", 1);
     }
 }
