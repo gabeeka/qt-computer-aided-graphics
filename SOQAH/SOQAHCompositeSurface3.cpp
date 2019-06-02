@@ -80,7 +80,7 @@ GLboolean SOQAHCompositeSurface3::PatchAttributes::UpdatePatch
     return ok;
 }
 
-GLboolean SOQAHCompositeSurface3::PatchAttributes::RenderPatch()
+GLboolean SOQAHCompositeSurface3::PatchAttributes::RenderPatch(GLuint order)
 {
     GLboolean ok = GL_TRUE;
 
@@ -103,6 +103,8 @@ GLboolean SOQAHCompositeSurface3::PatchAttributes::RenderPatch()
         glDepthMask(GL_TRUE);
         glDisable(GL_BLEND);
     }
+
+    if (order < 1) return ok;
 
     for(GLuint i = 0; i < _u_lines->GetColumnCount(); i++)
     {
@@ -180,5 +182,62 @@ GLboolean SOQAHCompositeSurface3::GetPatchPoint(GLuint patch_index, GLuint point
 GLboolean SOQAHCompositeSurface3::SetPatchPoint(GLuint patch_index, GLuint point_ind_1, GLuint point_ind_2, const DCoordinate3& point)
 {
     return _patches[patch_index]->_patch->SetData(point_ind_1, point_ind_2, point);
+}
+
+GLboolean SOQAHCompositeSurface3::JoinPatches(GLuint ind1, Direction dir1, GLuint ind2, Direction dir2)
+{
+    GLboolean ok = GL_TRUE;
+
+    auto* patch1 = _patches[ind1];
+    auto* patch2 = _patches[ind2];
+
+    auto* join_patch = AppendPatch();
+
+    if ((dir1 == Direction::EAST && dir2 == Direction::WEST) ||
+        (dir1 == Direction::WEST && dir2 == Direction::EAST))
+    {
+        if (dir1 == Direction::WEST && dir2 == Direction::EAST)
+        {
+            patch1 = _patches[ind2];
+            patch2 = _patches[ind1];
+        }
+        for (GLuint i = 0; i < 4; ++i)
+        {
+            // join the first patch's right side
+            auto cp3i = patch1->_patch->operator ()(3, i);
+            auto cp2i = patch1->_patch->operator ()(2, i);
+
+            // join patch (new patch)
+            auto cp0i = join_patch->_patch->operator ()(0, i);
+            auto cp1i = join_patch->_patch->operator ()(1, i);
+
+            cp0i = cp3i;
+            cp1i = 2 * cp3i - cp2i;
+
+            ok = ok && join_patch->_patch->SetData(0, i, cp0i.x(), cp0i.y(), cp0i.z());
+            ok = ok && join_patch->_patch->SetData(1, i, cp1i.x(), cp1i.y(), cp1i.z());
+        }
+
+        for (GLuint i = 0; i < 4; ++i)
+        {
+            // join the first patch's right side
+            auto cp0i = patch2->_patch->operator ()(0, i);
+            auto cp1i = patch2->_patch->operator ()(1, i);
+
+            // join patch (new patch)
+            auto cp3i = join_patch->_patch->operator ()(3, i);
+            auto cp2i = join_patch->_patch->operator ()(2, i);
+
+            cp3i = cp0i;
+            cp2i = 2 * cp0i - cp1i;
+
+            ok = ok && join_patch->_patch->SetData(3, i, cp3i.x(), cp3i.y(), cp3i.z());
+            ok = ok && join_patch->_patch->SetData(2, i, cp2i.x(), cp2i.y(), cp2i.z());
+        }
+    }
+
+
+
+    return ok;
 }
 

@@ -50,7 +50,7 @@ public:
             GLenum usage_flag = GL_STATIC_DRAW
             );
 
-        GLboolean RenderPatch();
+        GLboolean RenderPatch(GLuint order = 0);
     };
 
     SOQAHCompositeSurface3(GLuint patch_count = 500);
@@ -72,6 +72,8 @@ public:
     GLboolean GetPatchPoint(GLuint patch_index, GLuint point_ind_1, GLuint point_ind_2, DCoordinate3& point);
 
     GLboolean SetPatchPoint(GLuint patch_index, GLuint point_ind_1, GLuint point_ind_2, const DCoordinate3& point);
+
+    GLboolean JoinPatches(GLuint ind1, Direction dir1, GLuint ind2, Direction dir2);
 private:
     std::vector<PatchAttributes*>   _patches;
 };

@@ -1,5 +1,4 @@
 #include "SideWidget.h"
-#include "../SOQAH/SOQAHCompositeCurve3.h";
 
 namespace cagd
 {
