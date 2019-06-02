@@ -30,6 +30,8 @@ public:
         ArcAttributes*      _left{};
         ArcAttributes*      _right{};
 
+        GLboolean           _is_join_arc{GL_FALSE};
+
         GLboolean GenerateImage(GLuint max_order_of_derivatives, GLuint div_point_count, GLenum usage_flag = GL_STATIC_DRAW);
     };
 
@@ -39,7 +41,7 @@ public:
     SOQAHCompositeCurve3(GLuint arcCount = 500);
 
     // Returns a pointer to the newly added arc
-    ArcAttributes* AppendArc();
+    ArcAttributes* AppendArc(GLboolean is_join_arc = GL_FALSE);
 
     DCoordinate3& GetArcPoint(GLuint arc_index, GLuint point_ind);
     DCoordinate3 GetArcPoint(GLuint arc_index, GLuint point_ind) const;

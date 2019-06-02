@@ -18,9 +18,10 @@ SOQAHCompositeCurve3::SOQAHCompositeCurve3(GLuint arcCount)
     _arcs.reserve(arcCount);
 }
 
-SOQAHCompositeCurve3::ArcAttributes* SOQAHCompositeCurve3::AppendArc()
+SOQAHCompositeCurve3::ArcAttributes* SOQAHCompositeCurve3::AppendArc(GLboolean is_join_arc)
 {
     _arcs.push_back(new SOQAHCompositeCurve3::ArcAttributes());
+    _arcs[_arcs.size() - 1]->_is_join_arc = is_join_arc;
     return _arcs[_arcs.size() - 1];
 }
 
@@ -48,7 +49,7 @@ GLboolean SOQAHCompositeCurve3::UpdateVBODatas(GLenum usage_flag)
     {
         if (arc->_left && arc->_right)
         {
-            RefreshJoins(arc->_left, arc, arc->_right);
+            if (arc->_is_join_arc) RefreshJoins(arc->_left, arc, arc->_right);
         }
     }
 
@@ -142,7 +143,7 @@ GLboolean SOQAHCompositeCurve3::JoinArcs(GLuint ind1, Direction dir1, GLuint ind
     auto* arc2 = _arcs[ind2];
 
     // We add a new arc
-    auto* new_arc = AppendArc();
+    auto* new_arc = AppendArc(GL_TRUE);
     // Set color
     new_arc->_arc_color    = Color4((static_cast<float>(rand()) / (RAND_MAX)),
                                     (static_cast<float>(rand()) / (RAND_MAX)),
