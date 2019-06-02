@@ -1,6 +1,6 @@
 #pragma once
 
-#include "./SOQAHArcs3.h"
+#include "SOQAHArcs3.h"
 #include "../Core/Colors4.h"
 
 #include <vector>

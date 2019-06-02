@@ -125,6 +125,7 @@ namespace cagd
             initSOQAHArcComposite();
 
             initSOQAHPatch();
+            initSOQAHPatchComposite();
 
 
             HCoordinate3 direction(0.0, 0.0, 1.0, 0.0);
@@ -178,7 +179,8 @@ namespace cagd
 //                        renderSOQAHArc();
                         renderSOQAHArcComposite();
                     else
-                        renderSOQAHPatch();
+//                        renderSOQAHPatch();
+                        renderSOQAHPatchComposite();
                     break;
             }
 
@@ -740,6 +742,41 @@ namespace cagd
                 (*_v_lines)[i]->RenderDerivatives(0, GL_LINE_STRIP);
             }
         }
+    }
+
+    void GLWidget::initSOQAHPatchComposite()
+    {
+        _soqah_patch_composite = new SOQAHCompositeSurface3();
+
+        // add control points
+        auto* patch = _soqah_patch_composite->AppendPatch();
+        patch->_patch->SetData(0, 0, -2.0, -2.0, 0.0);
+        patch->_patch->SetData(0, 1, -2.0, -1.0, 0.0);
+        patch->_patch->SetData(0, 2, -2.0,  1.0, 0.0);
+        patch->_patch->SetData(0, 3, -2.0,  2.0, 0.0);
+
+        patch->_patch->SetData(1, 0, -1.0, -2.0, 0.0);
+        patch->_patch->SetData(1, 1, -1.0, -1.0, 2.0);
+        patch->_patch->SetData(1, 2, -1.0,  1.0, 2.0);
+        patch->_patch->SetData(1, 3, -1.0,  2.0, 0.0);
+
+        patch->_patch->SetData(2, 0, 1.0, -2.0, 0.0);
+        patch->_patch->SetData(2, 1, 1.0, -1.0, 2.0);
+        patch->_patch->SetData(2, 2, 1.0,  1.0, 2.0);
+        patch->_patch->SetData(2, 3, 1.0,  2.0, 0.0);
+
+        patch->_patch->SetData(3, 0, 2.0, -2.0, 0.0);
+        patch->_patch->SetData(3, 1, 2.0, -1.0, 0.0);
+        patch->_patch->SetData(3, 2, 2.0,  1.0, 0.0);
+        patch->_patch->SetData(3, 3, 2.0,  2.0, 0.0);
+
+        // update patches
+        _soqah_patch_composite->UpdatePatches();
+    }
+
+    void GLWidget::renderSOQAHPatchComposite()
+    {
+        _soqah_patch_composite->RenderPatches();
     }
 
     void GLWidget::initSOQAHArc()

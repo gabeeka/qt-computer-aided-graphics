@@ -20,6 +20,7 @@
 #include "../SOQAH/SOQAHPatch3.h"
 
 #include "../SOQAH/SOQAHCompositeCurve3.h"
+#include "../SOQAH/SOQAHCompositeSurface3.h"
 
 #include <QTimer>
 
@@ -98,7 +99,7 @@ namespace cagd
         SOQAHArcs3*       _soqah_arc;
         GenericCurve3*    _image_of_soqah_arc;
 
-        // SOQAH composite
+        // SOQAH arc composite
         SOQAHCompositeCurve3*   _soqah_arc_composite;
 
 
@@ -108,6 +109,9 @@ namespace cagd
         TriangulatedMesh3*              _after_interpolation;
         RowMatrix<GenericCurve3*>*      _u_lines;
         RowMatrix<GenericCurve3*>*      _v_lines;
+
+        // SOQAH patch composite
+        SOQAHCompositeSurface3*         _soqah_patch_composite;
 
         // Lighting
         DirectionalLight*                       _directionalLight;
@@ -149,7 +153,7 @@ namespace cagd
         void initSOQAHArc();
         void renderSOQAHArc();
 
-        // Composite
+        // SOQAH Arc Composite
         void initSOQAHArcComposite();
         void renderSOQAHArcComposite();
 
@@ -159,6 +163,10 @@ namespace cagd
         // SOQAH Patch
         void initSOQAHPatch();
         void renderSOQAHPatch();
+
+        // SOQAH Patch Composite
+        void initSOQAHPatchComposite();
+        void renderSOQAHPatchComposite();
 
         // Shaders
         GLuint          _shader_index{0};

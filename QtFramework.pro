@@ -84,7 +84,8 @@ HEADERS += \
     Core/TensorProductSurfaces3.h \
     Core/ShaderPrograms.h \
     SOQAH/SOQAHArcs3.h \
-    SOQAH/SOQAHCompositeCurve3.h
+    SOQAH/SOQAHCompositeCurve3.h \
+    SOQAH/SOQAHCompositeSurface3.h
 
 SOURCES += \
     GUI/GLWidget.cpp \
@@ -106,5 +107,6 @@ SOURCES += \
     Core/TensorProductSurfaces3.cpp \
     Core/ShaderPrograms.cpp \
     SOQAH/SOQAHArcs3.cpp \
-    SOQAH/SOQAHCompositeCurve3.cpp
+    SOQAH/SOQAHCompositeCurve3.cpp \
+    SOQAH/SOQAHCompositeSurface3.cpp
 
