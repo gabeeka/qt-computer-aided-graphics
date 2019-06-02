@@ -43,8 +43,14 @@ namespace cagd
         SOQAHCompositeCurve3::Direction _joinDirection1{SOQAHCompositeCurve3::Direction::LEFT};
         SOQAHCompositeCurve3::Direction _joinDirection2{SOQAHCompositeCurve3::Direction::LEFT};
 
+        // arc control point manipulation
         int      _arc_index{0};
         int      _cp_index{0};
+
+        // patch control point manipulation
+        int     _patch_index{0};
+        int     _p_cp_index_1{0};
+        int     _p_cp_index_2{0};
 
         // variables defining the projection matrix
         double       _aspect;            // aspect ratio of the rendering window
@@ -168,6 +174,9 @@ namespace cagd
         void initSOQAHPatchComposite();
         void renderSOQAHPatchComposite();
 
+        void addNewSOQAHPatch();
+
+
         // Shaders
         GLuint          _shader_index{0};
         ShaderProgram   _shader;
@@ -248,6 +257,18 @@ namespace cagd
         void updateArcJoinDir2(int value);
 
         void joinArcs();
+
+        // patch control point manipulation
+        void updatePatchIndex(int value);
+
+        void updatePatchCpIndex1(int value);
+        void updatePatchCpIndex2(int value);
+
+        void updatePatchCpXCoord(double value);
+        void updatePatchCpYCoord(double value);
+        void updatePatchCpZCoord(double value);
+
+        void addNewPatch();
 
         void render_setup(GLuint render_function, GLuint render_index);
 

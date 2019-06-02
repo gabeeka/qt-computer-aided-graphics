@@ -747,36 +747,48 @@ namespace cagd
     void GLWidget::initSOQAHPatchComposite()
     {
         _soqah_patch_composite = new SOQAHCompositeSurface3();
-
         // add control points
-        auto* patch = _soqah_patch_composite->AppendPatch();
-        patch->_patch->SetData(0, 0, -2.0, -2.0, 0.0);
-        patch->_patch->SetData(0, 1, -2.0, -1.0, 0.0);
-        patch->_patch->SetData(0, 2, -2.0,  1.0, 0.0);
-        patch->_patch->SetData(0, 3, -2.0,  2.0, 0.0);
-
-        patch->_patch->SetData(1, 0, -1.0, -2.0, 0.0);
-        patch->_patch->SetData(1, 1, -1.0, -1.0, 2.0);
-        patch->_patch->SetData(1, 2, -1.0,  1.0, 2.0);
-        patch->_patch->SetData(1, 3, -1.0,  2.0, 0.0);
-
-        patch->_patch->SetData(2, 0, 1.0, -2.0, 0.0);
-        patch->_patch->SetData(2, 1, 1.0, -1.0, 2.0);
-        patch->_patch->SetData(2, 2, 1.0,  1.0, 2.0);
-        patch->_patch->SetData(2, 3, 1.0,  2.0, 0.0);
-
-        patch->_patch->SetData(3, 0, 2.0, -2.0, 0.0);
-        patch->_patch->SetData(3, 1, 2.0, -1.0, 0.0);
-        patch->_patch->SetData(3, 2, 2.0,  1.0, 0.0);
-        patch->_patch->SetData(3, 3, 2.0,  2.0, 0.0);
-
-        // update patches
-        _soqah_patch_composite->UpdatePatches();
+        addNewSOQAHPatch();
     }
 
     void GLWidget::renderSOQAHPatchComposite()
     {
         _soqah_patch_composite->RenderPatches();
+    }
+
+    void GLWidget::addNewSOQAHPatch()
+    {
+        auto* patch = _soqah_patch_composite->AppendPatch();
+        auto index = static_cast<GLuint>(_soqah_patch_composite->GetPatchCount()- 1);
+
+        patch->_patch->SetData(0, 0, -2.0, -2.0, 0.0 + index *5.0);
+        patch->_patch->SetData(0, 1, -2.0, -1.0, 0.0 + index *5.0);
+        patch->_patch->SetData(0, 2, -2.0,  1.0, 0.0 + index *5.0) ;
+        patch->_patch->SetData(0, 3, -2.0,  2.0, 0.0 + index *5.0);
+
+        patch->_patch->SetData(1, 0, -1.0, -2.0, 0.0 + index *5.0);
+        patch->_patch->SetData(1, 1, -1.0, -1.0, 2.0 + index *5.0);
+        patch->_patch->SetData(1, 2, -1.0,  1.0, 2.0 + index *5.0);
+        patch->_patch->SetData(1, 3, -1.0,  2.0, 0.0 + index *5.0);
+
+        patch->_patch->SetData(2, 0, 1.0, -2.0, 0.0 + index *5.0);
+        patch->_patch->SetData(2, 1, 1.0, -1.0, 2.0 + index *5.0);
+        patch->_patch->SetData(2, 2, 1.0,  1.0, 2.0 + index *5.0);
+        patch->_patch->SetData(2, 3, 1.0,  2.0, 0.0 + index *5.0);
+
+        patch->_patch->SetData(3, 0, 2.0, -2.0, 0.0 + index *5.0);
+        patch->_patch->SetData(3, 1, 2.0, -1.0, 0.0 + index *5.0);
+        patch->_patch->SetData(3, 2, 2.0,  1.0, 0.0 + index *5.0);
+        patch->_patch->SetData(3, 3, 2.0,  2.0, 0.0 + index *5.0);
+
+
+        // update patches
+        _soqah_patch_composite->UpdatePatches();
+    }
+
+    void GLWidget::addNewPatch()
+    {
+        addNewSOQAHPatch();
     }
 
     void GLWidget::initSOQAHArc()
@@ -892,6 +904,45 @@ namespace cagd
     {
         _soqah_arc_composite->JoinArcs(_joinIndex1, _joinDirection1, _joinIndex2, _joinDirection2);
         updateSOQAHArcComposite();
+    }
+
+    void GLWidget::updatePatchIndex(int value)
+    {
+        _patch_index = value;
+    }
+
+    void GLWidget::updatePatchCpIndex1(int value)
+    {
+        _p_cp_index_1 = value;
+    }
+
+    void GLWidget::updatePatchCpIndex2(int value)
+    {
+        _p_cp_index_2 = value;
+    }
+
+    void GLWidget::updatePatchCpXCoord(double value)
+    {
+        DCoordinate3 point;
+        _soqah_patch_composite->GetPatchPoint(_patch_index, _p_cp_index_1, _p_cp_index_2, point);
+        point.x()=value;
+       _soqah_patch_composite->UpdatePatches();
+    }
+
+    void GLWidget::updatePatchCpYCoord(double value)
+    {
+        DCoordinate3 point;
+        _soqah_patch_composite->GetPatchPoint(_patch_index, _p_cp_index_1, _p_cp_index_2, point);
+        point.y()=value;
+        _soqah_patch_composite->UpdatePatches();
+    }
+
+    void GLWidget::updatePatchCpZCoord(double value)
+    {
+        DCoordinate3 point;
+        _soqah_patch_composite->GetPatchPoint(_patch_index, _p_cp_index_1, _p_cp_index_2, point);
+        point.z()=value;
+        _soqah_patch_composite->UpdatePatches();
     }
 
     //-----------------------------------

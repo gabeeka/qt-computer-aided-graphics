@@ -100,6 +100,19 @@ namespace cagd
         connect(_side_widget->arc_join_dir_2, SIGNAL(currentIndexChanged(int)), _gl_widget, SLOT(updateArcJoinDir2(int)));
 
         connect(_side_widget->join_arcs, SIGNAL(clicked(bool)), _gl_widget, SLOT(joinArcs()));
+
+        // patch control point manipulation
+        connect(_side_widget->patch_index, SIGNAL(valueChanged(int)), _gl_widget, SLOT(updatePatchIndex(int)));
+
+        connect(_side_widget->p_cp_index_1, SIGNAL(valueChanged(int)), _gl_widget, SLOT(updatePatchCpIndex1(int)));
+        connect(_side_widget->p_cp_index_2, SIGNAL(valueChanged(int)), _gl_widget, SLOT(updatePatchCpIndex2(int)));
+
+        connect(_side_widget->p_cp_x_coord, SIGNAL(valueChanged(double)), _gl_widget, SLOT(updatePatchCpXCoord(double)));
+        connect(_side_widget->p_cp_y_coord, SIGNAL(valueChanged(double)), _gl_widget, SLOT(updatePatchCpYCoord(double)));
+        connect(_side_widget->p_cp_z_coord, SIGNAL(valueChanged(double)), _gl_widget, SLOT(updatePatchCpZCoord(double)));
+
+        connect(_side_widget->add_new_patch, SIGNAL(clicked(bool)), _gl_widget, SLOT(addNewPatch()));
+
     }
 
     //--------------------------------

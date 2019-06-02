@@ -67,6 +67,9 @@ public:
 
     GLboolean RenderPatches();
 
+    size_t GetPatchCount() const;
+
+    GLboolean GetPatchPoint(GLuint patch_index, GLuint point_ind_1, GLuint point_ind_2, DCoordinate3& point);
 
 private:
     std::vector<PatchAttributes*>   _patches;

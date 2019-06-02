@@ -166,3 +166,13 @@ GLboolean SOQAHCompositeSurface3::RenderPatches()
     return ok;
 }
 
+size_t SOQAHCompositeSurface3::GetPatchCount() const
+{
+    return _patches.size();
+}
+
+GLboolean SOQAHCompositeSurface3::GetPatchPoint(GLuint patch_index, GLuint point_ind_1, GLuint point_ind_2, DCoordinate3& point)
+{
+    return _patches[patch_index]->_patch->GetData(point_ind_1, point_ind_2, point);
+}
+

@@ -10,5 +10,7 @@ namespace cagd
     public:
         // special and default constructor
         SideWidget(QWidget *parent = 0);
+    private slots:
+        void on_patch_index_valueChanged(int arg1);
     };
 }
