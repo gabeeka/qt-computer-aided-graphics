@@ -747,11 +747,26 @@ namespace cagd
     void GLWidget::initSOQAHPatchComposite()
     {
         _soqah_patch_composite = new SOQAHCompositeSurface3();
-        // add 2 patch
+
+        // Test join
         addNewSOQAHPatch();
         addNewSOQAHPatch();
-        // join them
         _soqah_patch_composite->JoinPatches(0, SOQAHCompositeSurface3::Direction::WEST, 1, SOQAHCompositeSurface3::Direction::EAST);
+
+
+        addNewSOQAHPatch();
+        addNewSOQAHPatch();
+        _soqah_patch_composite->JoinPatches(3, SOQAHCompositeSurface3::Direction::NORTH, 4, SOQAHCompositeSurface3::Direction::SOUTH);
+        _soqah_patch_composite->UpdatePatches();
+
+        // Test continue
+        _soqah_patch_composite->ContinuePatch(0, SOQAHCompositeSurface3::Direction::SOUTH);
+        _soqah_patch_composite->UpdatePatches();
+
+        // Test merge
+        addNewSOQAHPatch();
+        addNewSOQAHPatch();
+        _soqah_patch_composite->MergePatches(7, SOQAHCompositeSurface3::Direction::NORTH, 8, SOQAHCompositeSurface3::Direction::SOUTH);
         _soqah_patch_composite->UpdatePatches();
     }
 
@@ -837,6 +852,15 @@ namespace cagd
     {
         _soqah_arc_composite = new SOQAHCompositeCurve3(500);
         addNewSOQAHArc();
+        addNewSOQAHArc();
+        _soqah_arc_composite->JoinArcs(0, SOQAHCompositeCurve3::Direction::LEFT, 1, SOQAHCompositeCurve3::Direction::LEFT);
+        updateSOQAHArcComposite();
+        _soqah_arc_composite->Continue(0, SOQAHCompositeCurve3::Direction::RIGHT);
+        updateSOQAHArcComposite();
+
+        addNewSOQAHArc();
+        addNewSOQAHArc();
+        _soqah_arc_composite->MergeArcs(4, SOQAHCompositeCurve3::Direction::LEFT, 5, SOQAHCompositeCurve3::Direction::LEFT);
         updateSOQAHArcComposite();
     }
 
@@ -1226,18 +1250,21 @@ namespace cagd
     void GLWidget::updateCpXCoord(double value)
     {
         _soqah_arc_composite->GetArcPoint(_arc_index, _cp_index).x()=value;
+        _soqah_arc_composite->RefreshNeighbours(_arc_index);
         updateSOQAHArcComposite();
     }
 
     void GLWidget::updateCpYCoord(double value)
     {
         _soqah_arc_composite->GetArcPoint(_arc_index, _cp_index).y()=value;
+        _soqah_arc_composite->RefreshNeighbours(_arc_index);
         updateSOQAHArcComposite();
     }
 
     void GLWidget::updateCpZCoord(double value)
     {
         _soqah_arc_composite->GetArcPoint(_arc_index, _cp_index).z()=value;
+        _soqah_arc_composite->RefreshNeighbours(_arc_index);
         updateSOQAHArcComposite();
     }
 

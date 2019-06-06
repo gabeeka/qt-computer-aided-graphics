@@ -70,10 +70,11 @@ public:
     size_t GetPatchCount() const;
 
     GLboolean GetPatchPoint(GLuint patch_index, GLuint point_ind_1, GLuint point_ind_2, DCoordinate3& point);
-
     GLboolean SetPatchPoint(GLuint patch_index, GLuint point_ind_1, GLuint point_ind_2, const DCoordinate3& point);
 
     GLboolean JoinPatches(GLuint ind1, Direction dir1, GLuint ind2, Direction dir2);
+    GLboolean ContinuePatch(GLuint ind, Direction dir);
+    GLboolean MergePatches(GLuint ind1, Direction dir1, GLuint ind2, Direction dir2);
 private:
     std::vector<PatchAttributes*>   _patches;
 };

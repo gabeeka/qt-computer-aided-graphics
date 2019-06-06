@@ -55,7 +55,10 @@ public:
     GLboolean Render(GLuint order, GLboolean renderControlPoints = GL_FALSE) const;
 
     GLboolean JoinArcs(GLuint ind1, Direction dir1, GLuint ind2, Direction dir2);
-    void RefreshJoins(ArcAttributes* arc_left, ArcAttributes* arc_between, ArcAttributes* arc_right);
+    GLboolean Continue(GLuint ind, Direction dir);
+    GLboolean MergeArcs(GLuint ind1, Direction dir1, GLuint ind2, Direction dir2);
+
+    void RefreshNeighbours(GLuint ind);
 
 private:
     std::vector<ArcAttributes*>  _arcs;

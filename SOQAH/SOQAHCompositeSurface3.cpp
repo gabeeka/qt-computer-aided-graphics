@@ -236,8 +236,237 @@ GLboolean SOQAHCompositeSurface3::JoinPatches(GLuint ind1, Direction dir1, GLuin
         }
     }
 
+    if ((dir1 == Direction::NORTH && dir2 == Direction::SOUTH) ||
+        (dir1 == Direction::SOUTH && dir2 == Direction::NORTH))
+    {
+        if (dir1 == Direction::SOUTH && dir2 == Direction::NORTH)
+        {
+            patch1 = _patches[ind2];
+            patch2 = _patches[ind1];
+        }
+        for (GLuint i = 0; i < 4; ++i)
+        {
+            // join the first patch's north side
+            auto cpi3 = patch1->_patch->operator ()(i, 3);
+            auto cpi2 = patch1->_patch->operator ()(i, 2);
+
+            // join patch (new patch)
+            auto cp0i = join_patch->_patch->operator ()(i, 0);
+            auto cp1i = join_patch->_patch->operator ()(i, 1);
+
+            cp0i = cpi3;
+            cp1i = 2 * cpi3 - cpi2;
+
+            ok = ok && join_patch->_patch->SetData(i, 0, cp0i.x(), cp0i.y(), cp0i.z());
+            ok = ok && join_patch->_patch->SetData(i, 1, cp1i.x(), cp1i.y(), cp1i.z());
+        }
+
+        for (GLuint i = 0; i < 4; ++i)
+        {
+            // join the first patch's north side
+            auto cp0i = patch2->_patch->operator ()(i, 0);
+            auto cp1i = patch2->_patch->operator ()(i, 1);
+
+            // join patch (new patch)
+            auto cpi3 = join_patch->_patch->operator ()(i, 3);
+            auto cpi2 = join_patch->_patch->operator ()(i, 2);
+
+            cpi3 = cp0i;
+            cpi2 = 2 * cp0i - cp1i;
+
+            ok = ok && join_patch->_patch->SetData(i, 3, cpi3.x(), cpi3.y(), cpi3.z());
+            ok = ok && join_patch->_patch->SetData(i, 2, cpi2.x(), cpi2.y(), cpi2.z());
+        }
+    }
+
+    return ok;
+}
+
+GLboolean SOQAHCompositeSurface3::ContinuePatch(GLuint ind, SOQAHCompositeSurface3::Direction dir)
+{
+    GLboolean ok = GL_TRUE;
+
+    auto* patch = _patches[ind];
+    auto* continue_patch = AppendPatch();
+
+    switch (dir) {
+    case Direction::NORTH:
+        for (GLuint i = 0; i < 4; ++i)
+        {
+            auto cpi3 = patch->_patch->operator ()(i, 3);
+            auto cpi2 = patch->_patch->operator ()(i, 2);
+
+            auto Ccp0i = cpi3;
+            auto Ccp1i = 2 * cpi3 - cpi2;
+            auto Ccp2i = 3 * cpi3 - cpi2;
+            auto Ccp3i = 4 * cpi3 - cpi2;
+
+            ok = ok && continue_patch->_patch->SetData(i, 0, Ccp0i.x(), Ccp0i.y(), Ccp0i.z());
+            ok = ok && continue_patch->_patch->SetData(i, 1, Ccp1i.x(), Ccp1i.y(), Ccp1i.z());
+            ok = ok && continue_patch->_patch->SetData(i, 2, Ccp2i.x(), Ccp2i.y(), Ccp2i.z());
+            ok = ok && continue_patch->_patch->SetData(i, 3, Ccp3i.x(), Ccp3i.y(), Ccp3i.z());
+        }
+        break;
+    case Direction::EAST:
+        for (GLuint i = 0; i < 4; ++i)
+        {
+            auto cpi3 = patch->_patch->operator ()(3, i);
+            auto cpi2 = patch->_patch->operator ()(2, i);
+
+            auto Ccp0i = cpi3;
+            auto Ccp1i = 2 * cpi3 - cpi2;
+            auto Ccp2i = 3 * cpi3 - cpi2;
+            auto Ccp3i = 4 * cpi3 - cpi2;
+
+            ok = ok && continue_patch->_patch->SetData(0, i, Ccp0i.x(), Ccp0i.y(), Ccp0i.z());
+            ok = ok && continue_patch->_patch->SetData(1, i, Ccp1i.x(), Ccp1i.y(), Ccp1i.z());
+            ok = ok && continue_patch->_patch->SetData(2, i, Ccp2i.x(), Ccp2i.y(), Ccp2i.z());
+            ok = ok && continue_patch->_patch->SetData(3, i, Ccp3i.x(), Ccp3i.y(), Ccp3i.z());
+        }
+        break;
+    case Direction::SOUTH:
+        for (GLuint i = 0; i < 4; ++i)
+        {
+            auto cpi3 = patch->_patch->operator ()(i, 0);
+            auto cpi2 = patch->_patch->operator ()(i, 1);
+
+            auto Ccp0i = cpi3;
+            auto Ccp1i = 2 * cpi3 - cpi2;
+            auto Ccp2i = 3 * cpi3 - cpi2;
+            auto Ccp3i = 4 * cpi3 - cpi2;
+
+            ok = ok && continue_patch->_patch->SetData(i, 0, Ccp0i.x(), Ccp0i.y(), Ccp0i.z());
+            ok = ok && continue_patch->_patch->SetData(i, 1, Ccp1i.x(), Ccp1i.y(), Ccp1i.z());
+            ok = ok && continue_patch->_patch->SetData(i, 2, Ccp2i.x(), Ccp2i.y(), Ccp2i.z());
+            ok = ok && continue_patch->_patch->SetData(i, 3, Ccp3i.x(), Ccp3i.y(), Ccp3i.z());
+        }
+        break;
+    case Direction::WEST:
+        for (GLuint i = 0; i < 4; ++i)
+        {
+            auto cpi3 = patch->_patch->operator ()(i, 3);
+            auto cpi2 = patch->_patch->operator ()(i, 2);
+
+            auto Ccp0i = cpi3;
+            auto Ccp1i = 2 * cpi3 - cpi2;
+            auto Ccp2i = 3 * cpi3 - cpi2;
+            auto Ccp3i = 4 * cpi3 - cpi2;
+
+            ok = ok && continue_patch->_patch->SetData(i, 0, Ccp0i.x(), Ccp0i.y(), Ccp0i.z());
+            ok = ok && continue_patch->_patch->SetData(i, 1, Ccp1i.x(), Ccp1i.y(), Ccp1i.z());
+            ok = ok && continue_patch->_patch->SetData(i, 2, Ccp2i.x(), Ccp2i.y(), Ccp2i.z());
+            ok = ok && continue_patch->_patch->SetData(i, 3, Ccp3i.x(), Ccp3i.y(), Ccp3i.z());
+        }
+        break;
+    default:
+        break;
+    }
 
 
     return ok;
+}
+
+GLboolean SOQAHCompositeSurface3::MergePatches(GLuint ind1, SOQAHCompositeSurface3::Direction dir1, GLuint ind2, SOQAHCompositeSurface3::Direction dir2)
+{
+    auto* patch1 = _patches[ind1];
+    auto* patch2 = _patches[ind2];
+
+    if (dir1 == Direction::NORTH && dir2 == Direction::NORTH)
+    {
+        for (GLuint i = 0; i < 4; ++i)
+        {
+            auto p = patch1->_patch->operator ()(i, 2);
+            auto q = patch2->_patch->operator ()(i, 2);
+
+            auto res = 0.5 * (p + q);
+
+            patch1->_patch->SetData(i, 3, res.x(), res.y(), res.z());
+            patch2->_patch->SetData(i, 3, res.x(), res.y(), res.z());
+        }
+    }
+
+    if (dir1 == Direction::SOUTH && dir2 == Direction::SOUTH)
+    {
+        for (GLuint i = 0; i < 4; ++i)
+        {
+            auto p = patch1->_patch->operator ()(i, 1);
+            auto q = patch2->_patch->operator ()(i, 1);
+
+            auto res = 0.5 * (p + q);
+
+            patch1->_patch->SetData(i, 0, res.x(), res.y(), res.z());
+            patch2->_patch->SetData(i, 0, res.x(), res.y(), res.z());
+        }
+    }
+
+    if (dir1 == Direction::WEST && dir2 == Direction::WEST)
+    {
+        for (GLuint i = 0; i < 4; ++i)
+        {
+            auto p = patch1->_patch->operator ()(2, i);
+            auto q = patch2->_patch->operator ()(2, i);
+
+            auto res = 0.5 * (p + q);
+
+            patch1->_patch->SetData(3, i, res.x(), res.y(), res.z());
+            patch2->_patch->SetData(3, i, res.x(), res.y(), res.z());
+        }
+    }
+
+    if (dir1 == Direction::EAST && dir2 == Direction::EAST)
+    {
+        for (GLuint i = 0; i < 4; ++i)
+        {
+            auto p = patch1->_patch->operator ()(1, i);
+            auto q = patch2->_patch->operator ()(1, i);
+
+            auto res = 0.5 * (p + q);
+
+            patch1->_patch->SetData(0, i, res.x(), res.y(), res.z());
+            patch2->_patch->SetData(0, i, res.x(), res.y(), res.z());
+        }
+    }
+
+    if ((dir1 == Direction::NORTH && dir2 == Direction::SOUTH) ||
+        (dir1 == Direction::SOUTH && dir2 == Direction::NORTH))
+    {
+        if (dir1 == Direction::SOUTH && dir2 == Direction::NORTH)
+        {
+            patch1 = _patches[ind2];
+            patch2 = _patches[ind1];
+        }
+        for (GLuint i = 0; i < 4; ++i)
+        {
+            auto p = patch1->_patch->operator ()(i, 2);
+            auto q = patch2->_patch->operator ()(i, 1);
+
+            auto res = 0.5 * (p + q);
+
+            patch1->_patch->SetData(i, 3, res.x(), res.y(), res.z());
+            patch2->_patch->SetData(i, 0, res.x(), res.y(), res.z());
+        }
+    }
+
+    if ((dir1 == Direction::EAST && dir2 == Direction::WEST) ||
+        (dir1 == Direction::WEST && dir2 == Direction::EAST))
+    {
+        if (dir1 == Direction::WEST && dir2 == Direction::EAST)
+        {
+            patch1 = _patches[ind2];
+            patch2 = _patches[ind1];
+        }
+        for (GLuint i = 0; i < 4; ++i)
+        {
+            auto p = patch1->_patch->operator ()(2, i);
+            auto q = patch2->_patch->operator ()(1, i);
+
+            auto res = 0.5 * (p + q);
+
+            patch1->_patch->SetData(3, i, res.x(), res.y(), res.z());
+            patch2->_patch->SetData(0, i, res.x(), res.y(), res.z());
+        }
+    }
+
+    return GL_TRUE;
 }
 
