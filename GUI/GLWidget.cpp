@@ -1291,6 +1291,66 @@ namespace cagd
         installShader();
     }
 
+    void GLWidget::set_scale_factor(double value)
+    {
+        if (_scale_factor != value)
+        {
+            _scale_factor = value;
+            _shader.SetUniformVariable1f("scale_factor", _scale_factor);
+            updateGL();
+        }
+    }
+
+    void GLWidget::set_smoothing(double value)
+    {
+        if (_smoothing != value)
+        {
+            _smoothing = value;
+            _shader.SetUniformVariable1f("smoothing", _smoothing);
+            updateGL();
+        }
+    }
+
+    void GLWidget::set_shading(double value)
+    {
+        if (_shading != value)
+        {
+            _shading = value;
+            _shader.SetUniformVariable1f("shading", _shading);
+            updateGL();
+        }
+    }
+
+    void GLWidget::set_red_default_outline_color(double value)
+    {
+        if (_red_default_outline_color != value)
+        {
+            _red_default_outline_color = value;
+            _shader.SetUniformVariable4f("default_outline_color", _red_default_outline_color, _green_default_outline_color, _blue_default_outline_color, 1.0f);
+            updateGL();
+        }
+    }
+
+    void GLWidget::set_green_default_outline_color(double value)
+    {
+        if (_green_default_outline_color != value)
+        {
+            _green_default_outline_color = value;
+            _shader.SetUniformVariable4f("default_outline_color", _red_default_outline_color, _green_default_outline_color, _blue_default_outline_color, 1.0f);
+            updateGL();
+        }
+    }
+
+    void GLWidget::set_blue_default_outline_color(double value)
+    {
+        if (_blue_default_outline_color != value)
+        {
+            _blue_default_outline_color = value;
+            _shader.SetUniformVariable4f("default_outline_color", _red_default_outline_color, _green_default_outline_color, _blue_default_outline_color, 1.0f);
+            updateGL();
+        }
+    }
+
     void GLWidget::arcIndexChanged(int value)
     {
         _arc_index = value;

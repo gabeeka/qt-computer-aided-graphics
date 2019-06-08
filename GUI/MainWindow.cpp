@@ -78,6 +78,13 @@ namespace cagd
         connect(_side_widget->two_s_light, SIGNAL(clicked(bool)), _gl_widget, SLOT(initTwoSidedLighting()));
         connect(_side_widget->none, SIGNAL(clicked(bool)), _gl_widget, SLOT(disableShader()));
 
+        connect(_side_widget->scale_sb, SIGNAL(valueChanged(double)), _gl_widget, SLOT(set_scale_factor(double)));
+        connect(_side_widget->smoothing_sb, SIGNAL(valueChanged(double)), _gl_widget, SLOT(set_smoothing(double)));
+        connect(_side_widget->shading_sb, SIGNAL(valueChanged(double)), _gl_widget, SLOT(set_shading(double)));
+        connect(_side_widget->red_sb, SIGNAL(valueChanged(double)), _gl_widget, SLOT(set_red_default_outline_color(double)));
+        connect(_side_widget->green_sb, SIGNAL(valueChanged(double)), _gl_widget, SLOT(set_green_default_outline_color(double)));
+        connect(_side_widget->blue_sb, SIGNAL(valueChanged(double)), _gl_widget, SLOT(set_blue_default_outline_color(double)));
+
         // project
         connect(_side_widget->arc_radio_button, SIGNAL(clicked(bool)), _gl_widget, SLOT(renderArc()));
         connect(_side_widget->patch_radio_button, SIGNAL(clicked(bool)), _gl_widget, SLOT(renderPatch()));

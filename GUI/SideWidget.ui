@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>289</width>
-    <height>2112</height>
+    <height>2224</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -31,7 +31,7 @@
      <x>10</x>
      <y>0</y>
      <width>271</width>
-     <height>261</height>
+     <height>231</height>
     </rect>
    </property>
    <property name="title">
@@ -43,7 +43,7 @@
       <x>3</x>
       <y>21</y>
       <width>261</width>
-      <height>230</height>
+      <height>201</height>
      </rect>
     </property>
     <layout class="QFormLayout" name="formLayout">
@@ -224,7 +224,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>269</y>
+     <y>239</y>
      <width>121</width>
      <height>181</height>
     </rect>
@@ -302,7 +302,7 @@
    <property name="geometry">
     <rect>
      <x>150</x>
-     <y>270</y>
+     <y>240</y>
      <width>131</width>
      <height>181</height>
     </rect>
@@ -380,7 +380,7 @@
    <property name="geometry">
     <rect>
      <x>150</x>
-     <y>480</y>
+     <y>430</y>
      <width>131</width>
      <height>151</height>
     </rect>
@@ -432,7 +432,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>480</y>
+     <y>430</y>
      <width>120</width>
      <height>71</height>
     </rect>
@@ -458,7 +458,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>550</y>
+     <y>510</y>
      <width>120</width>
      <height>181</height>
     </rect>
@@ -536,9 +536,9 @@
    <property name="geometry">
     <rect>
      <x>150</x>
-     <y>640</y>
+     <y>590</y>
      <width>131</width>
-     <height>91</height>
+     <height>101</height>
     </rect>
    </property>
    <property name="title">
@@ -547,8 +547,8 @@
    <widget class="QRadioButton" name="arc_radio_button">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>20</y>
+      <x>10</x>
+      <y>30</y>
       <width>82</width>
       <height>17</height>
      </rect>
@@ -560,8 +560,8 @@
    <widget class="QRadioButton" name="patch_radio_button">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>50</y>
+      <x>10</x>
+      <y>60</y>
       <width>82</width>
       <height>17</height>
      </rect>
@@ -575,7 +575,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>740</y>
+     <y>920</y>
      <width>261</width>
      <height>381</height>
     </rect>
@@ -834,7 +834,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>1130</y>
+     <y>1310</y>
      <width>261</width>
      <height>291</height>
     </rect>
@@ -981,7 +981,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>1430</y>
+     <y>1610</y>
      <width>261</width>
      <height>301</height>
     </rect>
@@ -1185,7 +1185,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>1740</y>
+     <y>1920</y>
      <width>261</width>
      <height>291</height>
     </rect>
@@ -1325,6 +1325,211 @@
     </property>
     <property name="text">
      <string>Continue Patch</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="groupBox_12">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>700</y>
+     <width>271</width>
+     <height>211</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Shader parameters</string>
+   </property>
+   <widget class="QDoubleSpinBox" name="shading_sb">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>80</y>
+      <width>161</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <double>-100.000000000000000</double>
+    </property>
+    <property name="maximum">
+     <double>100.000000000000000</double>
+    </property>
+    <property name="singleStep">
+     <double>0.100000000000000</double>
+    </property>
+   </widget>
+   <widget class="QDoubleSpinBox" name="scale_sb">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>20</y>
+      <width>161</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <double>-100.000000000000000</double>
+    </property>
+    <property name="maximum">
+     <double>100.000000000000000</double>
+    </property>
+    <property name="singleStep">
+     <double>0.100000000000000</double>
+    </property>
+   </widget>
+   <widget class="QDoubleSpinBox" name="smoothing_sb">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>50</y>
+      <width>161</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <double>-100.000000000000000</double>
+    </property>
+    <property name="maximum">
+     <double>100.000000000000000</double>
+    </property>
+    <property name="singleStep">
+     <double>0.100000000000000</double>
+    </property>
+   </widget>
+   <widget class="QDoubleSpinBox" name="blue_sb">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>170</y>
+      <width>161</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <double>-100.000000000000000</double>
+    </property>
+    <property name="maximum">
+     <double>100.000000000000000</double>
+    </property>
+    <property name="singleStep">
+     <double>0.100000000000000</double>
+    </property>
+   </widget>
+   <widget class="QDoubleSpinBox" name="red_sb">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>110</y>
+      <width>161</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <double>-100.000000000000000</double>
+    </property>
+    <property name="maximum">
+     <double>100.000000000000000</double>
+    </property>
+    <property name="singleStep">
+     <double>0.100000000000000</double>
+    </property>
+   </widget>
+   <widget class="QDoubleSpinBox" name="green_sb">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>140</y>
+      <width>161</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <double>-100.000000000000000</double>
+    </property>
+    <property name="maximum">
+     <double>100.000000000000000</double>
+    </property>
+    <property name="singleStep">
+     <double>0.100000000000000</double>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_30">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>20</y>
+      <width>47</width>
+      <height>13</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Scale</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_31">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>50</y>
+      <width>61</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Smoothing</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_32">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>80</y>
+      <width>47</width>
+      <height>13</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Shading</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_33">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>110</y>
+      <width>47</width>
+      <height>13</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Red</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_34">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>140</y>
+      <width>47</width>
+      <height>13</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Green</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_35">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>170</y>
+      <width>47</width>
+      <height>13</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Blue</string>
     </property>
    </widget>
   </widget>

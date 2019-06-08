@@ -388,6 +388,49 @@ GLboolean ShaderProgram::SetUniformVariable1i(const GLchar *name, GLint paramete
     return GL_TRUE;
 }
 
+GLboolean ShaderProgram::SetUniformVariable2i(const GLchar *name, GLint parameter_1, GLint parameter_2) const
+{
+    if (!_program)
+        return GL_FALSE;
+
+    GLint location = GetUniformVariableLocation(name);
+    if (location == -1)
+            return GL_FALSE;
+
+    glUniform2i(location, parameter_1, parameter_2);
+
+    return GL_TRUE;
+}
+
+GLboolean ShaderProgram::SetUniformVariable3i(const GLchar *name, GLint parameter_1, GLint parameter_2, GLint parameter_3) const
+{
+    if (!_program)
+        return GL_FALSE;
+
+    GLint location = GetUniformVariableLocation(name);
+    if (location == -1)
+            return GL_FALSE;
+
+    glUniform3i(location, parameter_1, parameter_2, parameter_3);
+
+    return GL_TRUE;
+}
+
+
+GLboolean ShaderProgram::SetUniformVariable4i(const GLchar *name, GLint parameter_1, GLint parameter_2, GLint parameter_3, GLint parameter_4) const
+{
+    if (!_program)
+        return GL_FALSE;
+
+    GLint location = GetUniformVariableLocation(name);
+    if (location == -1)
+            return GL_FALSE;
+
+    glUniform4i(location, parameter_1, parameter_2, parameter_3, parameter_4);
+
+    return GL_TRUE;
+}
+
 GLboolean ShaderProgram::SetUniformVariable1f(const GLchar *name, GLfloat parameter) const
 {
     if (!_program)
@@ -426,6 +469,132 @@ GLboolean ShaderProgram::SetUniformVariable3f(const GLchar *name, GLfloat parame
             return GL_FALSE;
 
     glUniform3f(location, parameter_1, parameter_2, parameter_3);
+
+    return GL_TRUE;
+}
+
+GLboolean ShaderProgram::SetUniformVariable4f(const GLchar *name, GLfloat parameter_1, GLfloat parameter_2, GLfloat parameter_3, GLfloat parameter_4) const
+{
+    if (!_program)
+        return GL_FALSE;
+
+    GLint location = GetUniformVariableLocation(name);
+    if (location == -1)
+            return GL_FALSE;
+
+    glUniform4f(location, parameter_1, parameter_2, parameter_3, parameter_4);
+
+    return GL_TRUE;
+}
+
+GLboolean ShaderProgram::SetUniformVariable1ui(const GLchar *name, GLuint parameter) const
+{
+    if (!_program)
+        return GL_FALSE;
+
+    GLint location = GetUniformVariableLocation(name);
+    if (location == -1)
+        return GL_FALSE;
+
+    glUniform1ui(location, parameter);
+
+    return GL_TRUE;
+}
+
+GLboolean ShaderProgram::SetUniformVariable2ui(const GLchar *name, GLuint parameter_1, GLuint parameter_2) const
+{
+    if (!_program)
+        return GL_FALSE;
+
+    GLint location = GetUniformVariableLocation(name);
+    if (location == -1)
+            return GL_FALSE;
+
+    glUniform2ui(location, parameter_1, parameter_2);
+
+    return GL_TRUE;
+}
+
+GLboolean ShaderProgram::SetUniformVariable3ui(const GLchar *name, GLuint parameter_1, GLuint parameter_2, GLuint parameter_3) const
+{
+    if (!_program)
+        return GL_FALSE;
+
+    GLint location = GetUniformVariableLocation(name);
+    if (location == -1)
+            return GL_FALSE;
+
+    glUniform3ui(location, parameter_1, parameter_2, parameter_3);
+
+    return GL_TRUE;
+}
+
+GLboolean ShaderProgram::SetUniformVariable4ui(const GLchar *name, GLuint parameter_1, GLuint parameter_2, GLuint parameter_3, GLuint parameter_4) const
+{
+    if (!_program)
+        return GL_FALSE;
+
+    GLint location = GetUniformVariableLocation(name);
+    if (location == -1)
+            return GL_FALSE;
+
+    glUniform4ui(location, parameter_1, parameter_2, parameter_3, parameter_4);
+
+    return GL_TRUE;
+}
+
+GLboolean ShaderProgram::SetUniformVariable1fv(const GLchar *name, GLsizei count, const GLfloat *value) const
+{
+    if (!_program)
+        return GL_FALSE;
+
+    GLint location = GetUniformVariableLocation(name);
+    if (location == -1)
+        return GL_FALSE;
+
+    glUniform1fv(location, count, value);
+
+    return GL_TRUE;
+}
+
+GLboolean ShaderProgram::SetUniformVariable2fv(const GLchar *name, GLsizei count, const GLfloat *value) const
+{
+    if (!_program)
+        return GL_FALSE;
+
+    GLint location = GetUniformVariableLocation(name);
+    if (location == -1)
+        return GL_FALSE;
+
+    glUniform2fv(location, count, value);
+
+    return GL_TRUE;
+}
+
+GLboolean ShaderProgram::SetUniformVariable3fv(const GLchar *name, GLsizei count, const GLfloat *value) const
+{
+    if (!_program)
+        return GL_FALSE;
+
+    GLint location = GetUniformVariableLocation(name);
+    if (location == -1)
+        return GL_FALSE;
+
+    glUniform3fv(location, count, value);
+
+    return GL_TRUE;
+}
+
+GLboolean ShaderProgram::SetUniformVariable4fv(const GLchar *name, GLsizei count, const GLfloat *value) const
+{
+    if (!_program)
+        return GL_FALSE;
+
+    GLint location = GetUniformVariableLocation(name);
+    if (location == -1)
+        return GL_FALSE;
+
+    glUniform4fv(location, count, value);
 
     return GL_TRUE;
 }

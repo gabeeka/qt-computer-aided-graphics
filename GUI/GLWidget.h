@@ -193,6 +193,13 @@ namespace cagd
         GLuint          _shader_index{0};
         ShaderProgram   _shader;
 
+        GLdouble _scale_factor;
+        GLdouble _smoothing;
+        GLdouble _shading;
+
+        GLdouble _red_default_outline_color;
+        GLdouble _green_default_outline_color;
+        GLdouble _blue_default_outline_color;
     public:
         // special and default constructor
         // the format specifies the properties of the rendering window
@@ -246,6 +253,13 @@ namespace cagd
         void initTwoSidedLighting();
         void installShader();
         void disableShader();
+
+        void set_scale_factor(double value);
+        void set_smoothing(double value);
+        void set_shading(double value);
+        void set_red_default_outline_color(double value);
+        void set_green_default_outline_color(double value);
+        void set_blue_default_outline_color(double value);
 
         // project
         void renderArc();
