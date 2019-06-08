@@ -969,6 +969,7 @@ namespace cagd
         _soqah_patch_composite->GetPatchPoint(_patch_index, _p_cp_index_1, _p_cp_index_2, point);
         point.x()=value;
         _soqah_patch_composite->SetPatchPoint(_patch_index, _p_cp_index_1, _p_cp_index_2, point);
+        _soqah_patch_composite->RefreshNeighbours(_patch_index);
        _soqah_patch_composite->UpdatePatches();
     }
 
@@ -978,6 +979,7 @@ namespace cagd
         _soqah_patch_composite->GetPatchPoint(_patch_index, _p_cp_index_1, _p_cp_index_2, point);
         point.y()=value;
         _soqah_patch_composite->SetPatchPoint(_patch_index, _p_cp_index_1, _p_cp_index_2, point);
+        _soqah_patch_composite->RefreshNeighbours(_patch_index);
         _soqah_patch_composite->UpdatePatches();
     }
 
@@ -987,6 +989,7 @@ namespace cagd
         _soqah_patch_composite->GetPatchPoint(_patch_index, _p_cp_index_1, _p_cp_index_2, point);
         point.z()=value;
         _soqah_patch_composite->SetPatchPoint(_patch_index, _p_cp_index_1, _p_cp_index_2, point);
+        _soqah_patch_composite->RefreshNeighbours(_patch_index);
         _soqah_patch_composite->UpdatePatches();
     }
 

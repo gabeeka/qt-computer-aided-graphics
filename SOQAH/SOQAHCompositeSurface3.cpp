@@ -148,10 +148,10 @@ GLboolean SOQAHCompositeSurface3::JoinPatches(GLuint ind1, Direction dir1, GLuin
         (dir1 == Direction::NORTH && patch1->_north) ||
         (dir1 == Direction::WEST && patch1->_west)   ||
         (dir1 == Direction::SOUTH && patch1->_south) ||
-        (dir2 == Direction::EAST && patch1->_east)   ||
-        (dir2 == Direction::NORTH && patch1->_north) ||
-        (dir2 == Direction::WEST && patch1->_west)   ||
-        (dir2 == Direction::SOUTH && patch1->_south))
+        (dir2 == Direction::EAST && patch2->_east)   ||
+        (dir2 == Direction::NORTH && patch2->_north) ||
+        (dir2 == Direction::WEST && patch2->_west)   ||
+        (dir2 == Direction::SOUTH && patch2->_south))
     {
         std::cout << "Join failed, invalid direction." << std::endl;
         return GL_FALSE;
@@ -201,8 +201,8 @@ GLboolean SOQAHCompositeSurface3::JoinPatches(GLuint ind1, Direction dir1, GLuin
 
         for (GLuint i = 0; i < 4; ++i)
         {
-            auto p = patch1->_patch->operator ()(i, 0);
-            auto q = patch1->_patch->operator ()(i, 1);
+            auto p = patch1->_patch->operator ()(i, 3);
+            auto q = patch1->_patch->operator ()(i, 2);
 
             auto pp = p;
             auto qq = 2 * p - q;
@@ -218,8 +218,8 @@ GLboolean SOQAHCompositeSurface3::JoinPatches(GLuint ind1, Direction dir1, GLuin
 
         for (GLuint i = 0; i < 4; ++i)
         {
-            auto p = patch1->_patch->operator ()(i, 3);
-            auto q = patch1->_patch->operator ()(i, 2);
+            auto p = patch1->_patch->operator ()(i, 0);
+            auto q = patch1->_patch->operator ()(i, 1);
 
             auto pp = p;
             auto qq = 2 * p - q;
@@ -271,8 +271,8 @@ GLboolean SOQAHCompositeSurface3::JoinPatches(GLuint ind1, Direction dir1, GLuin
 
         for (GLuint i = 0; i < 4; ++i)
         {
-            auto p = patch2->_patch->operator ()(i, 0);
-            auto q = patch2->_patch->operator ()(i, 1);
+            auto p = patch2->_patch->operator ()(i, 3);
+            auto q = patch2->_patch->operator ()(i, 2);
 
             auto pp = p;
             auto qq = 2 * p - q;
@@ -288,8 +288,8 @@ GLboolean SOQAHCompositeSurface3::JoinPatches(GLuint ind1, Direction dir1, GLuin
 
         for (GLuint i = 0; i < 4; ++i)
         {
-            auto p = patch2->_patch->operator ()(i, 3);
-            auto q = patch2->_patch->operator ()(i, 2);
+            auto p = patch2->_patch->operator ()(i, 0);
+            auto q = patch2->_patch->operator ()(i, 1);
 
             auto pp = p;
             auto qq = 2 * p - q;
@@ -307,14 +307,25 @@ GLboolean SOQAHCompositeSurface3::ContinuePatch(GLuint ind, SOQAHCompositeSurfac
     GLboolean ok = GL_TRUE;
 
     auto* patch = _patches[ind];
+
+    // Check if continue is possible
+    if ((dir == Direction::EAST  && patch->_east)   ||
+        (dir == Direction::NORTH && patch->_north)  ||
+        (dir == Direction::WEST  && patch->_west)   ||
+        (dir == Direction::SOUTH && patch->_south))
+    {
+        std::cout << "Continue failed, invalid direction." << std::endl;
+        return GL_FALSE;
+    }
+
     auto* continue_patch = AppendPatch();
 
     switch (dir) {
     case Direction::NORTH:
         for (GLuint i = 0; i < 4; ++i)
         {
-            auto cpi3 = patch->_patch->operator ()(i, 3);
-            auto cpi2 = patch->_patch->operator ()(i, 2);
+            auto cpi3 = patch->_patch->operator ()(i, 0);
+            auto cpi2 = patch->_patch->operator ()(i, 1);
 
             auto Ccp0i = cpi3;
             auto Ccp1i = 2 * cpi3 - cpi2;
@@ -353,8 +364,8 @@ GLboolean SOQAHCompositeSurface3::ContinuePatch(GLuint ind, SOQAHCompositeSurfac
     case Direction::SOUTH:
         for (GLuint i = 0; i < 4; ++i)
         {
-            auto cpi3 = patch->_patch->operator ()(i, 0);
-            auto cpi2 = patch->_patch->operator ()(i, 1);
+            auto cpi3 = patch->_patch->operator ()(i, 3);
+            auto cpi2 = patch->_patch->operator ()(i, 2);
 
             auto Ccp0i = cpi3;
             auto Ccp1i = 2 * cpi3 - cpi2;
@@ -373,8 +384,8 @@ GLboolean SOQAHCompositeSurface3::ContinuePatch(GLuint ind, SOQAHCompositeSurfac
     case Direction::WEST:
         for (GLuint i = 0; i < 4; ++i)
         {
-            auto cpi3 = patch->_patch->operator ()(i, 3);
-            auto cpi2 = patch->_patch->operator ()(i, 2);
+            auto cpi3 = patch->_patch->operator ()(i, 0);
+            auto cpi2 = patch->_patch->operator ()(i, 1);
 
             auto Ccp0i = cpi3;
             auto Ccp1i = 2 * cpi3 - cpi2;
@@ -400,105 +411,258 @@ GLboolean SOQAHCompositeSurface3::ContinuePatch(GLuint ind, SOQAHCompositeSurfac
 
 GLboolean SOQAHCompositeSurface3::MergePatches(GLuint ind1, SOQAHCompositeSurface3::Direction dir1, GLuint ind2, SOQAHCompositeSurface3::Direction dir2)
 {
+    GLboolean ok = GL_TRUE;
+
     auto* patch1 = _patches[ind1];
     auto* patch2 = _patches[ind2];
 
-    if (dir1 == Direction::NORTH && dir2 == Direction::NORTH)
+    // Check if merge is possible
+    if ((dir1 == Direction::EAST  && patch1->_east)   ||
+        (dir1 == Direction::NORTH && patch1->_north)  ||
+        (dir1 == Direction::WEST  && patch1->_west)   ||
+        (dir1 == Direction::SOUTH && patch1->_south)  ||
+        (dir2 == Direction::EAST  && patch2->_east)   ||
+        (dir2 == Direction::NORTH && patch2->_north)  ||
+        (dir2 == Direction::WEST  && patch2->_west)   ||
+        (dir2 == Direction::SOUTH && patch2->_south))
     {
-        for (GLuint i = 0; i < 4; ++i)
+        std::cout << "Merge failed, invalid direction." << std::endl;
+        return GL_FALSE;
+    }
+
+    for (GLuint i = 0; i < 4; ++i)
+    {
+        DCoordinate3 p;
+        DCoordinate3 q;
+
+        // Get the appropriate points based on directions
+        switch (dir1)
         {
-            auto p = patch1->_patch->operator ()(i, 2);
-            auto q = patch2->_patch->operator ()(i, 2);
+        case Direction::NORTH:
+            p = patch1->_patch->operator ()(i, 1);
+            break;
+        case Direction::SOUTH:
+            p = patch1->_patch->operator ()(i, 2);
+            break;
+        case Direction::WEST:
+            p = patch1->_patch->operator ()(1, i);
+            break;
+        case Direction::EAST:
+            p = patch1->_patch->operator ()(2, i);
+            break;
+        default:
+            std::cout << "Merge failed, invalid direction." << std::endl;
+            return GL_FALSE;
+        }
+        switch (dir2)
+        {
+        case Direction::NORTH:
+            q = patch2->_patch->operator ()(i, 1);
+            break;
+        case Direction::SOUTH:
+            q = patch2->_patch->operator ()(i, 2);
+            break;
+        case Direction::WEST:
+            q = patch2->_patch->operator ()(1, i);
+            break;
+        case Direction::EAST:
+            q = patch2->_patch->operator ()(2, i);
+            break;
+        default:
+            std::cout << "Merge failed, invalid direction." << std::endl;
+            return GL_FALSE;
+        }
 
-            auto res = 0.5 * (p + q);
+        // Calculate the merge point
+        auto res = 0.5 * (p + q);
 
-            patch1->_patch->SetData(i, 3, res.x(), res.y(), res.z());
-            patch2->_patch->SetData(i, 3, res.x(), res.y(), res.z());
+        // Update the existing points based in directions
+        switch (dir1)
+        {
+        case Direction::NORTH:
+            ok = ok && patch1->_patch->SetData(i, 0, res.x(), res.y(), res.z());
+            patch1->_north = patch2;
+            break;
+        case Direction::SOUTH:
+            ok = ok && patch1->_patch->SetData(i, 3, res.x(), res.y(), res.z());
+            patch1->_south = patch2;
+            break;
+        case Direction::WEST:
+            ok = ok && patch1->_patch->SetData(0, i, res.x(), res.y(), res.z());
+            patch1->_west = patch2;
+            break;
+        case Direction::EAST:
+            ok = ok && patch1->_patch->SetData(3, i, res.x(), res.y(), res.z());
+            patch1->_east = patch2;
+            break;
+        default:
+            std::cout << "Merge failed, invalid direction." << std::endl;
+            return GL_FALSE;
+        }
+        switch (dir2)
+        {
+        case Direction::NORTH:
+            ok = ok && patch2->_patch->SetData(i, 0, res.x(), res.y(), res.z());
+            patch2->_north = patch1;
+            break;
+        case Direction::SOUTH:
+            ok = ok && patch2->_patch->SetData(i, 3, res.x(), res.y(), res.z());
+            patch2->_south = patch1;
+            break;
+        case Direction::WEST:
+            ok = ok && patch2->_patch->SetData(0, i, res.x(), res.y(), res.z());
+            patch2->_west = patch1;
+            break;
+        case Direction::EAST:
+            ok = ok && patch2->_patch->SetData(3, i, res.x(), res.y(), res.z());
+            patch2->_east = patch1;
+            break;
+        default:
+            std::cout << "Merge failed, invalid direction." << std::endl;
+            return GL_FALSE;
         }
     }
 
-    if (dir1 == Direction::SOUTH && dir2 == Direction::SOUTH)
+    return ok;
+}
+
+GLboolean SOQAHCompositeSurface3::RefreshNeighbours(GLuint ind)
+{
+    GLboolean ok = GL_TRUE;
+    auto* patch = _patches[ind];
+
+    if (patch->_north)
     {
+        auto* patch_north = patch->_north;
         for (GLuint i = 0; i < 4; ++i)
         {
-            auto p = patch1->_patch->operator ()(i, 1);
-            auto q = patch2->_patch->operator ()(i, 1);
+            auto p = patch->_patch->operator ()(i, 0);
+            auto q = patch->_patch->operator ()(i, 1);
+            auto res0 = p;
+            auto res1 = 2 * p - q;
 
-            auto res = 0.5 * (p + q);
-
-            patch1->_patch->SetData(i, 0, res.x(), res.y(), res.z());
-            patch2->_patch->SetData(i, 0, res.x(), res.y(), res.z());
+            if (patch_north->_north == patch)
+            {
+                ok = ok && patch_north->_patch->SetData(i, 0, res0);
+                ok = ok && patch_north->_patch->SetData(i, 1, res1);
+            }
+            else if (patch_north->_south == patch)
+            {
+                ok = ok && patch_north->_patch->SetData(i, 3, res0);
+                ok = ok && patch_north->_patch->SetData(i, 2, res1);
+            }
+            else if (patch_north->_west == patch)
+            {
+                ok = ok && patch_north->_patch->SetData(0, i, res0);
+                ok = ok && patch_north->_patch->SetData(1, i, res1);
+            }
+            else if (patch_north->_east == patch)
+            {
+                ok = ok && patch_north->_patch->SetData(3, i, res0);
+                ok = ok && patch_north->_patch->SetData(2, i, res1);
+            }
         }
     }
 
-    if (dir1 == Direction::WEST && dir2 == Direction::WEST)
+    if (patch->_south)
     {
+        auto* patch_south = patch->_south;
         for (GLuint i = 0; i < 4; ++i)
         {
-            auto p = patch1->_patch->operator ()(2, i);
-            auto q = patch2->_patch->operator ()(2, i);
+            auto p = patch->_patch->operator ()(i, 3);
+            auto q = patch->_patch->operator ()(i, 2);
+            auto res0 = p;
+            auto res1 = 2 * p - q;
 
-            auto res = 0.5 * (p + q);
-
-            patch1->_patch->SetData(3, i, res.x(), res.y(), res.z());
-            patch2->_patch->SetData(3, i, res.x(), res.y(), res.z());
+            if (patch_south->_north == patch)
+            {
+                ok = ok && patch_south->_patch->SetData(i, 0, res0);
+                ok = ok && patch_south->_patch->SetData(i, 1, res1);
+            }
+            else if (patch_south->_south == patch)
+            {
+                ok = ok && patch_south->_patch->SetData(i, 3, res0);
+                ok = ok && patch_south->_patch->SetData(i, 2, res1);
+            }
+            else if (patch_south->_west == patch)
+            {
+                ok = ok && patch_south->_patch->SetData(0, i, res0);
+                ok = ok && patch_south->_patch->SetData(1, i, res1);
+            }
+            else if (patch_south->_east == patch)
+            {
+                ok = ok && patch_south->_patch->SetData(3, i, res0);
+                ok = ok && patch_south->_patch->SetData(2, i, res1);
+            }
         }
     }
 
-    if (dir1 == Direction::EAST && dir2 == Direction::EAST)
+    if (patch->_west)
     {
+        auto* patch_west = patch->_west;
         for (GLuint i = 0; i < 4; ++i)
         {
-            auto p = patch1->_patch->operator ()(1, i);
-            auto q = patch2->_patch->operator ()(1, i);
+            auto p = patch->_patch->operator ()(0, i);
+            auto q = patch->_patch->operator ()(1, i);
+            auto res0 = p;
+            auto res1 = 2 * p - q;
 
-            auto res = 0.5 * (p + q);
-
-            patch1->_patch->SetData(0, i, res.x(), res.y(), res.z());
-            patch2->_patch->SetData(0, i, res.x(), res.y(), res.z());
+            if (patch_west->_north == patch)
+            {
+                ok = ok && patch_west->_patch->SetData(i, 0, res0);
+                ok = ok && patch_west->_patch->SetData(i, 1, res1);
+            }
+            else if (patch_west->_south == patch)
+            {
+                ok = ok && patch_west->_patch->SetData(i, 3, res0);
+                ok = ok && patch_west->_patch->SetData(i, 2, res1);
+            }
+            else if (patch_west->_west == patch)
+            {
+                ok = ok && patch_west->_patch->SetData(0, i, res0);
+                ok = ok && patch_west->_patch->SetData(1, i, res1);
+            }
+            else if (patch_west->_east == patch)
+            {
+                ok = ok && patch_west->_patch->SetData(3, i, res0);
+                ok = ok && patch_west->_patch->SetData(2, i, res1);
+            }
         }
     }
 
-    if ((dir1 == Direction::NORTH && dir2 == Direction::SOUTH) ||
-        (dir1 == Direction::SOUTH && dir2 == Direction::NORTH))
+    if (patch->_east)
     {
-        if (dir1 == Direction::SOUTH && dir2 == Direction::NORTH)
-        {
-            patch1 = _patches[ind2];
-            patch2 = _patches[ind1];
-        }
+        auto* patch_east = patch->_east;
         for (GLuint i = 0; i < 4; ++i)
         {
-            auto p = patch1->_patch->operator ()(i, 2);
-            auto q = patch2->_patch->operator ()(i, 1);
+            auto p = patch->_patch->operator ()(3, i);
+            auto q = patch->_patch->operator ()(2, i);
+            auto res0 = p;
+            auto res1 = 2 * p - q;
 
-            auto res = 0.5 * (p + q);
-
-            patch1->_patch->SetData(i, 3, res.x(), res.y(), res.z());
-            patch2->_patch->SetData(i, 0, res.x(), res.y(), res.z());
+            if (patch_east->_north == patch)
+            {
+                ok = ok && patch_east->_patch->SetData(i, 0, res0);
+                ok = ok && patch_east->_patch->SetData(i, 1, res1);
+            }
+            else if (patch_east->_south == patch)
+            {
+                ok = ok && patch_east->_patch->SetData(i, 3, res0);
+                ok = ok && patch_east->_patch->SetData(i, 2, res1);
+            }
+            else if (patch_east->_west == patch)
+            {
+                ok = ok && patch_east->_patch->SetData(0, i, res0);
+                ok = ok && patch_east->_patch->SetData(1, i, res1);
+            }
+            else if (patch_east->_east == patch)
+            {
+                ok = ok && patch_east->_patch->SetData(3, i, res0);
+                ok = ok && patch_east->_patch->SetData(2, i, res1);
+            }
         }
     }
 
-    if ((dir1 == Direction::EAST && dir2 == Direction::WEST) ||
-        (dir1 == Direction::WEST && dir2 == Direction::EAST))
-    {
-        if (dir1 == Direction::WEST && dir2 == Direction::EAST)
-        {
-            patch1 = _patches[ind2];
-            patch2 = _patches[ind1];
-        }
-        for (GLuint i = 0; i < 4; ++i)
-        {
-            auto p = patch1->_patch->operator ()(2, i);
-            auto q = patch2->_patch->operator ()(1, i);
-
-            auto res = 0.5 * (p + q);
-
-            patch1->_patch->SetData(3, i, res.x(), res.y(), res.z());
-            patch2->_patch->SetData(0, i, res.x(), res.y(), res.z());
-        }
-    }
-
-    return GL_TRUE;
+    return ok;
 }
 

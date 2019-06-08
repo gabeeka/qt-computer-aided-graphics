@@ -74,6 +74,8 @@ public:
     GLboolean JoinPatches(GLuint ind1, Direction dir1, GLuint ind2, Direction dir2);
     GLboolean ContinuePatch(GLuint ind, Direction dir);
     GLboolean MergePatches(GLuint ind1, Direction dir1, GLuint ind2, Direction dir2);
+
+    GLboolean RefreshNeighbours(GLuint ind);
 private:
     std::vector<PatchAttributes*>   _patches;
 };
