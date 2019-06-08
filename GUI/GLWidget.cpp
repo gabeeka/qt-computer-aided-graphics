@@ -747,27 +747,7 @@ namespace cagd
     void GLWidget::initSOQAHPatchComposite()
     {
         _soqah_patch_composite = new SOQAHCompositeSurface3();
-
-        // Test join
         addNewSOQAHPatch();
-        addNewSOQAHPatch();
-        _soqah_patch_composite->JoinPatches(0, SOQAHCompositeSurface3::Direction::WEST, 1, SOQAHCompositeSurface3::Direction::EAST);
-
-
-        addNewSOQAHPatch();
-        addNewSOQAHPatch();
-        _soqah_patch_composite->JoinPatches(3, SOQAHCompositeSurface3::Direction::NORTH, 4, SOQAHCompositeSurface3::Direction::SOUTH);
-        _soqah_patch_composite->UpdatePatches();
-
-        // Test continue
-        _soqah_patch_composite->ContinuePatch(0, SOQAHCompositeSurface3::Direction::SOUTH);
-        _soqah_patch_composite->UpdatePatches();
-
-        // Test merge
-        addNewSOQAHPatch();
-        addNewSOQAHPatch();
-        _soqah_patch_composite->MergePatches(7, SOQAHCompositeSurface3::Direction::NORTH, 8, SOQAHCompositeSurface3::Direction::SOUTH);
-        _soqah_patch_composite->UpdatePatches();
     }
 
     void GLWidget::renderSOQAHPatchComposite()
@@ -808,6 +788,11 @@ namespace cagd
     void GLWidget::addNewPatch()
     {
         addNewSOQAHPatch();
+    }
+
+    void GLWidget::resetPatches()
+    {
+        initSOQAHPatchComposite();
     }
 
     void GLWidget::initSOQAHArc()
@@ -890,6 +875,11 @@ namespace cagd
     void GLWidget::addNewArc()
     {
         addNewSOQAHArc();
+    }
+
+    void GLWidget::resetArcs()
+    {
+        initSOQAHArcComposite();
     }
 
     void GLWidget::updateArcJoinIndex1(int value)
@@ -997,6 +987,71 @@ namespace cagd
         _soqah_patch_composite->GetPatchPoint(_patch_index, _p_cp_index_1, _p_cp_index_2, point);
         point.z()=value;
         _soqah_patch_composite->SetPatchPoint(_patch_index, _p_cp_index_1, _p_cp_index_2, point);
+        _soqah_patch_composite->UpdatePatches();
+    }
+
+    void GLWidget::updatePatchIndex1(int value)
+    {
+        _patchIndex1 = value;
+    }
+
+
+    void GLWidget::updatePatchIndex2(int value)
+    {
+        _patchIndex2 = value;
+    }
+
+    void GLWidget::updatePatchDir1(int value)
+    {
+        switch (value) {
+        case 0:
+            _patchDirection1 = SOQAHCompositeSurface3::Direction::NORTH;
+            break;
+        case 1:
+            _patchDirection1 = SOQAHCompositeSurface3::Direction::EAST;
+            break;
+        case 2:
+            _patchDirection1 = SOQAHCompositeSurface3::Direction::SOUTH;
+            break;
+        case 3:
+            _patchDirection1 = SOQAHCompositeSurface3::Direction::WEST;
+            break;
+        }
+    }
+
+    void GLWidget::updatePatchDir2(int value)
+    {
+        switch (value) {
+        case 0:
+            _patchDirection2 = SOQAHCompositeSurface3::Direction::NORTH;
+            break;
+        case 1:
+            _patchDirection2 = SOQAHCompositeSurface3::Direction::EAST;
+            break;
+        case 2:
+            _patchDirection2 = SOQAHCompositeSurface3::Direction::SOUTH;
+            break;
+        case 3:
+            _patchDirection2 = SOQAHCompositeSurface3::Direction::WEST;
+            break;
+        }
+    }
+
+    void GLWidget::joinPatches()
+    {
+        _soqah_patch_composite->JoinPatches(_patchIndex1, _patchDirection1, _patchIndex2, _patchDirection2);
+        _soqah_patch_composite->UpdatePatches();
+    }
+
+    void GLWidget::mergePatches()
+    {
+        _soqah_patch_composite->MergePatches(_patchIndex1, _patchDirection1, _patchIndex2, _patchDirection2);
+        _soqah_patch_composite->UpdatePatches();
+    }
+
+    void GLWidget::continuePatch()
+    {
+        _soqah_patch_composite->ContinuePatch(_patchIndex1, _patchDirection1);
         _soqah_patch_composite->UpdatePatches();
     }
 

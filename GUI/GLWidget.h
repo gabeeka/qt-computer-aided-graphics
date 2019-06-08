@@ -52,6 +52,13 @@ namespace cagd
         int      _arc_index{0};
         int      _cp_index{0};
 
+        // patch operation falgs
+        GLuint _patchIndex1{0};
+        GLuint _patchIndex2{1};
+
+        SOQAHCompositeSurface3::Direction _patchDirection1{SOQAHCompositeSurface3::Direction::NORTH};
+        SOQAHCompositeSurface3::Direction _patchDirection2{SOQAHCompositeSurface3::Direction::SOUTH};
+
         // patch control point manipulation
         int     _patch_index{0};
         int     _p_cp_index_1{0};
@@ -257,6 +264,7 @@ namespace cagd
         void updateRenderControlPoints(int value);
 
         void addNewArc();
+        void resetArcs();
 
         // arc join operation
         void updateArcJoinIndex1(int value);
@@ -279,7 +287,18 @@ namespace cagd
         void updatePatchCpYCoord(double value);
         void updatePatchCpZCoord(double value);
 
+        // patch operations
+        void updatePatchIndex1(int value);
+        void updatePatchIndex2(int value);
+        void updatePatchDir1(int value);
+        void updatePatchDir2(int value);
+
+        void joinPatches();
+        void mergePatches();
+        void continuePatch();
+
         void addNewPatch();
+        void resetPatches();
 
         void render_setup(GLuint render_function, GLuint render_index);
 

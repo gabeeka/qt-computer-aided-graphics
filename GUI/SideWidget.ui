@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>289</width>
-    <height>1685</height>
+    <height>2112</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -577,7 +577,7 @@
      <x>10</x>
      <y>740</y>
      <width>261</width>
-     <height>321</height>
+     <height>381</height>
     </rect>
    </property>
    <property name="title">
@@ -816,12 +816,25 @@
      <string/>
     </property>
    </widget>
+   <widget class="QPushButton" name="reset_arcs">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>320</y>
+      <width>241</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Reset Arcs</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QGroupBox" name="groupBox_9">
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>1070</y>
+     <y>1130</y>
      <width>261</width>
      <height>291</height>
     </rect>
@@ -968,9 +981,9 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>1370</y>
+     <y>1430</y>
      <width>261</width>
-     <height>251</height>
+     <height>301</height>
     </rect>
    </property>
    <property name="title">
@@ -1152,6 +1165,166 @@
       <width>161</width>
       <height>22</height>
      </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="reset_patches">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>250</y>
+      <width>241</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Reset Patches</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="groupBox_11">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>1740</y>
+     <width>261</width>
+     <height>291</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Patch Operations</string>
+   </property>
+   <widget class="QSpinBox" name="patch_index_1">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>20</y>
+      <width>161</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="patch_index_2">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>50</y>
+      <width>161</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="value">
+     <number>1</number>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_26">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>20</y>
+      <width>71</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Patch 1 Index</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_27">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>50</y>
+      <width>71</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Patch 2 Index</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="patch_dir_1">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>80</y>
+      <width>161</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="patch_dir_2">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>110</y>
+      <width>161</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_28">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>80</y>
+      <width>71</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Direction 1</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_29">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>110</y>
+      <width>71</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Direction 2</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="join_patches">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>140</y>
+      <width>241</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Join Patches</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="merge_patches">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>190</y>
+      <width>241</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Merge Patches</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="continue_patch">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>240</y>
+      <width>241</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Continue Patch</string>
     </property>
    </widget>
   </widget>

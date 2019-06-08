@@ -18,10 +18,24 @@ namespace cagd
 
         rotate_y_slider->setPalette(p);
 
+        // arc operations directions
+
         arc_join_dir_1->addItem("LEFT", 0);
         arc_join_dir_1->addItem("RIGHT", 1);
 
         arc_join_dir_2->addItem("LEFT", 0);
         arc_join_dir_2->addItem("RIGHT", 1);
+
+        // patch operations directions
+
+        patch_dir_1->addItem("NORTH",   0);
+        patch_dir_1->addItem("EAST",    1);
+        patch_dir_1->addItem("SOUTH",   2);
+        patch_dir_1->addItem("WEST",    3);
+
+        patch_dir_2->addItem("NORTH",   0);
+        patch_dir_2->addItem("EAST",    1);
+        patch_dir_2->addItem("SOUTH",   2);
+        patch_dir_2->addItem("WEST",    3);
     }
 }
