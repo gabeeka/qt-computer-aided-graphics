@@ -30,8 +30,7 @@ public:
         RowMatrix<GenericCurve3*>*      _u_lines;
         RowMatrix<GenericCurve3*>*      _v_lines;
 
-        TriangulatedMesh3*              _before_interpolation{};
-        TriangulatedMesh3*              _after_interpolation{};
+        TriangulatedMesh3*              _image_of_patch{};
 
         PatchAttributes*                _north{};
         PatchAttributes*                _north_east{};

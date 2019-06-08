@@ -36,46 +36,11 @@ GLboolean SOQAHCompositeSurface3::PatchAttributes::UpdatePatch
     if (!ok) throw std::runtime_error("Failed to update VBOs for V lines!");
 
     // Generate the mesh (image) of the surface patch
-    ok = ok && (_before_interpolation = _patch->GenerateImage(30, 30, GL_STATIC_DRAW));
+    ok = ok && (_image_of_patch = _patch->GenerateImage(30, 30, GL_STATIC_DRAW));
     if (!ok) throw std::runtime_error("Failed to generate image of patch!");
     // Update the VBOs of the image of patch
-    ok = ok && (_before_interpolation->UpdateVertexBufferObjects(usage_flag));
+    ok = ok && (_image_of_patch->UpdateVertexBufferObjects(usage_flag));
     if (!ok) throw std::runtime_error("Failed to updathe the VBOs of the image of patch!");
-
-    // define an interpolation problem:
-    // 1: create a knot vector in u−direction
-//    RowMatrix<GLdouble> u_knot_vector(4);
-//    u_knot_vector(0) = 0.0;
-//    u_knot_vector(1) = 1.0 / 3.0;
-//    u_knot_vector(2) = 2.0 / 3.0;
-//    u_knot_vector(3) = 1.0;
-
-//    // 2: create a knot vector in v−direction
-//    ColumnMatrix<GLdouble> v_knot_vector(4);
-//    v_knot_vector(0) = 0.0;
-//    v_knot_vector(1) = 1.0 / 3.0;
-//    v_knot_vector(2) = 2.0 / 3.0;
-//    v_knot_vector(3) = 1.0;
-
-//    // 3: define a matrix of datapoints, e.g. set them to the original controlpoints
-//    Matrix<DCoordinate3> data_points_to_interpolate(4, 4);
-//    for(GLuint row = 0; row < 4; ++row)
-//    {
-//        for(GLuint column = 0; column < 4; ++column)
-//        {
-//            _patch->GetData(row, column, data_points_to_interpolate(row, column));
-//        }
-//    }
-
-//    // 4: solve the interpolation problem and generate the mesh of the interpolating patch
-//    ok = ok && (_patch->UpdateDataForInterpolation(u_knot_vector, v_knot_vector, data_points_to_interpolate));
-//    if (!ok) throw std::runtime_error("Failed to update data for interpolation!");
-
-//    ok = ok && (_after_interpolation = _patch->GenerateImage(div_point_count, div_point_count, usage_flag));
-//    if (!ok) throw std::runtime_error("Failed to generate image of patch after interpolation!");
-
-//    ok = ok && _after_interpolation->UpdateVertexBufferObjects(usage_flag);
-//    if (!ok) throw std::runtime_error("Failed to update VBOS after interpolation!");
 
     return ok;
 }
@@ -85,26 +50,10 @@ GLboolean SOQAHCompositeSurface3::PatchAttributes::RenderPatch(GLuint order)
     GLboolean ok = GL_TRUE;
 
     MatFBRuby.Apply();
-    ok = ok && _before_interpolation->Render();
+    ok = ok && _image_of_patch->Render();
     if (!ok) throw std::runtime_error("Failed to render the image of patch!");
 
-    if(_after_interpolation)
-    {
-        glEnable(GL_LIGHTING);
-        glEnable(GL_LIGHT0);
-        glEnable(GL_NORMALIZE);
-
-        glEnable(GL_BLEND);
-        glDepthMask(GL_FALSE);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-        MatFBTurquoise.Apply();
-        ok = ok && _after_interpolation->Render();
-        if (!ok) throw std::runtime_error("Failed to render the interpolation of patch!");
-        glDepthMask(GL_TRUE);
-        glDisable(GL_BLEND);
-    }
-
-    if (order < 1) return ok;
+//    if (order < 1) return ok;
 
     for(GLuint i = 0; i < _u_lines->GetColumnCount(); i++)
     {
@@ -191,91 +140,159 @@ GLboolean SOQAHCompositeSurface3::JoinPatches(GLuint ind1, Direction dir1, GLuin
     auto* patch1 = _patches[ind1];
     auto* patch2 = _patches[ind2];
 
+    // Check if join is possible
+    if ((dir1 == Direction::EAST && patch1->_east)   ||
+        (dir1 == Direction::NORTH && patch1->_north) ||
+        (dir1 == Direction::WEST && patch1->_west)   ||
+        (dir1 == Direction::SOUTH && patch1->_south) ||
+        (dir2 == Direction::EAST && patch1->_east)   ||
+        (dir2 == Direction::NORTH && patch1->_north) ||
+        (dir2 == Direction::WEST && patch1->_west)   ||
+        (dir2 == Direction::SOUTH && patch1->_south))
+    {
+        std::cout << "Join failed, invalid direction." << std::endl;
+        return GL_FALSE;
+    }
+
     auto* join_patch = AppendPatch();
 
-    if ((dir1 == Direction::EAST && dir2 == Direction::WEST) ||
-        (dir1 == Direction::WEST && dir2 == Direction::EAST))
+    // Connect the first patch
+    if (dir1 == Direction::EAST)
     {
-        if (dir1 == Direction::WEST && dir2 == Direction::EAST)
-        {
-            patch1 = _patches[ind2];
-            patch2 = _patches[ind1];
-        }
-        for (GLuint i = 0; i < 4; ++i)
-        {
-            // join the first patch's right side
-            auto cp3i = patch1->_patch->operator ()(3, i);
-            auto cp2i = patch1->_patch->operator ()(2, i);
-
-            // join patch (new patch)
-            auto cp0i = join_patch->_patch->operator ()(0, i);
-            auto cp1i = join_patch->_patch->operator ()(1, i);
-
-            cp0i = cp3i;
-            cp1i = 2 * cp3i - cp2i;
-
-            ok = ok && join_patch->_patch->SetData(0, i, cp0i.x(), cp0i.y(), cp0i.z());
-            ok = ok && join_patch->_patch->SetData(1, i, cp1i.x(), cp1i.y(), cp1i.z());
-        }
+        patch1->_east = join_patch;
+        join_patch->_west = patch1;
 
         for (GLuint i = 0; i < 4; ++i)
         {
-            // join the first patch's right side
-            auto cp0i = patch2->_patch->operator ()(0, i);
-            auto cp1i = patch2->_patch->operator ()(1, i);
+            auto p = patch1->_patch->operator ()(3, i);
+            auto q = patch1->_patch->operator ()(2, i);
 
-            // join patch (new patch)
-            auto cp3i = join_patch->_patch->operator ()(3, i);
-            auto cp2i = join_patch->_patch->operator ()(2, i);
+            auto pp = p;
+            auto qq = 2 * p - q;
 
-            cp3i = cp0i;
-            cp2i = 2 * cp0i - cp1i;
+            ok = ok && join_patch->_patch->SetData(0, i, pp.x(), pp.y(), pp.z());
+            ok = ok && join_patch->_patch->SetData(1, i, qq.x(), qq.y(), qq.z());
+        }
+    }
+    if (dir1 == Direction::WEST)
+    {
+        patch1->_west = join_patch;
+        join_patch->_east = patch1;
 
-            ok = ok && join_patch->_patch->SetData(3, i, cp3i.x(), cp3i.y(), cp3i.z());
-            ok = ok && join_patch->_patch->SetData(2, i, cp2i.x(), cp2i.y(), cp2i.z());
+        for (GLuint i = 0; i < 4; ++i)
+        {
+            auto p = patch1->_patch->operator ()(0, i);
+            auto q = patch1->_patch->operator ()(1, i);
+
+            auto pp = p;
+            auto qq = 2 * p - q;
+
+            ok = ok && join_patch->_patch->SetData(3, i, pp.x(), pp.y(), pp.z());
+            ok = ok && join_patch->_patch->SetData(2, i, qq.x(), qq.y(), qq.z());
+        }
+    }
+    if (dir1 == Direction::SOUTH)
+    {
+        patch1->_south = join_patch;
+        join_patch->_north = patch1;
+
+        for (GLuint i = 0; i < 4; ++i)
+        {
+            auto p = patch1->_patch->operator ()(i, 0);
+            auto q = patch1->_patch->operator ()(i, 1);
+
+            auto pp = p;
+            auto qq = 2 * p - q;
+
+            ok = ok && join_patch->_patch->SetData(i, 3, pp.x(), pp.y(), pp.z());
+            ok = ok && join_patch->_patch->SetData(i, 2, qq.x(), qq.y(), qq.z());
+        }
+    }
+    if (dir1 == Direction::NORTH)
+    {
+        patch1->_north = join_patch;
+        join_patch->_south = patch1;
+
+        for (GLuint i = 0; i < 4; ++i)
+        {
+            auto p = patch1->_patch->operator ()(i, 3);
+            auto q = patch1->_patch->operator ()(i, 2);
+
+            auto pp = p;
+            auto qq = 2 * p - q;
+
+            ok = ok && join_patch->_patch->SetData(i, 0, pp.x(), pp.y(), pp.z());
+            ok = ok && join_patch->_patch->SetData(i, 1, qq.x(), qq.y(), qq.z());
         }
     }
 
-    if ((dir1 == Direction::NORTH && dir2 == Direction::SOUTH) ||
-        (dir1 == Direction::SOUTH && dir2 == Direction::NORTH))
+    // Connect the second patch
+    if (dir2 == Direction::EAST)
     {
-        if (dir1 == Direction::SOUTH && dir2 == Direction::NORTH)
-        {
-            patch1 = _patches[ind2];
-            patch2 = _patches[ind1];
-        }
-        for (GLuint i = 0; i < 4; ++i)
-        {
-            // join the first patch's north side
-            auto cpi3 = patch1->_patch->operator ()(i, 3);
-            auto cpi2 = patch1->_patch->operator ()(i, 2);
-
-            // join patch (new patch)
-            auto cp0i = join_patch->_patch->operator ()(i, 0);
-            auto cp1i = join_patch->_patch->operator ()(i, 1);
-
-            cp0i = cpi3;
-            cp1i = 2 * cpi3 - cpi2;
-
-            ok = ok && join_patch->_patch->SetData(i, 0, cp0i.x(), cp0i.y(), cp0i.z());
-            ok = ok && join_patch->_patch->SetData(i, 1, cp1i.x(), cp1i.y(), cp1i.z());
-        }
+        patch2->_east = join_patch;
+        join_patch->_east = patch2;
 
         for (GLuint i = 0; i < 4; ++i)
         {
-            // join the first patch's north side
-            auto cp0i = patch2->_patch->operator ()(i, 0);
-            auto cp1i = patch2->_patch->operator ()(i, 1);
+            auto p = patch2->_patch->operator ()(3, i);
+            auto q = patch2->_patch->operator ()(2, i);
 
-            // join patch (new patch)
-            auto cpi3 = join_patch->_patch->operator ()(i, 3);
-            auto cpi2 = join_patch->_patch->operator ()(i, 2);
+            auto pp = p;
+            auto qq = 2 * p - q;
 
-            cpi3 = cp0i;
-            cpi2 = 2 * cp0i - cp1i;
+            ok = ok && join_patch->_patch->SetData(3, i, pp.x(), pp.y(), pp.z());
+            ok = ok && join_patch->_patch->SetData(2, i, qq.x(), qq.y(), qq.z());
+        }
+    }
+    if (dir2 == Direction::WEST)
+    {
+        patch2->_west = join_patch;
+        join_patch->_west = patch2;
 
-            ok = ok && join_patch->_patch->SetData(i, 3, cpi3.x(), cpi3.y(), cpi3.z());
-            ok = ok && join_patch->_patch->SetData(i, 2, cpi2.x(), cpi2.y(), cpi2.z());
+        for (GLuint i = 0; i < 4; ++i)
+        {
+            auto p = patch2->_patch->operator ()(0, i);
+            auto q = patch2->_patch->operator ()(1, i);
+
+            auto pp = p;
+            auto qq = 2 * p - q;
+
+            ok = ok && join_patch->_patch->SetData(0, i, pp.x(), pp.y(), pp.z());
+            ok = ok && join_patch->_patch->SetData(1, i, qq.x(), qq.y(), qq.z());
+        }
+    }
+    if (dir2 == Direction::SOUTH)
+    {
+        patch2->_south = join_patch;
+        join_patch->_south = patch2;
+
+        for (GLuint i = 0; i < 4; ++i)
+        {
+            auto p = patch2->_patch->operator ()(i, 0);
+            auto q = patch2->_patch->operator ()(i, 1);
+
+            auto pp = p;
+            auto qq = 2 * p - q;
+
+            ok = ok && join_patch->_patch->SetData(i, 0, pp.x(), pp.y(), pp.z());
+            ok = ok && join_patch->_patch->SetData(i, 1, qq.x(), qq.y(), qq.z());
+        }
+    }
+    if (dir2 == Direction::NORTH)
+    {
+        patch2->_north = join_patch;
+        join_patch->_south = patch2;
+
+        for (GLuint i = 0; i < 4; ++i)
+        {
+            auto p = patch2->_patch->operator ()(i, 3);
+            auto q = patch2->_patch->operator ()(i, 2);
+
+            auto pp = p;
+            auto qq = 2 * p - q;
+
+            ok = ok && join_patch->_patch->SetData(i, 3, pp.x(), pp.y(), pp.z());
+            ok = ok && join_patch->_patch->SetData(i, 2, qq.x(), qq.y(), qq.z());
         }
     }
 
@@ -305,6 +322,9 @@ GLboolean SOQAHCompositeSurface3::ContinuePatch(GLuint ind, SOQAHCompositeSurfac
             ok = ok && continue_patch->_patch->SetData(i, 1, Ccp1i.x(), Ccp1i.y(), Ccp1i.z());
             ok = ok && continue_patch->_patch->SetData(i, 2, Ccp2i.x(), Ccp2i.y(), Ccp2i.z());
             ok = ok && continue_patch->_patch->SetData(i, 3, Ccp3i.x(), Ccp3i.y(), Ccp3i.z());
+
+            patch->_north = continue_patch;
+            continue_patch->_south = patch;
         }
         break;
     case Direction::EAST:
@@ -322,6 +342,9 @@ GLboolean SOQAHCompositeSurface3::ContinuePatch(GLuint ind, SOQAHCompositeSurfac
             ok = ok && continue_patch->_patch->SetData(1, i, Ccp1i.x(), Ccp1i.y(), Ccp1i.z());
             ok = ok && continue_patch->_patch->SetData(2, i, Ccp2i.x(), Ccp2i.y(), Ccp2i.z());
             ok = ok && continue_patch->_patch->SetData(3, i, Ccp3i.x(), Ccp3i.y(), Ccp3i.z());
+
+            patch->_east = continue_patch;
+            continue_patch->_west = patch;
         }
         break;
     case Direction::SOUTH:
@@ -339,6 +362,9 @@ GLboolean SOQAHCompositeSurface3::ContinuePatch(GLuint ind, SOQAHCompositeSurfac
             ok = ok && continue_patch->_patch->SetData(i, 1, Ccp1i.x(), Ccp1i.y(), Ccp1i.z());
             ok = ok && continue_patch->_patch->SetData(i, 2, Ccp2i.x(), Ccp2i.y(), Ccp2i.z());
             ok = ok && continue_patch->_patch->SetData(i, 3, Ccp3i.x(), Ccp3i.y(), Ccp3i.z());
+
+            patch->_south = continue_patch;
+            continue_patch->_north = patch;
         }
         break;
     case Direction::WEST:
@@ -356,6 +382,9 @@ GLboolean SOQAHCompositeSurface3::ContinuePatch(GLuint ind, SOQAHCompositeSurfac
             ok = ok && continue_patch->_patch->SetData(i, 1, Ccp1i.x(), Ccp1i.y(), Ccp1i.z());
             ok = ok && continue_patch->_patch->SetData(i, 2, Ccp2i.x(), Ccp2i.y(), Ccp2i.z());
             ok = ok && continue_patch->_patch->SetData(i, 3, Ccp3i.x(), Ccp3i.y(), Ccp3i.z());
+
+            patch->_west = continue_patch;
+            continue_patch->_east = patch;
         }
         break;
     default:
