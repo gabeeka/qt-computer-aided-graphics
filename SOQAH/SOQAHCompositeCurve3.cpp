@@ -133,10 +133,10 @@ GLboolean SOQAHCompositeCurve3::JoinArcs(GLuint ind1, Direction dir1, GLuint ind
     auto* arc1 = _arcs[ind1];
     auto* arc2 = _arcs[ind2];
 
-    if ((dir1 == Direction::LEFT && arc1->_left) ||
-        (dir1 == Direction::RIGHT && arc1->_right) ||
-        (dir2 == Direction::LEFT && arc2->_left) ||
-        (dir2 == Direction::RIGHT && arc2->_right) ||)
+    if ((dir1 == Direction::LEFT && arc1->_left)    ||
+        (dir1 == Direction::RIGHT && arc1->_right)  ||
+        (dir2 == Direction::LEFT && arc2->_left)    ||
+        (dir2 == Direction::RIGHT && arc2->_right))
     {
         std::cout << "Join failed: invalid direction!" << std::endl;
         return GL_FALSE;
@@ -270,10 +270,10 @@ GLboolean SOQAHCompositeCurve3::MergeArcs(GLuint ind1, SOQAHCompositeCurve3::Dir
     auto* arc1 = _arcs[ind1];
     auto* arc2 = _arcs[ind2];
 
-    if ((dir1 == Direction::LEFT && arc1->_left) ||
-        (dir1 == Direction::RIGHT && arc1->_right) ||
-        (dir2 == Direction::LEFT && arc2->_left) ||
-        (dir2 == Direction::RIGHT && arc2->_right) ||)
+    if ((dir1 == Direction::LEFT && arc1->_left)    ||
+        (dir1 == Direction::RIGHT && arc1->_right)  ||
+        (dir2 == Direction::LEFT && arc2->_left)    ||
+        (dir2 == Direction::RIGHT && arc2->_right))
     {
         std::cout << "Merge failed: invalid direction!" << std::endl;
         return GL_FALSE;
