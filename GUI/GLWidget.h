@@ -43,6 +43,11 @@ namespace cagd
         SOQAHCompositeCurve3::Direction _joinDirection1{SOQAHCompositeCurve3::Direction::LEFT};
         SOQAHCompositeCurve3::Direction _joinDirection2{SOQAHCompositeCurve3::Direction::LEFT};
 
+        // arc render options
+        GLboolean _render_first_order{GL_FALSE};
+        GLboolean _render_second_order{GL_FALSE};
+        GLboolean _render_control_points{GL_FALSE};
+
         // arc control point manipulation
         int      _arc_index{0};
         int      _cp_index{0};
@@ -247,6 +252,10 @@ namespace cagd
         void updateCpYCoord(double value);
         void updateCpZCoord(double value);
 
+        void updateRenderFirstOrder(int value);
+        void updateRenderSecondOrder(int value);
+        void updateRenderControlPoints(int value);
+
         void addNewArc();
 
         // arc join operation
@@ -257,6 +266,8 @@ namespace cagd
         void updateArcJoinDir2(int value);
 
         void joinArcs();
+        void mergeArcs();
+        void continueArc();
 
         // patch control point manipulation
         void updatePatchIndex(int value);

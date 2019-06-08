@@ -73,7 +73,7 @@ GLboolean SOQAHCompositeCurve3::UpdateVBOs(GLenum usage_flag)
     return ok;
 }
 
-GLboolean SOQAHCompositeCurve3::Render(GLuint order, GLboolean renderControlPoints) const
+GLboolean SOQAHCompositeCurve3::Render(GLboolean renderFirstOrder, GLboolean renderSecondOrder, GLboolean renderControlPoints) const
 {
     GLboolean ok = GL_TRUE;
 
@@ -98,8 +98,7 @@ GLboolean SOQAHCompositeCurve3::Render(GLuint order, GLboolean renderControlPoin
     }
     if (!ok) throw std::runtime_error("Failed to render the image of arcs!");
 
-//    order = 2;
-    if (order >= 1)
+    if (renderFirstOrder)
     {
         for (auto arc : _arcs)
         {
@@ -109,7 +108,7 @@ GLboolean SOQAHCompositeCurve3::Render(GLuint order, GLboolean renderControlPoin
         if (!ok) throw std::runtime_error("Failed to render the 1st oreder derivatives of the arcs!");
     }
 
-    if (order >= 2)
+    if (renderSecondOrder)
     {
         for (auto arc : _arcs)
         {

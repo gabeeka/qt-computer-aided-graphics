@@ -852,21 +852,12 @@ namespace cagd
     {
         _soqah_arc_composite = new SOQAHCompositeCurve3(500);
         addNewSOQAHArc();
-        addNewSOQAHArc();
-        _soqah_arc_composite->JoinArcs(0, SOQAHCompositeCurve3::Direction::LEFT, 1, SOQAHCompositeCurve3::Direction::LEFT);
-        updateSOQAHArcComposite();
-        _soqah_arc_composite->Continue(0, SOQAHCompositeCurve3::Direction::RIGHT);
-        updateSOQAHArcComposite();
-
-        addNewSOQAHArc();
-        addNewSOQAHArc();
-        _soqah_arc_composite->MergeArcs(4, SOQAHCompositeCurve3::Direction::LEFT, 5, SOQAHCompositeCurve3::Direction::LEFT);
         updateSOQAHArcComposite();
     }
 
     void GLWidget::renderSOQAHArcComposite()
     {
-        (void)_soqah_arc_composite->Render(0, GL_TRUE);
+        (void)_soqah_arc_composite->Render(_render_first_order, _render_second_order, _render_control_points);
     }
 
     void GLWidget::updateSOQAHArcComposite()
@@ -931,6 +922,18 @@ namespace cagd
     void GLWidget::joinArcs()
     {
         _soqah_arc_composite->JoinArcs(_joinIndex1, _joinDirection1, _joinIndex2, _joinDirection2);
+        updateSOQAHArcComposite();
+    }
+
+    void GLWidget::mergeArcs()
+    {
+        _soqah_arc_composite->MergeArcs(_joinIndex1, _joinDirection1, _joinIndex2, _joinDirection2);
+        updateSOQAHArcComposite();
+    }
+
+    void GLWidget::continueArc()
+    {
+        _soqah_arc_composite->Continue(_joinIndex1, _joinDirection1);
         updateSOQAHArcComposite();
     }
 
@@ -1266,6 +1269,21 @@ namespace cagd
         _soqah_arc_composite->GetArcPoint(_arc_index, _cp_index).z()=value;
         _soqah_arc_composite->RefreshNeighbours(_arc_index);
         updateSOQAHArcComposite();
+    }
+
+    void GLWidget::updateRenderFirstOrder(int value)
+    {
+        _render_first_order = static_cast<GLboolean>(value);
+    }
+
+    void GLWidget::updateRenderSecondOrder(int value)
+    {
+        _render_second_order = static_cast<GLboolean>(value);
+    }
+
+    void GLWidget::updateRenderControlPoints(int value)
+    {
+        _render_control_points = static_cast<GLboolean>(value);
     }
 
     void GLWidget::_animate()

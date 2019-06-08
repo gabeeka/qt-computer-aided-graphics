@@ -52,7 +52,7 @@ public:
     GLboolean GenerateImages(GLuint max_order_of_derivatives, GLuint div_point_count, GLenum usage_flag = GL_STATIC_DRAW);
     GLboolean UpdateVBOs(GLenum usage_flag = GL_STATIC_DRAW);
 
-    GLboolean Render(GLuint order, GLboolean renderControlPoints = GL_FALSE) const;
+    GLboolean Render(GLboolean renderFirstOrder, GLboolean renderSecondOrder, GLboolean renderControlPoints) const;
 
     GLboolean JoinArcs(GLuint ind1, Direction dir1, GLuint ind2, Direction dir2);
     GLboolean Continue(GLuint ind, Direction dir);

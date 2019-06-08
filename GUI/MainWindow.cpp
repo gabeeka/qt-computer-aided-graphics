@@ -90,9 +90,13 @@ namespace cagd
         connect(_side_widget->cp_y_coord, SIGNAL(valueChanged(double)), _gl_widget, SLOT(updateCpYCoord(double)));
         connect(_side_widget->cp_z_coord, SIGNAL(valueChanged(double)), _gl_widget, SLOT(updateCpZCoord(double)));
 
+        connect(_side_widget->first_order, SIGNAL(stateChanged(int)), _gl_widget, SLOT(updateRenderFirstOrder(int)));
+        connect(_side_widget->second_order, SIGNAL(stateChanged(int)), _gl_widget, SLOT(updateRenderSecondOrder(int)));
+        connect(_side_widget->control_points, SIGNAL(stateChanged(int)), _gl_widget, SLOT(updateRenderControlPoints(int)));
+
         connect(_side_widget->appendArc, SIGNAL(clicked(bool)), _gl_widget, SLOT(addNewArc()));
 
-        // arc join operation
+        // arc operations
         connect(_side_widget->arc_join_ind_1, SIGNAL(valueChanged(int)), _gl_widget, SLOT(updateArcJoinIndex1(int)));
         connect(_side_widget->arc_join_ind_2, SIGNAL(valueChanged(int)), _gl_widget, SLOT(updateArcJoinIndex2(int)));
 
@@ -100,6 +104,8 @@ namespace cagd
         connect(_side_widget->arc_join_dir_2, SIGNAL(currentIndexChanged(int)), _gl_widget, SLOT(updateArcJoinDir2(int)));
 
         connect(_side_widget->join_arcs, SIGNAL(clicked(bool)), _gl_widget, SLOT(joinArcs()));
+        connect(_side_widget->merge_arcs, SIGNAL(clicked(bool)), _gl_widget, SLOT(mergeArcs()));
+        connect(_side_widget->continue_arc, SIGNAL(clicked(bool)), _gl_widget, SLOT(continueArc()));
 
         // patch control point manipulation
         connect(_side_widget->patch_index, SIGNAL(valueChanged(int)), _gl_widget, SLOT(updatePatchIndex(int)));
