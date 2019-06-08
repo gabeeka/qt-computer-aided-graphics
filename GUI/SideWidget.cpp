@@ -37,5 +37,7 @@ namespace cagd
         patch_dir_2->addItem("EAST",    1);
         patch_dir_2->addItem("SOUTH",   2);
         patch_dir_2->addItem("WEST",    3);
+
+        patch_dir_2->setCurrentIndex(2);
     }
 }

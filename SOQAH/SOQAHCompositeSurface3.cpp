@@ -49,6 +49,9 @@ GLboolean SOQAHCompositeSurface3::PatchAttributes::RenderPatch(GLuint order)
 {
     GLboolean ok = GL_TRUE;
 
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    glEnable(GL_NORMALIZE);
     MatFBRuby.Apply();
     ok = ok && _image_of_patch->Render();
     if (!ok) throw std::runtime_error("Failed to render the image of patch!");
@@ -177,7 +180,7 @@ GLboolean SOQAHCompositeSurface3::JoinPatches(GLuint ind1, Direction dir1, GLuin
     if (dir1 == Direction::WEST)
     {
         patch1->_west = join_patch;
-        join_patch->_east = patch1;
+        join_patch->_west = patch1;
 
         for (GLuint i = 0; i < 4; ++i)
         {
@@ -187,14 +190,14 @@ GLboolean SOQAHCompositeSurface3::JoinPatches(GLuint ind1, Direction dir1, GLuin
             auto pp = p;
             auto qq = 2 * p - q;
 
-            ok = ok && join_patch->_patch->SetData(3, i, pp.x(), pp.y(), pp.z());
-            ok = ok && join_patch->_patch->SetData(2, i, qq.x(), qq.y(), qq.z());
+            ok = ok && join_patch->_patch->SetData(0, i, pp.x(), pp.y(), pp.z());
+            ok = ok && join_patch->_patch->SetData(1, i, qq.x(), qq.y(), qq.z());
         }
     }
     if (dir1 == Direction::SOUTH)
     {
         patch1->_south = join_patch;
-        join_patch->_north = patch1;
+        join_patch->_west = patch1;
 
         for (GLuint i = 0; i < 4; ++i)
         {
@@ -204,14 +207,14 @@ GLboolean SOQAHCompositeSurface3::JoinPatches(GLuint ind1, Direction dir1, GLuin
             auto pp = p;
             auto qq = 2 * p - q;
 
-            ok = ok && join_patch->_patch->SetData(i, 3, pp.x(), pp.y(), pp.z());
-            ok = ok && join_patch->_patch->SetData(i, 2, qq.x(), qq.y(), qq.z());
+            ok = ok && join_patch->_patch->SetData(0, i, pp.x(), pp.y(), pp.z());
+            ok = ok && join_patch->_patch->SetData(1, i, qq.x(), qq.y(), qq.z());
         }
     }
     if (dir1 == Direction::NORTH)
     {
         patch1->_north = join_patch;
-        join_patch->_south = patch1;
+        join_patch->_west = patch1;
 
         for (GLuint i = 0; i < 4; ++i)
         {
@@ -221,8 +224,8 @@ GLboolean SOQAHCompositeSurface3::JoinPatches(GLuint ind1, Direction dir1, GLuin
             auto pp = p;
             auto qq = 2 * p - q;
 
-            ok = ok && join_patch->_patch->SetData(i, 0, pp.x(), pp.y(), pp.z());
-            ok = ok && join_patch->_patch->SetData(i, 1, qq.x(), qq.y(), qq.z());
+            ok = ok && join_patch->_patch->SetData(0, i, pp.x(), pp.y(), pp.z());
+            ok = ok && join_patch->_patch->SetData(1, i, qq.x(), qq.y(), qq.z());
         }
     }
 
@@ -247,7 +250,7 @@ GLboolean SOQAHCompositeSurface3::JoinPatches(GLuint ind1, Direction dir1, GLuin
     if (dir2 == Direction::WEST)
     {
         patch2->_west = join_patch;
-        join_patch->_west = patch2;
+        join_patch->_east = patch2;
 
         for (GLuint i = 0; i < 4; ++i)
         {
@@ -257,14 +260,14 @@ GLboolean SOQAHCompositeSurface3::JoinPatches(GLuint ind1, Direction dir1, GLuin
             auto pp = p;
             auto qq = 2 * p - q;
 
-            ok = ok && join_patch->_patch->SetData(0, i, pp.x(), pp.y(), pp.z());
-            ok = ok && join_patch->_patch->SetData(1, i, qq.x(), qq.y(), qq.z());
+            ok = ok && join_patch->_patch->SetData(3, i, pp.x(), pp.y(), pp.z());
+            ok = ok && join_patch->_patch->SetData(2, i, qq.x(), qq.y(), qq.z());
         }
     }
     if (dir2 == Direction::SOUTH)
     {
         patch2->_south = join_patch;
-        join_patch->_south = patch2;
+        join_patch->_east = patch2;
 
         for (GLuint i = 0; i < 4; ++i)
         {
@@ -274,14 +277,14 @@ GLboolean SOQAHCompositeSurface3::JoinPatches(GLuint ind1, Direction dir1, GLuin
             auto pp = p;
             auto qq = 2 * p - q;
 
-            ok = ok && join_patch->_patch->SetData(i, 0, pp.x(), pp.y(), pp.z());
-            ok = ok && join_patch->_patch->SetData(i, 1, qq.x(), qq.y(), qq.z());
+            ok = ok && join_patch->_patch->SetData(3, i, pp.x(), pp.y(), pp.z());
+            ok = ok && join_patch->_patch->SetData(2, i, qq.x(), qq.y(), qq.z());
         }
     }
     if (dir2 == Direction::NORTH)
     {
         patch2->_north = join_patch;
-        join_patch->_south = patch2;
+        join_patch->_east = patch2;
 
         for (GLuint i = 0; i < 4; ++i)
         {
@@ -291,8 +294,8 @@ GLboolean SOQAHCompositeSurface3::JoinPatches(GLuint ind1, Direction dir1, GLuin
             auto pp = p;
             auto qq = 2 * p - q;
 
-            ok = ok && join_patch->_patch->SetData(i, 3, pp.x(), pp.y(), pp.z());
-            ok = ok && join_patch->_patch->SetData(i, 2, qq.x(), qq.y(), qq.z());
+            ok = ok && join_patch->_patch->SetData(3, i, pp.x(), pp.y(), pp.z());
+            ok = ok && join_patch->_patch->SetData(2, i, qq.x(), qq.y(), qq.z());
         }
     }
 
