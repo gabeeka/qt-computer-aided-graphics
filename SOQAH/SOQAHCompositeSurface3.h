@@ -41,6 +41,8 @@ public:
         PatchAttributes*                _west{};
         PatchAttributes*                _north_west{};
 
+        GLuint                          _materialIndex{0};
+
         GLboolean UpdatePatch
             (
             GLuint iso_line_count = 3,
@@ -49,7 +51,8 @@ public:
             GLenum usage_flag = GL_STATIC_DRAW
             );
 
-        GLboolean RenderPatch(GLuint order = 0);
+        GLboolean RenderPatch(GLboolean renderControlNet = GL_FALSE);
+        void ApplyMaterial(GLuint materialIndex);
     };
 
     SOQAHCompositeSurface3(GLuint patch_count = 500);
@@ -64,6 +67,7 @@ public:
         GLenum usage_flag = GL_STATIC_DRAW
         );
 
+    void SetMaterialIndex(GLuint patchIndex, GLuint materialIndex);
     GLboolean RenderPatches();
 
     size_t GetPatchCount() const;

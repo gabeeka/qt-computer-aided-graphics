@@ -16,6 +16,8 @@ GLboolean SOQAHCompositeSurface3::PatchAttributes::UpdatePatch
 
     GLboolean ok = GL_TRUE;
 
+    ok = ok && _patch->UpdateVertexBufferObjectsOfData();
+
     // Update VBOs for iso parametric lines
     for(GLuint i = 0; i < _u_lines->GetColumnCount(); i++)
     {
@@ -45,18 +47,23 @@ GLboolean SOQAHCompositeSurface3::PatchAttributes::UpdatePatch
     return ok;
 }
 
-GLboolean SOQAHCompositeSurface3::PatchAttributes::RenderPatch(GLuint order)
+GLboolean SOQAHCompositeSurface3::PatchAttributes::RenderPatch(GLboolean renderControlNet)
 {
     GLboolean ok = GL_TRUE;
+
+    if (renderControlNet)
+    {
+        glDisable(GL_LIGHTING);
+        glColor3f(0.0, 0.0, 1.0);
+        ok = ok && _patch->RenderData();
+    }
 
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
     glEnable(GL_NORMALIZE);
-    MatFBRuby.Apply();
+    ApplyMaterial(_materialIndex);
     ok = ok && _image_of_patch->Render();
     if (!ok) throw std::runtime_error("Failed to render the image of patch!");
-
-//    if (order < 1) return ok;
 
     for(GLuint i = 0; i < _u_lines->GetColumnCount(); i++)
     {
@@ -88,6 +95,35 @@ GLboolean SOQAHCompositeSurface3::PatchAttributes::RenderPatch(GLuint order)
     return ok;
 }
 
+void SOQAHCompositeSurface3::PatchAttributes::ApplyMaterial(GLuint materialIndex)
+{
+    switch (materialIndex) {
+    case 0:
+        MatFBBrass.Apply();
+        break;
+    case 1:
+        MatFBGold.Apply();
+        break;
+    case 2:
+        MatFBSilver.Apply();
+        break;
+    case 3:
+        MatFBEmerald.Apply();
+        break;
+    case 4:
+        MatFBPearl.Apply();
+        break;
+    case 5:
+        MatFBRuby.Apply();
+        break;
+    case 6:
+        MatFBTurquoise.Apply();
+        break;
+    default:
+        break;
+    }
+}
+
 SOQAHCompositeSurface3::SOQAHCompositeSurface3(GLuint patch_count)
 {
     _patches.reserve(patch_count);
@@ -108,6 +144,11 @@ GLboolean SOQAHCompositeSurface3::UpdatePatches(GLuint iso_line_count, GLuint ma
     }
     if (!ok) throw std::runtime_error("Failed to update patches!");
     return ok;
+}
+
+void SOQAHCompositeSurface3::SetMaterialIndex(GLuint patchIndex, GLuint materialIndex)
+{
+    _patches[patchIndex]->_materialIndex = materialIndex;
 }
 
 GLboolean SOQAHCompositeSurface3::RenderPatches()
