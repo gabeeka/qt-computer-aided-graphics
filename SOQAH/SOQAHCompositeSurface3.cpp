@@ -151,24 +151,28 @@ void SOQAHCompositeSurface3::SetMaterialIndex(GLuint patchIndex, GLuint material
     _patches[patchIndex]->_materialIndex = materialIndex;
 }
 
-GLboolean SOQAHCompositeSurface3::RenderPatches()
+GLboolean SOQAHCompositeSurface3::RenderPatches(GLboolean renderControlNet)
 {
     GLboolean ok = GL_TRUE;
     for (auto patch : _patches)
     {
-        ok = ok && patch->RenderPatch();
+        ok = ok && patch->RenderPatch(renderControlNet);
     }
     if (!ok) throw std::runtime_error("Failed to render patches!");
     return ok;
 }
 
-size_t SOQAHCompositeSurface3::GetPatchCount() const
+int SOQAHCompositeSurface3::GetPatchCount() const
 {
-    return _patches.size();
+    return static_cast<int>(_patches.size());
 }
 
 GLboolean SOQAHCompositeSurface3::GetPatchPoint(GLuint patch_index, GLuint point_ind_1, GLuint point_ind_2, DCoordinate3& point)
 {
+    if (patch_index >= _patches.size())
+    {
+        return GL_FALSE;
+    }
     return _patches[patch_index]->_patch->GetData(point_ind_1, point_ind_2, point);
 }
 

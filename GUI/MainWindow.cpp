@@ -125,8 +125,12 @@ namespace cagd
         connect(_side_widget->p_cp_y_coord, SIGNAL(valueChanged(double)), _gl_widget, SLOT(updatePatchCpYCoord(double)));
         connect(_side_widget->p_cp_z_coord, SIGNAL(valueChanged(double)), _gl_widget, SLOT(updatePatchCpZCoord(double)));
 
+        connect(_side_widget->control_net, SIGNAL(stateChanged(int)), _gl_widget, SLOT(updateRenderControlNet(int)));
+        connect(_side_widget->patch_material, SIGNAL(currentIndexChanged(int)), _gl_widget, SLOT(updateMaterial(int)));
+
+
         connect(_side_widget->add_new_patch, SIGNAL(clicked(bool)), _gl_widget, SLOT(addNewPatch()));
-        connect(_side_widget->reset_patches, SIGNAL(clicked(bool)), _gl_widget, SLOT(resetPatches()));
+        connect(_side_widget->reset_patches, SIGNAL(clicked(bool)), _gl_widget, SLOT(resetPatches()));        
 
         // patch operations
         connect(_side_widget->patch_index_1, SIGNAL(valueChanged(int)), _gl_widget, SLOT(updatePatchIndex1(int)));

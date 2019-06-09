@@ -748,11 +748,12 @@ namespace cagd
     {
         _soqah_patch_composite = new SOQAHCompositeSurface3();
         addNewSOQAHPatch();
+        updatePatchIndex(0);
     }
 
     void GLWidget::renderSOQAHPatchComposite()
     {
-        _soqah_patch_composite->RenderPatches();
+        _soqah_patch_composite->RenderPatches(_render_control_net);
     }
 
     void GLWidget::addNewSOQAHPatch()
@@ -838,6 +839,7 @@ namespace cagd
         _soqah_arc_composite = new SOQAHCompositeCurve3(500);
         addNewSOQAHArc();
         updateSOQAHArcComposite();
+        arcIndexChanged(0);
     }
 
     void GLWidget::renderSOQAHArcComposite()
@@ -929,6 +931,10 @@ namespace cagd
 
     void GLWidget::updatePatchIndex(int value)
     {
+        if (value >= _soqah_patch_composite->GetPatchCount())
+        {
+            return;
+        }
         _patch_index = value;
         auto* widget = reinterpret_cast<MainWindow*>(_main_widget);
         DCoordinate3 point;
@@ -970,7 +976,7 @@ namespace cagd
         point.x()=value;
         _soqah_patch_composite->SetPatchPoint(_patch_index, _p_cp_index_1, _p_cp_index_2, point);
         _soqah_patch_composite->RefreshNeighbours(_patch_index);
-       _soqah_patch_composite->UpdatePatches();
+        _soqah_patch_composite->UpdatePatches();
     }
 
     void GLWidget::updatePatchCpYCoord(double value)
@@ -991,6 +997,16 @@ namespace cagd
         _soqah_patch_composite->SetPatchPoint(_patch_index, _p_cp_index_1, _p_cp_index_2, point);
         _soqah_patch_composite->RefreshNeighbours(_patch_index);
         _soqah_patch_composite->UpdatePatches();
+    }
+
+    void GLWidget::updateRenderControlNet(int value)
+    {
+        _render_control_net = static_cast<GLboolean>(value);
+    }
+
+    void GLWidget::updateMaterial(int index)
+    {
+        _soqah_patch_composite->SetMaterialIndex(_patch_index, index);
     }
 
     void GLWidget::updatePatchIndex1(int value)
@@ -1356,11 +1372,20 @@ namespace cagd
 
     void GLWidget::arcIndexChanged(int value)
     {
+        if (value >= _soqah_arc_composite->GetArcCount())
+        {
+            return;
+        }
         _arc_index = value;
+        cpIndexChanged(0);
     }
 
     void GLWidget::cpIndexChanged(int value)
     {
+        if (_arc_index >= _soqah_arc_composite->GetArcCount())
+        {
+            return;
+        }
         _cp_index = value;
         auto* widget = reinterpret_cast<MainWindow*>(_main_widget);
         widget->_side_widget->cp_x_coord->setValue(_soqah_arc_composite->GetArcPoint(_arc_index, _cp_index).x());

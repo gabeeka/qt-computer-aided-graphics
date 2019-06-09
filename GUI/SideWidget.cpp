@@ -39,5 +39,15 @@ namespace cagd
         patch_dir_2->addItem("WEST",    3);
 
         patch_dir_2->setCurrentIndex(2);
+
+        // patch materials
+
+        patch_material->addItem("MatFBBrass",       0);
+        patch_material->addItem("MatFBGold",        1);
+        patch_material->addItem("MatFBSilver",      2);
+        patch_material->addItem("MatFBEmerald",     3);
+        patch_material->addItem("MatFBPearl",       4);
+        patch_material->addItem("MatFBRuby",        5);
+        patch_material->addItem("MatFBTurquoise",   6);
     }
 }

@@ -56,6 +56,9 @@ namespace cagd
         GLuint _patchIndex1{0};
         GLuint _patchIndex2{1};
 
+        // patch render options
+        GLboolean _render_control_net{GL_FALSE};
+
         SOQAHCompositeSurface3::Direction _patchDirection1{SOQAHCompositeSurface3::Direction::NORTH};
         SOQAHCompositeSurface3::Direction _patchDirection2{SOQAHCompositeSurface3::Direction::SOUTH};
 
@@ -300,6 +303,9 @@ namespace cagd
         void updatePatchCpXCoord(double value);
         void updatePatchCpYCoord(double value);
         void updatePatchCpZCoord(double value);
+
+        void updateRenderControlNet(int value);
+        void updateMaterial(int index);
 
         // patch operations
         void updatePatchIndex1(int value);
